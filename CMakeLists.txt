@@ -4,6 +4,7 @@ project(BinPacking)
 add_library(linopt
             SHARED
             packing_list.c
+            linear_algebra.c
 )
 
 add_custom_command(OUTPUT tests.c
@@ -14,5 +15,5 @@ add_custom_command(OUTPUT tests.c
 add_executable(binpacking main.c)
 target_link_libraries(binpacking linopt)
 
-add_executable(tests tests.c CuTest.c CuTest.h packing_list_test.c)
+add_executable(tests tests.c CuTest.c CuTest.h packing_list_test.c linear_algebra_test.c)
 target_link_libraries(tests linopt)
