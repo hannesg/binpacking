@@ -4,8 +4,12 @@
  * 2011 Bastian Holst <bastianholst@gmx.de>
  *****************************************************************************/
 
+#ifndef PACKING_LIST_H_
+#define PACKING_LIST_H_
+
 #include <malloc.h>
 #include <string.h>
+#include "linear_algebra.h"
 
 #define INIT_SOLUTION(solution) \
     solution.size = 0; \
@@ -64,3 +68,17 @@ int packing_cmp(packing *a, packing *b);
 unsigned int packing_contains_item(packing *pack, item_number item);
 
 void print_packing(packing *pack);
+
+/*
+ * Packing List
+ */
+
+packing_list * alloc_packing_list();
+
+void free_packing_list(packing_list * list);
+
+packing_list * packing_list_from_ilp(uint_matrix * A, uint_vector *x);
+
+void print_packing_list(packing_list * list);
+
+#endif

@@ -117,3 +117,49 @@ void print_packing(packing *pack){
         i++;
     }
 }
+
+packing_list * alloc_packing_list(){
+    packing_list *list = malloc(sizeof(packing_list));
+    list->size = 0;
+    list->list = NULL;
+    return list;
+}
+
+void free_packing_list(packing_list * list){
+    free_packing_container(list->list);
+    free(list);
+}
+
+packing_list * packing_list_from_ilp(uint_matrix * A, uint_vector *x){
+    packing_list *list=alloc_packing_list();
+    packing *pack;
+    unsigned int i=0, j=0, aij=0;
+    while( i < x->size ){
+        if( x->values[i] ){
+            // this packing is used
+            pack = alloc_packing();
+            j = 0;
+            while( j < A->height ){
+                aij = A->values[i + j * A->width];
+                if( aij ){
+                    insert_item(pack,(item_number) aij);
+                }
+                j++;
+            }
+            insert_packing(&list, pack, x->values[i]);
+        }
+        i++;
+    }
+    return list;
+}
+
+void print_packing_list(packing_list *list){
+    packing_container *ct = list->list;
+    while( ct ){
+        printf("%ix :",ct->quantity);
+        print_packing(ct->value);
+        printf("\n");
+        ct = ct->next;
+    }
+}
+

@@ -3,6 +3,9 @@
  * 2011 Bastian Holst <bastianholst@gmx.de>
  *****************************************************************************/
 
+#ifndef LINEAR_ALGEBRA_H_
+#define LINEAR_ALGEBRA_H_
+
 #include "packing_list.h"
 
 // Vectors
@@ -41,4 +44,4 @@ typedef struct {
     double * values;
 } double_matrix;
 
-
+#endif
