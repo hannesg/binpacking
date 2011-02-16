@@ -20,9 +20,25 @@ void free_packing_container(packing_container * list){
 	}
 }
 
+packing * new_packing(){
+	packing * pack = malloc(sizeof(packing));
+	pack->size = 0;
+	pack->items = NULL;
+	return pack;
+}
+
 void free_packing(packing * pack){
 	free(pack->items);
 	free(pack);
+}
+
+unsigned int packing_contains(packing *pack, item_number item){
+	for( unsigned int i=0; i < pack->size; i++ ){
+        if( pack->items[i] == item ){
+            return 1;
+        }
+    }
+    return 0;
 }
 
 void prepend_packing(solution * sol, packing * pack){

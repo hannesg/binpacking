@@ -10,8 +10,10 @@
 #define FREE_SOLUTION(solution) \
 	free_packing_list(solution.list);
 
+typedef unsigned int item_number;
+
 typedef struct {
-    unsigned int *items;
+    item_number *items;
 	unsigned int size;
 } packing;
 
