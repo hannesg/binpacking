@@ -5,9 +5,10 @@
 
 #include "packing_list.h"
 
-packing_container * new_packing_container(packing * pack, packing_container * next ) {
+packing_container * new_packing_container(packing * pack, unsigned int quantity, packing_container * next ) {
     packing_container * result = malloc(sizeof(packing_container));
     result->value = pack;
+    result->quantity = quantity;
     result->next = next;
     return result;
 }
@@ -20,7 +21,7 @@ void free_packing_container(packing_container * list) {
     }
 }
 
-packing * new_packing() {
+packing * alloc_packing() {
     packing * pack = malloc(sizeof(packing));
     pack->size = 0;
     pack->items = NULL;
@@ -43,13 +44,63 @@ unsigned int packing_contains_item(packing *pack, item_number item) {
     return 0;
 }
 
-void insert_item(packing *pack, item_number item ){
-    pack->items = realloc(pack->items, sizeof(item_number) * (pack->size + 1));
-    pack->items[pack->size] = item;
-    pack->size++;
+int packing_cmp(packing *a, packing *b){
+    if( a->size > b->size ){
+        return 1;
+    }else if( a->size < b->size ){
+        return -1;
+    }else{
+        return memcmp(a->items,b->items,a->size);
+    }
 }
 
-void prepend_packing(packing_list * sol, packing * pack ){
-    sol->list = new_packing_container(pack, sol->list);
+void insert_item(packing *pack, item_number item ){
+    item_number * items;
+    unsigned int i = 0;
+    if( pack->items ){
+        items = pack->items;
+        pack->items = malloc(sizeof(item_number) * (pack->size + 1));
+        while( i < pack->size ){
+            if( items[i] > item ){
+                pack->items[i] = items[i];
+            }else{
+                pack->items[i] = item;
+                memcpy(pack->items+i+1,items+i,pack->size-i);
+                break;
+            }
+            i++;
+        }
+        free(items);
+        pack->size++;
+    }else{
+        pack->items = malloc(sizeof(item_number));
+        pack->items[0] = item;
+        pack->size = 1;
+    }
+}
+
+void insert_packing(packing_list * sol, packing * pack , unsigned int quantity ){
+    packing_container * cont = sol->list;
+    int cmp;
+    if( !cont ){
+        sol->list = new_packing_container(pack, quantity, sol->list);
+        sol->size++;
+        return ;
+    }
+    while( cont ){
+        cmp = packing_cmp(cont->value, pack);
+        if( cmp < 0 ){
+// insert this here
+            break;
+        }else if( cmp == 0 ){
+// already here
+            cont->quantity += quantity;
+            return ;
+        }
+        cont = cont->next;
+    }
+    cont->next = new_packing_container(pack, quantity, cont->next);
     sol->size++;
+    return ;
+
 }

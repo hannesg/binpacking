@@ -5,6 +5,7 @@
  *****************************************************************************/
 
 #include <malloc.h>
+#include <string.h>
 
 #define INIT_SOLUTION(solution) \
     solution.size = 0; \
@@ -21,6 +22,7 @@ typedef struct _packing_container packing_container;
 
 struct _packing_container {
     packing *value;
+    unsigned int quantity;
     packing_container *next;
 };
 
@@ -29,12 +31,34 @@ typedef struct {
     packing_container *list;
 } packing_list;
 
-packing_container * alloc_packing_container(packing * pack, packing_container * next );
+/*
+ * Packing Container Stuff
+ */
+
+packing_container * alloc_packing_container(packing * pack, unsigned int quantity, packing_container * next );
 
 void free_packing_container(packing_container * list);
 
-void prepend_packing(packing_list * sol, packing * pack);
+/**
+ * Inserts @p quantity of @p pack into @p list.
+ */
+void insert_packing(packing_list * list, packing * pack, unsigned int quantity);
+
+/*
+ * Packing Stuff
+ */
+
+packing * alloc_packing();
 
 void free_packing(packing * pack);
 
+/**
+ * Compares two packings.
+ * Returns 0 if they are equal, < 0 if a has fewer items or items with lower number and > 0 else.
+ */
+int packing_cmp(packing *a, packing *b);
+
+/**
+ * Checks if a packing contains an item with a given number.
+ */
 unsigned int packing_contains_item(packing *pack, item_number item);
