@@ -11,26 +11,48 @@
 #include <string.h>
 #include "linear_algebra.h"
 
-#define INIT_SOLUTION(solution) \
-    solution.size = 0; \
-    solution.list = NULL;
+/** @file packing_list.h
+ *  @brief Packings and Packing Lists
+ */
 
 typedef unsigned int item_number;
 
-typedef struct {
+/** @brief A packing contains different items.
+ *
+ */
+typedef struct packing {
+    /** @brief A field of items.
+     *
+     * The items are ordered descending and can appear in any number.
+     *
+     */
     item_number *items;
+    /** @brief The number of items in the field.
+     */
     unsigned int size;
 } packing;
 
-typedef struct _packing_container packing_container;
+typedef struct packing_container packing_container;
 
-struct _packing_container {
+struct packing_container {
+    /** @brief a packing
+     *
+     */
     packing *value;
+    /** @brief the number this packing is used
+     *
+     */
     unsigned int quantity;
     packing_container *next;
 };
 
-typedef struct {
+/** @brief A list of packings with quantities.
+ *
+ */
+typedef struct packing_list {
+    /** @brief the number of different packings used in this packing list
+     *
+     */
     unsigned int size;
     packing_container *list;
 } packing_list;
@@ -64,6 +86,8 @@ int packing_cmp(packing *a, packing *b);
 
 /**
  * Checks if a packing contains an item with a given number.
+ * @param pack the packing in which the item is inserted
+ * @param item the item to be inserted
  */
 unsigned int packing_contains_item(packing *pack, item_number item);
 
@@ -77,6 +101,12 @@ packing_list * alloc_packing_list();
 
 void free_packing_list(packing_list * list);
 
+/** @brief Creates a packing list from an ILP-solution.
+ *
+ * @param A the matrix used in the ILP
+ * @param x the ILP-solution
+ * @return a packing list which is equivalent to A and x
+ */
 packing_list * packing_list_from_ilp(uint_matrix * A, uint_vector *x);
 
 void print_packing_list(packing_list * list);

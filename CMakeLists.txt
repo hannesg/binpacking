@@ -12,6 +12,11 @@ add_custom_command(OUTPUT tests.c
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
+ADD_CUSTOM_TARGET(doxygen ALL DEPENDS
+    COMMAND doxygen
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+
 add_executable(binpacking main.c)
 target_link_libraries(binpacking linopt)
 
