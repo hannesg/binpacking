@@ -141,12 +141,13 @@ packing_list * packing_list_from_ilp(uint_matrix * A, uint_vector *x){
             j = 0;
             while( j < A->height ){
                 aij = A->values[i + j * A->width];
-                if( aij ){
-                    insert_item(pack,(item_number) aij);
+                while( aij ){
+                    insert_item(pack,(item_number) j);
+                    aij--;
                 }
                 j++;
             }
-            insert_packing(&list, pack, x->values[i]);
+            insert_packing(list, pack, x->values[i]);
         }
         i++;
     }
