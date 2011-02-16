@@ -3,7 +3,7 @@
  * 2011 Bastian Holst <bastianholst@gmx.de>
  *****************************************************************************/
 
-#include "solution.h"
+#include "packing_list.h"
 
-solution binpacking(double items[], double epsilon, int n);
+packing_list * binpacking(double items[], double epsilon, int n);
 
