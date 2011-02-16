@@ -35,7 +35,7 @@ void Test_vector_matrix_mult(CuTest *tc)
     vector->values[1] = 2.0;
     vector->values[2] = 3.0;
     
-    // Inintialize matrix
+    // Initialize matrix
     matrix->values[0 * 2 + 0] = 2.0;
     matrix->values[0 * 2 + 1] = 0.0;
     matrix->values[1 * 2 + 0] = 1.0;
