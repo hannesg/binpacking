@@ -4,6 +4,7 @@
  *****************************************************************************/
 
 #include "packing_list.h"
+#include <stdio.h>
 
 packing_container * new_packing_container(packing * pack, unsigned int quantity, packing_container * next ) {
     packing_container * result = malloc(sizeof(packing_container));
@@ -65,10 +66,13 @@ void insert_item(packing *pack, item_number item ){
                 pack->items[i] = items[i];
             }else{
                 pack->items[i] = item;
-                memcpy(pack->items+i+1,items+i,pack->size-i);
+                memcpy(pack->items+i+1,items+i,sizeof(item_number) * (pack->size-i));
                 break;
             }
             i++;
+        }
+        if( i == pack->size ){
+            pack->items[i] = item;
         }
         free(items);
         pack->size++;
@@ -103,4 +107,13 @@ void insert_packing(packing_list * sol, packing * pack , unsigned int quantity )
     sol->size++;
     return ;
 
+}
+
+void print_packing(packing *pack){
+    unsigned int i = 0;
+    i = 0;
+    while( i < pack->size ){
+        printf("%i ", pack->items[i]);
+        i++;
+    }
 }

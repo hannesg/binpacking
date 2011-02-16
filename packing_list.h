@@ -62,3 +62,5 @@ int packing_cmp(packing *a, packing *b);
  * Checks if a packing contains an item with a given number.
  */
 unsigned int packing_contains_item(packing *pack, item_number item);
+
+void print_packing(packing *pack);
