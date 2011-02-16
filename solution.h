@@ -15,18 +15,23 @@ typedef struct {
 	unsigned int size;
 } packing;
 
-typedef struct _packing_list packing_list;
+typedef struct _packing_container packing_container;
 
-struct _packing_list {
+struct _packing_container {
     packing *value;
-    packing_list *next;
+    packing_container *next;
 };
 
 typedef struct {
     unsigned int size;
-    packing_list *list;
+    packing_container *list;
 } solution;
 
-packing_list * new_packing_list(packing * pack, packing_list * next);
+packing_list * new_packing_container(packing * pack, packing_container * next);
+
+void free_packing_container(packing_container * list);
 
 void prepend_packing(solution * sol, packing * pack);
+
+void free_packing(packing * pack);
+
