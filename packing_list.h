@@ -4,12 +4,16 @@
  * 2011 Bastian Holst <bastianholst@gmx.de>
  *****************************************************************************/
 
+#include <malloc.h>
+
 #define INIT_SOLUTION(solution) \
-	solution.size = 0; \
-	solution.list = NULL;
+    solution.size = 0; \
+    solution.list = NULL;
+
+typedef unsigned int item_number;
 
 typedef struct {
-    unsigned int *items;
+    item_number *items;
     unsigned int size;
 } packing;
 
@@ -25,7 +29,7 @@ typedef struct {
     packing_container *list;
 } packing_list;
 
-packing_container * alloc_packing_container(packing * pack, packing_container * next);
+packing_container * alloc_packing_container(packing * pack, packing_container * next );
 
 void free_packing_container(packing_container * list);
 
@@ -33,3 +37,4 @@ void prepend_packing(packing_list * sol, packing * pack);
 
 void free_packing(packing * pack);
 
+unsigned int packing_contains_item(packing *pack, item_number item);
