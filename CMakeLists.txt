@@ -2,7 +2,6 @@ cmake_minimum_required (VERSION 2.6)
 project(BinPacking)
 
 add_library(linopt
-    packing_list.h
     packing_list.c
 )
 
