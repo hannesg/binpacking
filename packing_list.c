@@ -21,7 +21,7 @@ void free_packing_container(packing_container * list) {
     }
 }
 
-packing * new_packing() {
+packing * alloc_packing() {
     packing * pack = malloc(sizeof(packing));
     pack->size = 0;
     pack->items = NULL;
@@ -44,11 +44,13 @@ unsigned int packing_contains_item(packing *pack, item_number item) {
     return 0;
 }
 
-unsigned int packing_equals(packing *a, packing *b){
-    if( a->size != b->size ){
-        return 0;
+int packing_cmp(packing *a, packing *b){
+    if( a->size > b->size ){
+        return 1;
+    }else if( a->size < b->size ){
+        return -1;
     }else{
-        return memcmp(a->items,b->items,a->size) == 0;
+        return memcmp(a->items,b->items,a->size);
     }
 }
 
@@ -77,7 +79,28 @@ void insert_item(packing *pack, item_number item ){
     }
 }
 
-void prepend_packing(packing_list * sol, packing * pack , unsigned int quantity ){
-    sol->list = new_packing_container(pack, quantity, sol->list);
+void insert_packing(packing_list * sol, packing * pack , unsigned int quantity ){
+    packing_container * cont = sol->list;
+    int cmp;
+    if( !cont ){
+        sol->list = new_packing_container(pack, quantity, sol->list);
+        sol->size++;
+        return ;
+    }
+    while( cont ){
+        cmp = packing_cmp(cont->value, pack);
+        if( cmp < 0 ){
+// insert this here
+            break;
+        }else if( cmp == 0 ){
+// already here
+            cont->quantity += quantity;
+            return ;
+        }
+        cont = cont->next;
+    }
+    cont->next = new_packing_container(pack, quantity, cont->next);
     sol->size++;
+    return ;
+
 }
