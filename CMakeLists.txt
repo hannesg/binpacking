@@ -10,6 +10,7 @@ add_library(linopt
 # FIXME: Test that were added into an existing file won't be executed automatically.
 add_custom_command(OUTPUT tests.c
     COMMAND ./make-tests.sh ${CMAKE_CURRENT_SOURCE_DIR} > ${CMAKE_CURRENT_BINARY_DIR}/tests.c
+    DEPENDS packing_list_test.c linear_algebra_test.c
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
