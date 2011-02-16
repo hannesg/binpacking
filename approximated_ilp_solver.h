@@ -3,7 +3,7 @@
  * 2011 Bastian Holst <bastianholst@gmx.de>
  *****************************************************************************/
 
-#include "vector.h"
+#include "linear_algebra.h"
 
 /**
  * Solves the ILP @p A * x = @p b with the target function sum(A_i).
