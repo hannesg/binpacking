@@ -5,6 +5,7 @@
  *****************************************************************************/
 
 #include <malloc.h>
+#include <string.h>
 
 #define INIT_SOLUTION(solution) \
     solution.size = 0; \
@@ -21,6 +22,7 @@ typedef struct _packing_container packing_container;
 
 struct _packing_container {
     packing *value;
+    unsigned int quantity;
     packing_container *next;
 };
 
@@ -29,7 +31,7 @@ typedef struct {
     packing_container *list;
 } packing_list;
 
-packing_container * alloc_packing_container(packing * pack, packing_container * next );
+packing_container * alloc_packing_container(packing * pack, unsigned int quantity, packing_container * next );
 
 void free_packing_container(packing_container * list);
 
