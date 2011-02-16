@@ -1,9 +1,7 @@
 /******************************************************************************
  * Authors:
- * 2011 Bastian Holst <bastianholst@gmx.de>
+ * 2011 Hannes Georg <hannes.georg@googlemail.com>
  *****************************************************************************/
 
-#include "solution.h"
-
-solution binpacking(double items[], double epsilon, int n);
+#include "binpacking.h"
 
