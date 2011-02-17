@@ -34,6 +34,16 @@ void free_packing(packing * pack) {
     free(pack);
 }
 
+packing * clone_packing(packing * pack){
+    packing * result = malloc(sizeof(packing));
+    size_t memsize = sizeof(item_number) * result->size;
+    result->size = pack->size;
+    result->items = malloc(memsize);
+    memcpy(result->items, pack->items, memsize);
+    return result;
+}
+
+
 unsigned int packing_contains_item(packing *pack, item_number item) {
     unsigned int i = 0;
     while( i < pack->size ){
@@ -85,28 +95,38 @@ void insert_item(packing *pack, item_number item ){
 
 void insert_packing(packing_list * sol, packing * pack , unsigned int quantity ){
     packing_container * cont = sol->list;
+    packing_container * next = NULL;
     int cmp;
     if( !cont ){
+        // empty list
         sol->list = new_packing_container(pack, quantity, sol->list);
         sol->size++;
         return ;
     }
-    while( cont ){
-        cmp = packing_cmp(cont->value, pack);
+    cmp = packing_cmp(cont->value, pack);
+    if( cmp < 0 ){
+        // this item will be packed in the first place
+        sol->list = new_packing_container(pack, quantity, sol->list);
+        sol->size++;
+        return ;
+    }
+    next = cont->next;
+    while( next ){
+        cmp = packing_cmp(next->value, pack);
         if( cmp < 0 ){
 // insert this here
             break;
         }else if( cmp == 0 ){
 // already here
-            cont->quantity += quantity;
+            next->quantity += quantity;
             return ;
         }
-        cont = cont->next;
+        cont = next;
+        next = next->next;
     }
-    cont->next = new_packing_container(pack, quantity, cont->next);
+    cont->next = new_packing_container(pack, quantity, next);
     sol->size++;
     return ;
-
 }
 
 void print_packing(packing *pack){
@@ -117,6 +137,31 @@ void print_packing(packing *pack){
         i++;
     }
 }
+
+double packing_content(packing *pack, double items[]){
+    unsigned int i=0;
+    double sum = 0;
+    while( i < pack->size ){
+        sum += items[pack->items[i]];
+        i++;
+    }
+    return sum;
+}
+
+int packing_has_room_for(packing *pack, double items[], double item){
+    unsigned int i=0;
+    double sum = 1;
+    while( i < pack->size ){
+        sum -= items[pack->items[i]];
+        if( sum < item ){
+            return 0;
+        }
+        i++;
+    }
+    return 1;
+}
+
+
 
 packing_list * alloc_packing_list(){
     packing_list *list = malloc(sizeof(packing_list));

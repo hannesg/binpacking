@@ -5,5 +5,5 @@
 
 #include "packing_list.h"
 
-packing_list * binpacking(double items[], double epsilon, int n);
+packing_list * binpacking(double items[], double epsilon, unsigned int n);
 

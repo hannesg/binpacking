@@ -78,6 +78,8 @@ packing * alloc_packing();
 
 void free_packing(packing * pack);
 
+packing * clone_packing(packing * pack);
+
 /**
  * Compares two packings.
  * Returns 0 if they are equal, < 0 if a has fewer items or items with lower number and > 0 else.
@@ -90,6 +92,21 @@ int packing_cmp(packing *a, packing *b);
  * @param item the item to be inserted
  */
 unsigned int packing_contains_item(packing *pack, item_number item);
+
+/**
+ * Returns the content of the packing
+ * @param pack the packing
+ * @param items the item sizes
+ */
+double packing_content(packing *pack, double items[]);
+
+/**
+ * Returns whether the item fits in the packing.
+ * @param pack the packing
+ * @param items the item sizes
+ * @param the item for which to test
+ */
+int packing_has_room_for(packing *pack, double items[], double item);
 
 void print_packing(packing *pack);
 

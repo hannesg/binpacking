@@ -2,10 +2,13 @@ cmake_minimum_required (VERSION 2.6)
 project(BinPacking)
 
 set(LIBRARY_SRCS packing_list.c
-                 linear_algebra.c)
+                 linear_algebra.c
+                 first_fit.c)
 
 set(TEST_SRCS packing_list_test.c
-              linear_algebra_test.c)
+              linear_algebra_test.c
+              first_fit_test.c
+              )
 
 set(BINPACKING_SRCS main.c)
 
