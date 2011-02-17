@@ -8,7 +8,7 @@
 
 if test $# -eq 0 ; then INC="./" ; else INC=$1 ; fi
 
-FILES=**/*.c
+FILES=*.c
 
 echo '
 
@@ -16,7 +16,7 @@ echo '
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "'`pwd`'/tests/CuTest.h"
+#include "'`pwd`'/CuTest.h"
 
 '
 
