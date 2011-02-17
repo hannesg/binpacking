@@ -17,5 +17,5 @@
  */
 double_vector *approximate_block_solver(double_matrix *A,
                                         double_vector *p,
-                                        uint *limit,
+                                        unsigned int limit,
                                         double precision);

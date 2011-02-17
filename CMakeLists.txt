@@ -3,11 +3,13 @@ project(BinPacking)
 
 set(LIBRARY_SRCS packing_list.c
                  linear_algebra.c
-                 first_fit.c)
+                 first_fit.c
+                 approximate_block_solver.c)
 
 set(TEST_SRCS tests/packing_list.c
               tests/linear_algebra.c
               tests/first_fit.c
+              tests/approximate_block_solver.c
               )
 
 set(BINPACKING_SRCS main.c)

@@ -8,7 +8,7 @@
 
 double_vector *approximate_block_solver(double_matrix *A,
                                         double_vector *p,
-                                        uint *limit,
+                                        unsigned int limit,
                                         double precision)
 {
     double_vector *profits = vector_matrix_mult(p, A);
@@ -17,8 +17,8 @@ double_vector *approximate_block_solver(double_matrix *A,
     double largest_value = profits->values[0];
     unsigned int largest_index = 0;
     for(i = 1; i < profits->size; ++i) {
-        if(profit->values[i] > largest_value) {
-            largest_value = profit->values[i];
+        if(profits->values[i] > largest_value) {
+            largest_value = profits->values[i];
             largest_index = i;
         }
     }
