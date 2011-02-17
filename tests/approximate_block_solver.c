@@ -4,8 +4,8 @@
  *****************************************************************************/
 
 #include "CuTest.h"
-#include "../linear_algebra.h"
-#include "../approximate_block_solver.h"
+#include "linear_algebra.h"
+#include "approximate_block_solver.h"
 
 #include <stdio.h>
 
