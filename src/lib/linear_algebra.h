@@ -49,6 +49,8 @@ void free_double_vector(double_vector *vector);
 
 void fill_double_vector(double_vector *vector, double value);
 
+void print_double_vector(double_vector *vector);
+
 double_matrix *alloc_double_matrix(unsigned int height, unsigned int width);
 void free_double_matrix(double_matrix *matrix);
 

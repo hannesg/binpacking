@@ -61,3 +61,11 @@ double_vector *vector_matrix_mult(double_vector *x, double_matrix *A)
     
     return result;
 }
+
+void print_double_vector(double_vector *vector)
+{
+    int i;
+    for(i = 0; i < vector->size; ++i) {
+        printf("%lf\n", vector->values[i]);
+    }
+}

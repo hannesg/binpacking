@@ -5,6 +5,7 @@
 
 // Standard library
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 // Self
@@ -27,17 +28,11 @@ double_vector *parse_instance(char *file_name)
     for(i = 0; i < vector->size; ++i) {
         fgets(buffer, MAX_LINE_LENGTH, file);
         if(strcmp(buffer, "") == 0) {
-            printf("To few items");
+            printf("To few items\n");
             free_double_vector(vector);
             return NULL;
         }
         vector->values[i] = atof(buffer);
-    }
-    fgets(buffer, MAX_LINE_LENGTH, file);
-    if(strcmp(buffer, "") != 0) {
-        printf("To many items");
-        free_double_vector(vector);
-        return NULL;
     }
     
     return vector;
