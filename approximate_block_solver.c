@@ -26,5 +26,7 @@ double_vector *approximate_block_solver(double_matrix *A,
     double_vector *result = alloc_double_vector(profits->size);
     fill_double_vector(result, 0.0);
     result->values[largest_index] = limit;
+    
+    free_double_vector(profits);
     return result;
 }

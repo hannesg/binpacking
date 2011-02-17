@@ -68,5 +68,7 @@ void Test_fill_double_vector(CuTest *tc)
     for(i = 0; i < 10; ++i) {
         CuAssertDblEquals(tc, 10.0, vector->values[i], DBL_EPSILON);
     }
+    
+    free_double_vector(vector);
 }
 
