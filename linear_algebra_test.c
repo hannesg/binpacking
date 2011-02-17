@@ -7,6 +7,7 @@
 #include "linear_algebra.h"
 
 #include <stdio.h>
+#include <float.h>
 
 void Test_alloc_double_vector(CuTest *tc)
 {
@@ -54,5 +55,18 @@ void Test_vector_matrix_mult(CuTest *tc)
     free_double_vector(vector);
     free_double_matrix(matrix);
     free_double_vector(result);
+}
+
+void Test_fill_double_vector(CuTest *tc)
+{
+    // Alloc
+    double_vector *vector = alloc_double_vector(10);
+    fill_double_vector(vector, 10.0);
+    
+    // Test
+    int i;
+    for(i = 0; i < 10; ++i) {
+        CuAssertDblEquals(tc, 10.0, vector->values[i], DBL_EPSILON);
+    }
 }
 

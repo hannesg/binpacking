@@ -47,6 +47,8 @@ typedef struct {
 double_vector *alloc_double_vector(unsigned int size);
 void free_double_vector(double_vector *vector);
 
+void fill_double_vector(double_vector *vector, double value);
+
 double_matrix *alloc_double_matrix(unsigned int height, unsigned int width);
 void free_double_matrix(double_matrix *matrix);
 

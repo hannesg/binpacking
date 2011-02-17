@@ -19,6 +19,14 @@ void free_double_vector(double_vector * vector)
     free(vector);
 }
 
+void fill_double_vector(double_vector *vector, double value)
+{
+    int i;
+    for(i = 0; i < vector->size; ++i) {
+        vector->values[i] = value;
+    }
+}
+
 double_matrix *alloc_double_matrix(unsigned int height, unsigned int width)
 {
     double_matrix *result = (double_matrix *) malloc(sizeof(double_matrix));
