@@ -5,6 +5,9 @@ set(LIBRARY_SRCS packing_list.c
                  binpacking.c
                  )
 
+
 add_library(linopt
             SHARED
             ${LIBRARY_SRCS})
+            
+target_link_libraries(linopt m)

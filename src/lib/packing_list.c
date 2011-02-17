@@ -16,11 +16,12 @@ packing_container * new_packing_container(packing * pack, unsigned int quantity,
 
 void free_packing_container(packing_container * list) {
     if (list != NULL) {
-        free_packing_container(list->next);
+        //free_packing_container(list->next);
         free_packing(list->value);
         free(list);
     }
 }
+
 
 packing * alloc_packing() {
     packing * pack = malloc(sizeof(packing));
@@ -171,7 +172,12 @@ packing_list * alloc_packing_list(){
 }
 
 void free_packing_list(packing_list * list){
-    free_packing_container(list->list);
+    packing_container * cont = list->list, * next = NULL;
+    while( cont ){
+        next = cont->next;
+        free_packing_container(cont);
+        cont = next;
+    }
     free(list);
 }
 

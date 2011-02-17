@@ -12,12 +12,14 @@
  */
 
 #include "packing_list.h"
+#include "first_fit.h"
 #include "linear_algebra.h"
+#include <math.h>
 
 
 packing_list * binpacking(double items[], double epsilon, unsigned int n);
 
-/** @brief Sorts the given items an writes a list ( new_position => old_position ) into positions.
+/** @brief Sorts the given items and writes a list ( new_position => old_position ) into positions.
  *
  *  @param items the items
  *  @param n the number of items
@@ -33,4 +35,11 @@ void track_sort_items(double items[], unsigned int n, unsigned int positions[]);
  *
  */
 unsigned int *alloc_positions(unsigned int n);
+
+
+/** @brief Exchanges every item number according to positions.
+ *
+ */
+void renumber_packing_list(packing_list * list, item_number * positions);
+
 #endif
