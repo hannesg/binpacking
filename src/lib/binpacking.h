@@ -42,4 +42,9 @@ unsigned int *alloc_positions(unsigned int n);
  */
 void renumber_packing_list(packing_list * list, item_number * positions);
 
+/** @brief Creates a Matrix with all possible packings.
+ *
+ */
+uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limit);
+
 #endif

@@ -52,6 +52,9 @@ void fill_double_vector(double_vector *vector, double value);
 double_matrix *alloc_double_matrix(unsigned int height, unsigned int width);
 void free_double_matrix(double_matrix *matrix);
 
+uint_matrix *alloc_uint_matrix(unsigned int height, unsigned int width);
+void free_uint_matrix(uint_matrix *matrix);
+
 /**
  * Calculates x^T * A
  */

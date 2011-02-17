@@ -61,3 +61,17 @@ double_vector *vector_matrix_mult(double_vector *x, double_matrix *A)
     
     return result;
 }
+
+uint_matrix *alloc_uint_matrix(unsigned int height, unsigned int width)
+{
+    uint_matrix *result = (uint_matrix *) malloc(sizeof(uint_matrix));
+    result->height = height;
+    result->width = width;
+    result->values = (unsigned int *) malloc(sizeof(unsigned int) * height * width);
+
+    return result;
+}
+void free_uint_matrix(uint_matrix *matrix){
+    free(matrix->values);
+    free(matrix);
+}

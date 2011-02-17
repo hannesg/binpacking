@@ -45,7 +45,20 @@ void Test_track_sort_should_work(CuTest *tc)
         last = items[i];
         i++;
     }
-
 }
 
+void Test_matrix_from_items_should_workx(CuTest *tc)
+{
+    double items[] = {
+            0.32,
+            0.31,
+            0.3,
+            0.27,
+            0.25
+    };
+    uint_matrix *A = matrix_from_items(items,  5, 10);
+    unsigned int i = 0, j = 0;
+    printf("A in %2i x %2i \n",A->width, A->height);
+
+}
 

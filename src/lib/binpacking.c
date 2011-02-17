@@ -71,9 +71,9 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
 
     // solve the smaller binpacking approximately
 
-    // pack the big items
-
     // rewrite the solution to use the original sizes
+
+    // pack the big items
 
     // pack the small items
 
@@ -150,5 +150,73 @@ void renumber_packing_list(packing_list * list, item_number * positions){
         free_packing_container(cont);
         cont = next;
     }
+}
+
+uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limit){
+    unsigned int *store;
+    unsigned int m = 0;
+    unsigned int size = n * n;// we will at least have n rows and n columns
+    unsigned int colsize = sizeof(unsigned int) * n;
+    unsigned int *max = malloc(colsize);
+    unsigned int *col = malloc(colsize);
+    unsigned int i = 0, j = 0;
+    double room;
+    double min;
+    uint_matrix *matrix;
+
+    min = items[0];
+    while( i < n ){
+        max[i] = floor(PACKING_SIZE / items[i]);
+        if( max[i] > limit ){
+            max[i] = limit;
+        }
+        if( min > items[i] ){
+            min = items[i];
+        }
+        i++;
+    }
+
+    memset(col, 0, colsize);
+
+    store = malloc(size * sizeof(unsigned int) );
+
+    // TODO: this is fucking close to brute force!
+    while( 1 ){
+        i = 0;
+        while( i < n ){
+            col[i]++;
+            if( col[i] > max[i] ){
+                col[i] = 0;
+            }else{
+                break;
+            }
+            i++;
+        }
+        room = PACKING_SIZE;
+        j = 0;
+        while( j < n ){
+             room -= items[j] * col[j];
+             j++;
+        }
+        if( room < 1 && room >= 0 && room < min ){
+            // this configuration is valid
+            if( (m + 1)*n >= size ){
+                size *= 2;
+                store = realloc(store, size * sizeof(unsigned int));
+            }
+            memcpy( store + ( m * n ), col, colsize );
+            m++;
+        }
+        if( i == n ){
+            break ;
+        }
+    }
+
+    matrix = alloc_uint_matrix(m, n);
+    memcpy(matrix->values, store, m * n * sizeof(unsigned int));
+    free(store);
+    free(max);
+    free(col);
+    return matrix;
 }
 
