@@ -15,7 +15,7 @@
  * 
  * @return The approximated solution.
  */
-double_vector * approximated_block_solver(double_matrix * A,
-                                          double_vector * p,
-                                          uint * limit,
-                                          double precision);
+double_vector *approximate_block_solver(double_matrix *A,
+                                        double_vector *p,
+                                        uint *limit,
+                                        double precision);

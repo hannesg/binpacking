@@ -11,6 +11,6 @@
  * 
  * @return The approximated solution.
  */
-int_vector * approximated_ilp_solver(uint_matrix * A,
+int_vector * approximate_ilp_solver(uint_matrix * A,
                                      uint_vector * b,
                                      double precision);
