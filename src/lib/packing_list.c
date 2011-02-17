@@ -150,7 +150,7 @@ double packing_content(packing *pack, double items[]){
 
 int packing_has_room_for(packing *pack, double items[], double item){
     unsigned int i=0;
-    double sum = 1;
+    double sum = PACKING_SIZE;
     while( i < pack->size ){
         sum -= items[pack->items[i]];
         if( sum < item ){

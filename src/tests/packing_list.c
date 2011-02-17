@@ -18,6 +18,8 @@ void Test_packing_contains_items(CuTest *tc) {
     CuAssertTrue(tc, packing_contains_item(pack, 2));
     CuAssertTrue(tc, packing_contains_item(pack, 3));
     CuAssertTrue(tc, !packing_contains_item(pack, 4));
+
+    free_packing(pack);
 }
 
 void Test_packing_cmp_equals(CuTest *tc) {
@@ -33,6 +35,9 @@ void Test_packing_cmp_equals(CuTest *tc) {
     insert_item(pack2, 2);
 
     CuAssertIntEquals(tc, 0, packing_cmp(pack1, pack2));
+
+    free_packing(pack1);
+    free_packing(pack2);
 }
 
 void Test_packing_cmp_lt1(CuTest *tc) {
@@ -48,6 +53,9 @@ void Test_packing_cmp_lt1(CuTest *tc) {
     insert_item(pack2, 4);
 
     CuAssertTrue(tc, packing_cmp(pack1, pack2) < 0 );
+
+    free_packing(pack1);
+    free_packing(pack2);
 }
 
 void Test_packing_cmp_lt2(CuTest *tc) {
@@ -63,6 +71,9 @@ void Test_packing_cmp_lt2(CuTest *tc) {
     insert_item(pack2, 2);
 
     CuAssertTrue(tc, packing_cmp(pack1, pack2) < 0 );
+
+    free_packing(pack1);
+    free_packing(pack2);
 }
 
 void Test_packing_cmp_lt3(CuTest *tc) {
@@ -77,4 +88,7 @@ void Test_packing_cmp_lt3(CuTest *tc) {
     insert_item(pack2, 3);
 
     CuAssertTrue(tc, packing_cmp(pack1, pack2) < 0 );
+
+    free_packing(pack1);
+    free_packing(pack2);
 }
