@@ -4,7 +4,7 @@
  *****************************************************************************/
 
 #include "CuTest.h"
-#include "first_fit.h"
+#include "../first_fit.h"
 #include <stdio.h>
 
 void Test_first_fit_step_should_work(CuTest *tc) {

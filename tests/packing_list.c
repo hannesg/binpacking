@@ -1,5 +1,5 @@
 #include "CuTest.h"
-#include "packing_list.h"
+#include "../packing_list.h"
 #include <stdio.h>
 
 void Test_packing_is_initialized_correctly(CuTest *tc) {

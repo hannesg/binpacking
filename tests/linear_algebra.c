@@ -4,7 +4,7 @@
  *****************************************************************************/
 
 #include "CuTest.h"
-#include "linear_algebra.h"
+#include "../linear_algebra.h"
 
 #include <stdio.h>
 #include <float.h>

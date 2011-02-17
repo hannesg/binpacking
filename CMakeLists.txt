@@ -5,9 +5,9 @@ set(LIBRARY_SRCS packing_list.c
                  linear_algebra.c
                  first_fit.c)
 
-set(TEST_SRCS packing_list_test.c
-              linear_algebra_test.c
-              first_fit_test.c
+set(TEST_SRCS tests/packing_list.c
+              tests/linear_algebra.c
+              tests/first_fit.c
               )
 
 set(BINPACKING_SRCS main.c)
@@ -17,7 +17,7 @@ add_library(linopt
             ${LIBRARY_SRCS})
 
 add_custom_command(OUTPUT tests.c
-    COMMAND ./make-tests.sh ${CMAKE_CURRENT_SOURCE_DIR} > ${CMAKE_CURRENT_BINARY_DIR}/tests.c
+    COMMAND ./make-tests.sh ${CMAKE_CURRENT_SOURCE_DIR}/tests > ${CMAKE_CURRENT_BINARY_DIR}/tests.c
     DEPENDS ${TEST_SRCS}
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
@@ -33,5 +33,5 @@ add_custom_target(doxygen DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
 add_executable(binpacking ${BINPACKING_SRCS})
 target_link_libraries(binpacking linopt)
 
-add_executable(tests tests.c CuTest.c CuTest.h ${TEST_SRCS})
+add_executable(tests tests.c tests/CuTest.c tests/CuTest.h ${TEST_SRCS})
 target_link_libraries(tests linopt)
