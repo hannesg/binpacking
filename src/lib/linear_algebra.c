@@ -62,6 +62,14 @@ double_vector *vector_matrix_mult(double_vector *x, double_matrix *A)
     return result;
 }
 
+void print_double_vector(double_vector *vector)
+{
+    int i;
+    for(i = 0; i < vector->size; ++i) {
+        printf("%lf\n", vector->values[i]);
+    }
+}
+
 uint_matrix *alloc_uint_matrix(unsigned int height, unsigned int width)
 {
     uint_matrix *result = (uint_matrix *) malloc(sizeof(uint_matrix));
@@ -71,6 +79,7 @@ uint_matrix *alloc_uint_matrix(unsigned int height, unsigned int width)
 
     return result;
 }
+
 void free_uint_matrix(uint_matrix *matrix){
     free(matrix->values);
     free(matrix);
