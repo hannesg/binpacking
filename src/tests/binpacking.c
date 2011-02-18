@@ -47,11 +47,13 @@ void Test_track_sort_should_work(CuTest *tc)
     }
 }
 
+
 // this method is not required to be fast, just correct
 int check_bin_packing_matrix(uint_matrix *A, double items[]){
     unsigned int i,j;
     double room;
     double min;
+    int errors = 0;
     // check if every present packing is valid
     min = items[0];
     for( i = 0; i < A->width ; i++ ){
@@ -62,13 +64,13 @@ int check_bin_packing_matrix(uint_matrix *A, double items[]){
     for( i = 0; i < A->height ; i++ ){
         room = PACKING_SIZE;
         for( j = 0; j < A->width ; j++ ){
-            room -= uint_matrix_elem(A,i,j) * items[j];
+            room -= A->values[ A->width*i + j ] * items[j];
         }
         if( room < 0 ){
-            return 1;
+            errors |= 1;
         }
         if( room >= min ){
-            return 2;
+            errors |= 2;
         }
     }
 
@@ -76,7 +78,7 @@ int check_bin_packing_matrix(uint_matrix *A, double items[]){
 
 
 
-    return 0;
+    return errors;
 }
 
 void Test_matrix_from_items_should_work(CuTest *tc)
