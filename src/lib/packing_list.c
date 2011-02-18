@@ -16,11 +16,12 @@ packing_container * new_packing_container(packing * pack, unsigned int quantity,
 
 void free_packing_container(packing_container * list) {
     if (list != NULL) {
-        free_packing_container(list->next);
+        //free_packing_container(list->next);
         free_packing(list->value);
         free(list);
     }
 }
+
 
 packing * alloc_packing() {
     packing * pack = malloc(sizeof(packing));
@@ -150,7 +151,7 @@ double packing_content(packing *pack, double items[]){
 
 int packing_has_room_for(packing *pack, double items[], double item){
     unsigned int i=0;
-    double sum = 1;
+    double sum = PACKING_SIZE;
     while( i < pack->size ){
         sum -= items[pack->items[i]];
         if( sum < item ){
@@ -171,7 +172,12 @@ packing_list * alloc_packing_list(){
 }
 
 void free_packing_list(packing_list * list){
-    free_packing_container(list->list);
+    packing_container * cont = list->list, * next = NULL;
+    while( cont ){
+        next = cont->next;
+        free_packing_container(cont);
+        cont = next;
+    }
     free(list);
 }
 

@@ -2,6 +2,7 @@ set(TEST_SRCS packing_list.c
               linear_algebra.c
               first_fit.c
               approximate_block_solver.c
+              binpacking.c
               )
 
 add_custom_command(OUTPUT tests.c

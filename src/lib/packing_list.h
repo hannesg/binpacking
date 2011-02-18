@@ -7,6 +7,8 @@
 #ifndef PACKING_LIST_H_
 #define PACKING_LIST_H_
 
+#define PACKING_SIZE 1
+
 #include <malloc.h>
 #include <string.h>
 #include "linear_algebra.h"

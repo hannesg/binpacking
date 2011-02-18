@@ -38,6 +38,8 @@ void Test_first_fit_step_should_work(CuTest *tc) {
     first_fit_step(items,20,3,pack_list);
 
     CuAssertIntEquals(tc, 2, pack_list->size);
+
+    free_packing_list(pack_list);
 }
 
 
@@ -67,4 +69,6 @@ void Test_first_fit_should_work(CuTest *tc) {
     packing_list * pack_list = first_fit(items, 20);
 
     CuAssertIntEquals(tc, 6, pack_list->size);
+
+    free_packing_list(pack_list);
 }
