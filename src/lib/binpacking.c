@@ -249,6 +249,7 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
     unsigned int cur_items = 0;
     double room;
     double min;
+    double fill = 0;
     uint_matrix *matrix;
 
     min = items[0];
@@ -275,21 +276,16 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
         while( i < n ){
             col[i]++;
             cur_items++;
-            if( col[i] > max[i] || cur_items > max_items ){
-                cur_items -= col[i];
+            fill += items[i];
+            if( fill > PACKING_SIZE || col[i] > max[i] ){
+                fill -= col[i] * items[i];
                 col[i] = 0;
             }else{
                 break;
             }
             i++;
         }
-        room = PACKING_SIZE;
-        j = 0;
-        while( j < n ){
-             room -= items[j] * col[j];
-             j++;
-        }
-        if( room < 1 && room >= 0 && room < min ){
+        if( fill > 0 && (PACKING_SIZE - fill) <= min ){
             // this configuration is valid
             if( (m + 1)*n >= size ){
                 size *= 2;

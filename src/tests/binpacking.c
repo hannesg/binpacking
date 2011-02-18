@@ -50,11 +50,11 @@ void Test_track_sort_should_work(CuTest *tc)
 // this method is not required to be fast, just correct
 int check_bin_packing_matrix(uint_matrix *A, double items[]){
     unsigned int i,j;
-    double sum;
+    double room;
     double min;
     // check if every present packing is valid
     min = items[0];
-    for( i = 0; i < A->height ; i++ ){
+    for( i = 0; i < A->width ; i++ ){
         if( items[i] < min ){
             min = items[i];
         }
@@ -106,8 +106,7 @@ void Test_matrix_from_items_should_work(CuTest *tc)
     uint_matrix *A = matrix_from_items(items,  20, 10);
     unsigned int i = 0, j = 0;
 
+    printf("A in %2i x %2i \n",A->width, A->height);
     CuAssertIntEquals(tc, 0, check_bin_packing_matrix(A,items));
-    // printf("A in %2i x %2i \n",A->width, A->height);
-    // TODO: find a way to test whether this matrix really contains ALL possible packings.
 }
 
