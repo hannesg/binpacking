@@ -47,9 +47,33 @@ void Test_track_sort_should_work(CuTest *tc)
     }
 }
 
+void print_submatrix(uint_matrix *A, unsigned int start_i, unsigned int end_i, unsigned int start_j, unsigned int end_j){
+    unsigned int i,j;
+    for( i = start_i; i < end_i; i++ ){
+        for( j = start_j ; j < end_j ; j++ ){
+            printf("%6i ", A->values[ A->width*i + j ]);
+        }
+        printf("\n");
+    }
+}
+
+int matrix_contains_higher_row(uint_matrix *A, unsigned int *row){
+    unsigned int i,j;
+    for( i = 0; i < A->height ; i++ ){
+        for( j = 0; j < A->width ; j++ ){
+            if( A->values[ A->width*i + j ] < row[j] ){
+                break;
+            }
+        }
+        if( j == A->width ){
+            return 1;
+        }
+    }
+    return 0;
+}
 
 // this method is not required to be fast, just correct
-int check_bin_packing_matrix(uint_matrix *A, double items[]){
+int check_bin_packing_matrix(uint_matrix *A, double items[], unsigned int limit){
     unsigned int i,j;
     double room;
     double min;
@@ -64,12 +88,19 @@ int check_bin_packing_matrix(uint_matrix *A, double items[]){
     for( i = 0; i < A->height ; i++ ){
         room = PACKING_SIZE;
         for( j = 0; j < A->width ; j++ ){
+            if( A->values[ A->width*i + j ] > limit ){
+                errors |= 4;
+            }
             room -= A->values[ A->width*i + j ] * items[j];
         }
         if( room < 0 ){
+            printf("Packing too big:\n");
+            print_submatrix(A, i, i+1, 0, A->width);
             errors |= 1;
         }
         if( room >= min ){
+            printf("Packing too small:\n");
+            print_submatrix(A, i, i+1, 0, A->width);
             errors |= 2;
         }
     }
@@ -109,6 +140,6 @@ void Test_matrix_from_items_should_work(CuTest *tc)
     unsigned int i = 0, j = 0;
 
     printf("A in %2i x %2i \n",A->width, A->height);
-    CuAssertIntEquals(tc, 0, check_bin_packing_matrix(A,items));
+    CuAssertIntEquals(tc, 0, check_bin_packing_matrix(A,items, 10));
 }
 
