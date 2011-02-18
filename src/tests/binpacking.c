@@ -54,11 +54,26 @@ void Test_matrix_from_items_should_workx(CuTest *tc)
             0.31,
             0.3,
             0.27,
-            0.25
+            0.25,
+            0.1,
+            0.21,
+            0.17,
+            0.24,
+            0.73,
+            0.64,
+            0.43,
+            0.21,
+            0.24,
+            0.23,
+            0.14,
+            0.42,
+            0.35,
+            0.15,
+            0.15
     };
-    uint_matrix *A = matrix_from_items(items,  5, 10);
+    uint_matrix *A = matrix_from_items(items,  20, 10);
     unsigned int i = 0, j = 0;
-    printf("A in %2i x %2i \n",A->width, A->height);
-
+    // printf("A in %2i x %2i \n",A->width, A->height);
+    // TODO: find a way to test whether this matrix really contains ALL possible packings.
 }
 

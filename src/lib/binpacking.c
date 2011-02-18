@@ -160,6 +160,8 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
     unsigned int *max = malloc(colsize);
     unsigned int *col = malloc(colsize);
     unsigned int i = 0, j = 0;
+    unsigned int max_items;
+    unsigned int cur_items = 0;
     double room;
     double min;
     uint_matrix *matrix;
@@ -176,6 +178,8 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
         i++;
     }
 
+    max_items = floor(PACKING_SIZE / min);
+
     memset(col, 0, colsize);
 
     store = malloc(size * sizeof(unsigned int) );
@@ -185,7 +189,9 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
         i = 0;
         while( i < n ){
             col[i]++;
-            if( col[i] > max[i] ){
+            cur_items++;
+            if( col[i] > max[i] || cur_items > max_items ){
+                cur_items -= col[i];
                 col[i] = 0;
             }else{
                 break;
