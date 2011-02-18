@@ -1,6 +1,7 @@
 /******************************************************************************
  * Authors:
  * 2011 Hannes Georg <hannes.georg@googlemail.com>
+ * 2011 Bastian Holst <bastianholst@gmx.de>
  *****************************************************************************/
 
 #include "binpacking.h"
@@ -99,23 +100,23 @@ void track_sort_items(double items[], unsigned int n, unsigned int positions[])
             // this item should come before the cut
             // exchange the positions too
             temp_pos = positions[i];
-            positions[i] = positions[cut];
+            positions[i] = positions[cut+1];
+            positions[cut+1] = positions[cut];
             positions[cut] = temp_pos;
             // exchange the value
+            
             temp = items[i];
-            items[i] = items[cut];
+            items[i] = items[cut+1];
+            items[cut+1] = pv;
             items[cut] = temp;
 
             cut++;
         }
         i++;
     }
-    if( cut == 0 ){
-        track_sort_items(items + 1, n - 1 , positions + 1);
-    }else{
-        track_sort_items(items, cut, positions);
-        track_sort_items(items + cut, n - cut , positions + cut);
-    }
+    
+    track_sort_items(items, cut, positions);
+    track_sort_items(items + cut + 1, n - cut - 1, positions + cut + 1);
 }
 
 unsigned int *alloc_positions(unsigned int n)
