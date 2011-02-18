@@ -75,3 +75,29 @@ void free_uint_matrix(uint_matrix *matrix){
     free(matrix->values);
     free(matrix);
 }
+
+unsigned int uint_matrix_elem(uint_matrix *matrix, unsigned int row, unsigned int col){
+    return matrix->values[ matrix->height*row + col ];
+}
+
+uint_vector * alloc_uint_vector(unsigned int size)
+{
+    uint_vector *result = (uint_vector *) malloc(sizeof(uint_vector));
+    result->size = size;
+    result->values = (unsigned int *) malloc(sizeof(unsigned int) * size);
+
+    return result;
+}
+
+void free_uint_vector(uint_vector * vector)
+{
+    free(vector->values);
+    free(vector);
+}
+
+void fill_uint_vector(uint_vector *vector, unsigned int value){
+    unsigned int i;
+    for(i = 0; i < vector->size; ++i) {
+        vector->values[i] = value;
+    }
+}
