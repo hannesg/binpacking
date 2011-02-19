@@ -84,6 +84,7 @@ int matrix_contains_higher_row(uint_matrix *A, unsigned int *row){
 int check_bin_packing_matrix(uint_matrix *A, double items[], unsigned int limit){
     unsigned int i,j, x,y;
     double room;
+    double fill;
     double min;
     int errors = 0;
     unsigned int max_value;
@@ -103,50 +104,58 @@ int check_bin_packing_matrix(uint_matrix *A, double items[], unsigned int limit)
 
     for( i = 0; i < A->height ; i++ ){
         room = PACKING_SIZE;
+        fill = 0;
         for( j = 0; j < A->width ; j++ ){
             if( A->values[ A->width*i + j ] > limit ){
                 errors |= 4;
             }
+            fill += A->values[ A->width*i + j ] * items[j];
             room -= A->values[ A->width*i + j ] * items[j];
         }
-        if( room < 0 ){
-            printf("Packing too big:\n");
+        if( fill > PACKING_SIZE ){
+            printf("Packing too big: fill = %f\n", fill);
             print_submatrix(A, i, i+1, 0, A->width);
             errors |= 1;
         }
         if( room >= min ){
-            printf("Packing too small:\n");
+            printf("Packing too small: fill = %f\n",fill);
             print_submatrix(A, i, i+1, 0, A->width);
             errors |= 2;
         }
     }
 
     // check if every packing is present
-    x = 0;
-    while( x < A->width ){
-        row[x]++;
-        if( row[x] > max_value ){
-            row[x] = 0;
-            x++;
-        }else{
-            // check if this row is possible
-            room = PACKING_SIZE;
-            for( j = 0; j < A->width ; j++ ){
-                room -= row[j] * items[j];
-            }
-            if( room >= 0 ){
-                // this packing is small enough
-                // there has to be a containing packing
-                if( !matrix_contains_higher_row(A, row) ){
-                    printf("No Packing includes:\n");
-                    print_row( row, A->width);
-                    errors |= 8;
+    /*
+    while( 1 ){
+        x = 0;
+        while( x < A->width ){
+            row[x]++;
+            if( row[x] > max_value ){
+                row[x] = 0;
+                x++;
+            }else{
+                // check if this row is possible
+                room = PACKING_SIZE;
+                for( j = 0; j < A->width ; j++ ){
+                    room -= row[j] * items[j];
                 }
+                if( room >= 0 ){
+                    // this packing is small enough
+                    // there has to be a containing packing
+                    if( !matrix_contains_higher_row(A, row) ){
+                        printf("No Packing includes:\n");
+                        print_row( row, A->width);
+                        errors |= 8;
+                    }
+                }
+                break;
             }
         }
-
+        if( x == A->width ){
+            break;
+        }
     }
-
+*/
     return errors;
 }
 

@@ -247,9 +247,11 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
     unsigned int i = 0, j = 0;
     unsigned int max_items;
     unsigned int cur_items = 0;
+    double fill = 0;
     double room;
     double min;
-    double fill = 0;
+    unsigned int min_pos =0;
+    double min_fill;
     uint_matrix *matrix;
 
     min = items[0];
@@ -260,6 +262,7 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
         }
         if( min > items[i] ){
             min = items[i];
+            min_pos = i;
         }
         i++;
     }
@@ -267,6 +270,8 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
     max_items = floor(PACKING_SIZE / min);
 
     memset(col, 0, colsize);
+
+    min_fill = PACKING_SIZE - min;
 
     store = malloc(size * sizeof(unsigned int) );
 
@@ -276,16 +281,28 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
         while( i < n ){
             col[i]++;
             cur_items++;
-            fill += items[i];
-            if( fill > PACKING_SIZE || col[i] > max[i] ){
-                fill -= col[i] * items[i];
+            fill = 0;
+            for( j = 0 ; j < n ; j++ ){
+                fill += items[j] * col[j];
+            }
+            if( fill > PACKING_SIZE || col[i] > max[i] || cur_items > max_items ){
+                cur_items -= col[i];
                 col[i] = 0;
             }else{
                 break;
             }
             i++;
         }
-        if( fill > 0 && (PACKING_SIZE - fill) <= min ){
+        if( i == n ){
+            break ;
+        }
+        fill = 0;
+        col[min_pos]++;
+        for( j = 0 ; j < n ; j++ ){
+            fill += items[j] * col[j];
+        }
+        col[min_pos]--;
+        if( fill > PACKING_SIZE ){
             // this configuration is valid
             if( (m + 1)*n >= size ){
                 size *= 2;
@@ -293,9 +310,6 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
             }
             memcpy( store + ( m * n ), col, colsize );
             m++;
-        }
-        if( i == n ){
-            break ;
         }
     }
 
