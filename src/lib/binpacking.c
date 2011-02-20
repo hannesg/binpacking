@@ -20,7 +20,12 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
     /*
      * The partitioned items.
      */
-    double *partitioned_items;
+    double *partition_items;
+
+    /*
+     * The partitioned sizes.
+     */
+    unsigned int *partition_sizes;
 
 
     /*
@@ -65,14 +70,9 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
     double_vector *x;
 
     /*
-     * We will use this positions later to generate a solution for J_LO.
-     */
-    unsigned int *partition_positions;
-
-    /*
      * auxiliary variables
      */
-    unsigned int h=0, i=0, j=0, aij;
+    unsigned int g=0, h=0, i=0, j=0, aij;
     packing * pack;
 
     // copy and sort the given items
@@ -88,7 +88,7 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
         // if max_normal_n == 0 then every item is small and we cannot partition the input.
         // if max_normal_n == 1 then k will be 0, which will result in empty partitions.
         //      => simply first fit them!
-        //         since most are items are quite small, this will give acceptable results!
+        //         since most items are quite small, this will give acceptable results!
         free(positions);
         free(items);
         return first_fit(items_in, n);
@@ -101,17 +101,26 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
 
     // create the partitions
     // TODO: Do we always need m partitions? Maybe we need only m-1.
-    partitioned_items = malloc( m * sizeof(double) );
-    partition_positions = malloc( m * sizeof(unsigned int) );
+    partition_items = malloc( m * sizeof(double) );
+    partition_sizes = malloc( m * sizeof(unsigned int) );
+
     i = 0;
     while( i < m ){
-        partition_positions[i] = (i+1)*k + 1;
-        partitioned_items[i] = items[ partition_positions[i]  ];
+        unsigned int partition_start = (i+1) * k;
+        unsigned int partition_size = min_small_n - partition_start;
+
+        if( partition_size > k ){
+            partition_size = k;
+        }
+
+        partition_items[i] = items[ partition_start ];
+        partition_sizes[i] = partition_size;
+
         i++;
     }
 
     // this matrix contains all possible packings
-    A = matrix_from_items(partitioned_items, m, k);
+    A = matrix_from_items(partition_items, m, k);
 
     b = alloc_uint_vector(m);
     fill_uint_vector(b, k);
@@ -122,7 +131,8 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
     // pack the solutions
     i = 0;
     while( i < x->size ){
-        if( x->values[i] > 0 ){
+        g = ceil(x->values[i]);
+        while( g > 0 ){
             // generate packing
             pack = alloc_packing();
             j = 0;
@@ -133,25 +143,32 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
                     while( h < aij ){
                         // we pack the original items directly or a smaller one
                         // depending on whether we have already packed a bigger one
-                        insert_item(pack, partition_positions[j]);
-                        // this may exceed the partition, but this will make
-                        // the solution only better
-                        partition_positions[j]++;
+                        if( partition_sizes[j] > 0 ){
+                            // we haven't packed all items in this partition
+                            partition_sizes[j]--;
+                            insert_item(pack, positions[ (j+1)*k + partition_sizes[j] ] );
+                        }
                         h++;
                     }
                 }
                 j++;
             }
-            insert_packing(result, pack, ceil(x->values[i]));
+            if( pack->size == 0 ){
+                free_packing(pack);
+            }else{
+                insert_packing(result, pack, 1);
+            }
+            g--;
         }
         i++;
     }
+    // assert: every partition_sizes == 0
 
     // pack the big items
     i = 0;
     while( i < k ){
         pack = alloc_packing();
-        insert_item(pack, i);
+        insert_item(pack, positions[i]);
         insert_packing(result, pack, 1);
         i++;
     }
@@ -159,12 +176,21 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
     // pack the small items
     i = min_small_n;
     while( i < n ){
-        first_fit_step(items, n, i, result);
+        first_fit_step(items_in, n, positions[i], result);
     }
 
     // rewrite the positions in the solution
-    // TODO: not necessary, if we pack positions[i] instead of i!
-    renumber_packing_list(result, positions);
+    // is now unnecessary
+    //renumber_packing_list(result, positions);
+
+    // free memory
+    free_uint_matrix(A);
+    free_uint_vector(b);
+    free_double_vector(x);
+    free(items);
+    free(partition_items);
+    free(partition_sizes);
+    free(positions);
 
     // done!
     return result;
