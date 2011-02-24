@@ -83,6 +83,16 @@ void free_packing(packing * pack);
 packing * clone_packing(packing * pack);
 
 /**
+ * Inserts an item into a pack
+ */
+void insert_item(packing *pack, item_number item );
+
+/**
+ * Inserts an item n times into a pack
+ */
+void insert_items(packing *pack, item_number item , unsigned int n);
+
+/**
  * Compares two packings.
  * Returns 0 if they are equal, < 0 if a has fewer items or items with lower number and > 0 else.
  */

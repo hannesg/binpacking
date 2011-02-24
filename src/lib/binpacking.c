@@ -8,46 +8,73 @@
 
 packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
 
-    /**
+    /*
      * A list of positions which will be used in the last step to revert the sorting.
      */
     unsigned int *positions = alloc_positions(n);
 
-    /**
+    /*
      * A sorted copy of the items.
      */
     double *items = malloc(sizeof(double) * n);
 
-    /**
+    /*
+     * The partitioned items.
+     */
+    double *partition_items;
+
+    /*
+     * The partitioned sizes.
+     */
+    unsigned int *partition_sizes;
+
+
+    /*
      * Items smaller than delta will be ignored first and will be inserted later using first fit.
      */
     double delta = epsilon / 2;
 
-    /**
+    /*
      * Biggest n with items[n] >= delta .
      * This is n'+1 .
      */
     unsigned int min_small_n = 0;
 
-    /**
+    /*
      * The resulting packing list.
      */
     packing_list * result;
 
-    /**
+    /*
      * The number items in an item partition.
      */
     unsigned int k;
 
-    /**
+    /*
      * The number of item partitions.
      */
     unsigned int m;
 
+    /*
+     * The LP-Matrix
+     */
+    uint_matrix *A;
+
+    /*
+     * The LP-Target
+     */
+    uint_vector *b;
+
     /**
+     * The LP-Solution
+     */
+    double_vector *x;
+
+    /*
      * auxiliary variables
      */
-    unsigned int i=0;
+    unsigned int g=0, h=0, i=0, j=0, aij;
+    packing * pack;
 
     // copy and sort the given items
     memcpy(items, items_in, sizeof(double) * n);
@@ -58,29 +85,113 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
         min_small_n++;
     }
 
-    if( min_small_n == 0 ){
+    if( min_small_n <= 1 ){
         // if max_normal_n == 0 then every item is small and we cannot partition the input.
+        // if max_normal_n == 1 then k will be 0, which will result in empty partitions.
+        //      => simply first fit them!
+        //         since most items are quite small, this will give acceptable results!
         free(positions);
         free(items);
         return first_fit(items_in, n);
     }
 
     k = ceil( (delta * delta * (min_small_n - 1) )/2 );
+    // k > 0 since min_small_n > 1
+    // TODO: If k == 1 we will win nothing by partitioning the items. Fallback?
     m = floor( (min_small_n - 1)/k );
 
     // create the partitions
+    // TODO: Do we always need m partitions? Maybe we need only m-1.
+    partition_items = malloc( m * sizeof(double) );
+    partition_sizes = malloc( m * sizeof(unsigned int) );
 
-    // solve the smaller binpacking approximately
+    i = 0;
+    while( i < m ){
+        unsigned int partition_start = (i+1) * k;
+        unsigned int partition_size = min_small_n - partition_start;
 
-    // rewrite the solution to use the original sizes
+        if( partition_size > k ){
+            partition_size = k;
+        }
+
+        partition_items[i] = items[ partition_start ];
+        partition_sizes[i] = partition_size;
+
+        i++;
+    }
+
+    // this matrix contains all possible packings
+    A = matrix_from_items(partition_items, m, k);
+
+    b = alloc_uint_vector(m);
+    fill_uint_vector(b, k);
+
+    // solve the LP approximately
+    //x = approximate_lp_solver(A, b , delta);
+
+    // pack the solutions
+    i = 0;
+    while( i < x->size ){
+        g = ceil(x->values[i]);
+        while( g > 0 ){
+            // generate packing
+            pack = alloc_packing();
+            j = 0;
+            while( j < m ){
+                aij = uint_matrix_elem(A,i,j);
+                if( aij > 0){
+                    h = 0;
+                    while( h < aij ){
+                        // we pack the original items directly or a smaller one
+                        // depending on whether we have already packed a bigger one
+                        if( partition_sizes[j] > 0 ){
+                            // we haven't packed all items in this partition
+                            partition_sizes[j]--;
+                            insert_item(pack, positions[ (j+1)*k + partition_sizes[j] ] );
+                        }
+                        h++;
+                    }
+                }
+                j++;
+            }
+            if( pack->size == 0 ){
+                free_packing(pack);
+            }else{
+                insert_packing(result, pack, 1);
+            }
+            g--;
+        }
+        i++;
+    }
+    // assert: every partition_sizes == 0
 
     // pack the big items
+    i = 0;
+    while( i < k ){
+        pack = alloc_packing();
+        insert_item(pack, positions[i]);
+        insert_packing(result, pack, 1);
+        i++;
+    }
 
     // pack the small items
+    i = min_small_n;
+    while( i < n ){
+        first_fit_step(items_in, n, positions[i], result);
+    }
 
     // rewrite the positions in the solution
+    // is now unnecessary
+    //renumber_packing_list(result, positions);
 
-    renumber_packing_list(result, positions);
+    // free memory
+    free_uint_matrix(A);
+    free_uint_vector(b);
+    free_double_vector(x);
+    free(items);
+    free(partition_items);
+    free(partition_sizes);
+    free(positions);
 
     // done!
     return result;
@@ -163,8 +274,11 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
     unsigned int i = 0, j = 0;
     unsigned int max_items;
     unsigned int cur_items = 0;
+    double fill = 0;
     double room;
     double min;
+    unsigned int min_pos =0;
+    double min_fill;
     uint_matrix *matrix;
 
     min = items[0];
@@ -175,6 +289,7 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
         }
         if( min > items[i] ){
             min = items[i];
+            min_pos = i;
         }
         i++;
     }
@@ -182,6 +297,8 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
     max_items = floor(PACKING_SIZE / min);
 
     memset(col, 0, colsize);
+
+    min_fill = PACKING_SIZE - min;
 
     store = malloc(size * sizeof(unsigned int) );
 
@@ -191,7 +308,11 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
         while( i < n ){
             col[i]++;
             cur_items++;
-            if( col[i] > max[i] || cur_items > max_items ){
+            fill = 0;
+            for( j = 0 ; j < n ; j++ ){
+                fill += items[j] * col[j];
+            }
+            if( fill > PACKING_SIZE || col[i] > max[i] || cur_items > max_items ){
                 cur_items -= col[i];
                 col[i] = 0;
             }else{
@@ -199,13 +320,16 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
             }
             i++;
         }
-        room = PACKING_SIZE;
-        j = 0;
-        while( j < n ){
-             room -= items[j] * col[j];
-             j++;
+        if( i == n ){
+            break ;
         }
-        if( room < 1 && room >= 0 && room < min ){
+        fill = 0;
+        col[min_pos]++;
+        for( j = 0 ; j < n ; j++ ){
+            fill += items[j] * col[j];
+        }
+        col[min_pos]--;
+        if( fill > PACKING_SIZE ){
             // this configuration is valid
             if( (m + 1)*n >= size ){
                 size *= 2;
@@ -213,9 +337,6 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
             }
             memcpy( store + ( m * n ), col, colsize );
             m++;
-        }
-        if( i == n ){
-            break ;
         }
     }
 

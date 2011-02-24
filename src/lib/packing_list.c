@@ -94,6 +94,47 @@ void insert_item(packing *pack, item_number item ){
     }
 }
 
+void insert_items(packing *pack, item_number item , unsigned int n){
+    if( n == 0){
+        return ;
+    }
+    item_number * items;
+    unsigned int i = 0, j = 0;
+    if( pack->items ){
+        items = pack->items;
+        pack->items = malloc(sizeof(item_number) * (pack->size + n));
+        while( i < pack->size ){
+            if( items[i] > item ){
+                pack->items[i] = items[i];
+            }else{
+                while( j < n ){
+                    pack->items[i+j] = item;
+                    j++;
+                }
+                memcpy(pack->items+i+n,items+i,sizeof(item_number) * (pack->size-i));
+                break;
+            }
+            i++;
+        }
+        if( i == pack->size ){
+            while( j < n ){
+                pack->items[i+j] = item;
+                j++;
+            }
+        }
+        free(items);
+        pack->size += n;
+    }else{
+        pack->items = malloc(sizeof(item_number)*n);
+        while( j < n ){
+            pack->items[j] = item;
+            j++;
+        }
+        pack->size = n;
+    }
+}
+
+
 void insert_packing(packing_list * sol, packing * pack , unsigned int quantity ){
     packing_container * cont = sol->list;
     packing_container * next = NULL;
