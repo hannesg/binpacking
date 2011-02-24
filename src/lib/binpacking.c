@@ -200,34 +200,47 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
 void track_sort_items(double items[], unsigned int n, unsigned int positions[])
 {
     double temp;
-    double pv;
-    unsigned int i = 1, cut = 0, temp_pos;
+    unsigned int left = 1, right = n - 1, temp_pos;
     if (n <= 1) {
         return;
     }
-    pv = items[0];
-    while (i < n) {
-        if (items[i] >= pv) {
-            // this item should come before the cut
-            // exchange the positions too
-            temp_pos = positions[i];
-            positions[i] = positions[cut+1];
-            positions[cut+1] = positions[cut];
-            positions[cut] = temp_pos;
-            // exchange the value
-            
-            temp = items[i];
-            items[i] = items[cut+1];
-            items[cut+1] = pv;
-            items[cut] = temp;
-
-            cut++;
+    
+    while(left < right && items[left] > items[0]) {
+        left++;
+    }
+    while(items[right] < items[0]) {
+        right--;
+    }
+    while (left < right) {
+        // exchange the positions
+        temp_pos = positions[left];
+        positions[left] = positions[right];
+        positions[right] = temp_pos;
+        
+        // exchange the value
+        temp = items[left];
+        items[left] = items[right];
+        items[right] = temp;
+        
+        while(left < right && items[left] > items[0]) {
+            left++;
         }
-        i++;
+        while(items[right] < items[0]) {
+            right--;
+        }
     }
     
-    track_sort_items(items, cut, positions);
-    track_sort_items(items + cut + 1, n - cut - 1, positions + cut + 1);
+    // Putting the pivot element in the right position
+    temp_pos = positions[0];
+    positions[0] = positions[right];
+    positions[right] = temp_pos;
+    
+    temp = items[0];
+    items[0] = items[right];
+    items[right] = temp;
+    
+    track_sort_items(items, right, positions);
+    track_sort_items(items + right + 1, n - right - 1, positions + right + 1);
 }
 
 unsigned int *alloc_positions(unsigned int n)
