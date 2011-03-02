@@ -54,6 +54,11 @@ void fill_double_vector(double_vector *vector, double value);
  */
 void vector_vector_add_assignment(double_vector *a, double_vector *b);
 
+/**
+ * Calculates @p x * @p a and stores the result in a.
+ */
+void number_vector_mult_assignment(double x, double_vector *a);
+
 void print_double_vector(double_vector *vector);
 
 double_matrix *alloc_double_matrix(unsigned int height, unsigned int width);

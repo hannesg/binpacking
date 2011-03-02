@@ -37,6 +37,14 @@ void vector_vector_add_assignment(double_vector *a, double_vector *b)
     }
 }
 
+void number_vector_mult_assignment(double x, double_vector *a)
+{
+    int i;
+    for(i = 0; i < a->size; ++i) {
+        a->values[i] = x * a->values[i];
+    }
+}
+
 double_matrix *alloc_double_matrix(unsigned int height, unsigned int width)
 {
     double_matrix *result = (double_matrix *) malloc(sizeof(double_matrix));

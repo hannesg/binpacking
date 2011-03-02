@@ -94,3 +94,21 @@ void Test_vector_vector_add_assignment(CuTest *tc)
     CuAssertDblEquals(tc, 0.5 + 2.1, a->values[1], DBL_EPSILON);
     CuAssertDblEquals(tc, 0.3 + 1.5, a->values[2], DBL_EPSILON);
 }
+
+void Test_number_vector_mult_assignment(CuTest *tc)
+{
+    // Alloc
+    double_vector *a = alloc_double_vector(3);
+    
+    a->values[0] = 1.0;
+    a->values[1] = 0.5;
+    a->values[2] = 0.3;
+    
+    // Run
+    number_vector_mult_assignment(2.0, a);
+    
+    // Test 
+    CuAssertDblEquals(tc, 1.0 * 2.0, a->values[0], DBL_EPSILON);
+    CuAssertDblEquals(tc, 0.5 * 2.0, a->values[1], DBL_EPSILON);
+    CuAssertDblEquals(tc, 0.3 * 2.0, a->values[2], DBL_EPSILON);
+}
