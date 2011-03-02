@@ -3,11 +3,48 @@
  * 2011 Bastian Holst <bastianholst@gmx.de>
  *****************************************************************************/
 
+// Standard library
+#include <math.h>
+
 // Library
 #include "approximate_block_solver.h"
 
 // Self
 #include "approximate_max_min_resource_sharing.h"
+
+double calculate_optimum_condition(double_vector *b, double theta, double t)
+{
+    double result = 0;
+    
+    int i;
+    for(i = 0; i < b->size; ++i) {
+        result += theta / (b->values[i] - theta);
+    }
+    result *= t/((double) b->size);
+}
+
+double find_optimum(double_matrix *A, double_vector *x, double t)
+{
+    double_vector *function_solution = matrix_vector_mult(A, x);
+    
+    double minimum = 0;
+    double maximum = vector_min(function_solution);
+    
+    double medium = 0.5 * (minimum + maximum);
+    double optimum_condition = calculate_optimum_condition(function_solution, medium, t);
+    while(fabs(optimum_condition - 1) > t && minimum < maximum) {
+        if(optimum_condition < 1) {
+            minimum = medium;
+        } else {
+            maximum = medium;
+        }
+        
+        double medium = 0.5 * (minimum + maximum);
+        double optimum_condition = calculate_optimum_condition(function_solution, medium, t);
+    }
+    
+    return medium;
+}
 
 double_vector *approximate_max_min_resource_sharing(double_matrix *A,
                                                     unsigned int limit,
@@ -34,7 +71,11 @@ double_vector *approximate_max_min_resource_sharing(double_matrix *A,
     
     double approximate_block_solver_precision = precision / 6;
     while(1) {
+        double theta = find_optimum(A, x, approximate_block_solver_precision);
+        
         // TODO: Add the improving part.
+        
+        
         break;
     }
     
