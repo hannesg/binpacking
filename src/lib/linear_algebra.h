@@ -83,5 +83,10 @@ double_vector * vector_matrix_mult(double_vector *x, double_matrix *A);
  */
 double_vector *matrix_vector_mult(double_matrix *A, double_vector *x);
 
+/**
+ * Calculates the minimum of all items in the vector @p x
+ */
+double vector_min(double_vector *x);
+
 #endif
 

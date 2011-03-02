@@ -88,6 +88,27 @@ void Test_matrix_vector_mult(CuTest *tc)
     free_double_matrix(matrix);
 }
 
+void Test_vector_min(CuTest *tc)
+{
+    // Alloc
+    double_vector *x = alloc_double_vector(5);
+    
+    x->values[0] = -5.0;
+    x->values[1] = 0;
+    x->values[2] = 0.12;
+    x->values[3] = -12.2;
+    x->values[4] = -8;
+    
+    // Calculate
+    double minimum = vector_min(x);
+    
+    // Test
+    CuAssertDblEquals(tc, -12.2, minimum, DBL_EPSILON);
+    
+    // Cleanup
+    free_double_vector(x);
+}
+
 
 void Test_fill_double_vector(CuTest *tc)
 {

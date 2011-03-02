@@ -100,6 +100,21 @@ double_vector *matrix_vector_mult(double_matrix *A, double_vector *x)
     return result;
 }
 
+double vector_min(double_vector *x)
+{
+    assert(x->size > 0);
+    double result = x->values[0];
+    
+    int i;
+    for(i = 1; i < x->size; ++i) {
+        if(x->values[i] < result) {
+            result = x->values[i];
+        }
+    }
+    
+    return result;
+}
+
 void print_double_vector(double_vector *vector)
 {
     int i;
