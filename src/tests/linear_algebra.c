@@ -109,6 +109,30 @@ void Test_vector_min(CuTest *tc)
     free_double_vector(x);
 }
 
+void Test_vector_scalar_mult(CuTest *tc)
+{
+    // Alloc
+    double_vector *a = alloc_double_vector(3);
+    double_vector *b = alloc_double_vector(3);
+    
+    a->values[0] = 1.0;
+    a->values[1] = 0.2;
+    a->values[2] = -0.3;
+    b->values[0] = 0.1;
+    b->values[1] = -0.2;
+    b->values[2] = 0.01;
+    
+    // Calculate
+    double scalar_product = vector_scalar_mult(a, b);
+    
+    // Test
+    CuAssertDblEquals(tc, 1.0 * 0.1 - 0.2 * 0.2 - 0.3 * 0.01, scalar_product, DBL_EPSILON);
+    
+    // Cleanup
+    free_double_vector(a);
+    free_double_vector(b);
+}
+
 
 void Test_fill_double_vector(CuTest *tc)
 {

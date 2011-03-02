@@ -115,6 +115,19 @@ double vector_min(double_vector *x)
     return result;
 }
 
+double vector_scalar_mult(double_vector *a, double_vector *b)
+{
+    assert(a->size == b->size);
+    
+    double result;
+    int i;
+    for(i = 0; i < a->size; ++i) {
+        result += a->values[i] * b->values[i];
+    }
+    
+    return result;
+}
+
 void print_double_vector(double_vector *vector)
 {
     int i;

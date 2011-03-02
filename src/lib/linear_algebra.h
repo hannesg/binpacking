@@ -88,5 +88,10 @@ double_vector *matrix_vector_mult(double_matrix *A, double_vector *x);
  */
 double vector_min(double_vector *x);
 
+/**
+ * Calculates the scalar product of @p a and @p b.
+ */
+double vector_scalar_mult(double_vector *a, double_vector *b);
+
 #endif
 
