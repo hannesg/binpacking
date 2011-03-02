@@ -49,6 +49,11 @@ void free_double_vector(double_vector *vector);
 
 void fill_double_vector(double_vector *vector, double value);
 
+/**
+ * Calculates a + b and saves the result in a.
+ */
+void vector_vector_add_assignment(double_vector *a, double_vector *b);
+
 void print_double_vector(double_vector *vector);
 
 double_matrix *alloc_double_matrix(unsigned int height, unsigned int width);

@@ -72,3 +72,25 @@ void Test_fill_double_vector(CuTest *tc)
     free_double_vector(vector);
 }
 
+void Test_vector_vector_add_assignment(CuTest *tc)
+{
+    // Alloc
+    double_vector *a = alloc_double_vector(3);
+    double_vector *b = alloc_double_vector(3);
+    
+    a->values[0] = 1.0;
+    a->values[1] = 0.5;
+    a->values[2] = 0.3;
+    
+    b->values[0] = 0.4;
+    b->values[1] = 2.1;
+    b->values[2] = 1.5;
+    
+    // Run
+    vector_vector_add_assignment(a, b);
+    
+    // Test
+    CuAssertDblEquals(tc, 1.0 + 0.4, a->values[0], DBL_EPSILON);
+    CuAssertDblEquals(tc, 0.5 + 2.1, a->values[1], DBL_EPSILON);
+    CuAssertDblEquals(tc, 0.3 + 1.5, a->values[2], DBL_EPSILON);
+}
