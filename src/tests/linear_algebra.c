@@ -69,6 +69,7 @@ void Test_fill_double_vector(CuTest *tc)
         CuAssertDblEquals(tc, 10.0, vector->values[i], DBL_EPSILON);
     }
     
+    // Cleaning up
     free_double_vector(vector);
 }
 
@@ -93,6 +94,10 @@ void Test_vector_vector_add_assignment(CuTest *tc)
     CuAssertDblEquals(tc, 1.0 + 0.4, a->values[0], DBL_EPSILON);
     CuAssertDblEquals(tc, 0.5 + 2.1, a->values[1], DBL_EPSILON);
     CuAssertDblEquals(tc, 0.3 + 1.5, a->values[2], DBL_EPSILON);
+    
+    // Cleaning up
+    free_double_vector(a);
+    free_double_vector(b);
 }
 
 void Test_number_vector_mult_assignment(CuTest *tc)
@@ -111,4 +116,7 @@ void Test_number_vector_mult_assignment(CuTest *tc)
     CuAssertDblEquals(tc, 1.0 * 2.0, a->values[0], DBL_EPSILON);
     CuAssertDblEquals(tc, 0.5 * 2.0, a->values[1], DBL_EPSILON);
     CuAssertDblEquals(tc, 0.3 * 2.0, a->values[2], DBL_EPSILON);
+    
+    // Cleaning up
+    free_double_vector(a);
 }
