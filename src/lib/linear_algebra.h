@@ -78,5 +78,10 @@ void fill_uint_vector(uint_vector *vector, unsigned int value);
  */
 double_vector * vector_matrix_mult(double_vector *x, double_matrix *A);
 
+/**
+ * Calculates A * x^T
+ */
+double_vector *matrix_vector_mult(double_matrix *A, double_vector *x);
+
 #endif
 

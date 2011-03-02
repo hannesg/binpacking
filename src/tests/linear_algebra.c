@@ -57,6 +57,38 @@ void Test_vector_matrix_mult(CuTest *tc)
     free_double_vector(result);
 }
 
+void Test_matrix_vector_mult(CuTest *tc)
+{
+    // Alloc
+    double_vector *vector = (double_vector *) alloc_double_vector(3);
+    double_matrix *matrix = (double_matrix *) alloc_double_matrix(2, 3);
+    
+    // Initialize vector
+    vector->values[0] = 1.0;
+    vector->values[1] = 2.0;
+    vector->values[2] = 3.0;
+    
+    // Initialize matrix
+    matrix->values[0 * 3 + 0] = 2.0;
+    matrix->values[0 * 3 + 1] = 0.0;
+    matrix->values[0 * 3 + 2] = 1.0;
+    matrix->values[1 * 3 + 0] = 3.0;
+    matrix->values[1 * 3 + 1] = -1.0;
+    matrix->values[1 * 3 + 2] = -2.0;
+    
+    double_vector *result = matrix_vector_mult(matrix, vector);
+    
+    // Test
+    CuAssertDblEquals(tc, 2.0 * 1.0 + 0.0 * 2.0 + 1.0 * 3.0, result->values[0], DBL_EPSILON);
+    CuAssertDblEquals(tc, 3.0 * 1.0 - 1.0 * 2.0 - 2.0 * 3.0, result->values[1], DBL_EPSILON);
+    
+    // Cleanup
+    free_double_vector(vector);
+    free_double_vector(result);
+    free_double_matrix(matrix);
+}
+
+
 void Test_fill_double_vector(CuTest *tc)
 {
     // Alloc

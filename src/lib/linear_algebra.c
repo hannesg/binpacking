@@ -80,6 +80,26 @@ double_vector *vector_matrix_mult(double_vector *x, double_matrix *A)
     return result;
 }
 
+double_vector *matrix_vector_mult(double_matrix *A, double_vector *x)
+{
+    assert(x->size == A->width);
+    
+    double_vector *result = alloc_double_vector(A->width);
+    
+    int row;
+    for(row = 0; row < A->height; ++row) {
+        double row_sum = 0;
+        int column;
+        
+        for(column = 0; column < A->width; ++column) {
+            row_sum += A->values[row * A->width + column] * x->values[column];
+        }
+        result->values[row] = row_sum;
+    }
+    
+    return result;
+}
+
 void print_double_vector(double_vector *vector)
 {
     int i;
