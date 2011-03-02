@@ -23,15 +23,13 @@ double calculate_optimum_condition(double_vector *b, double theta, double t)
     result *= t/((double) b->size);
 }
 
-double find_optimum(double_matrix *A, double_vector *x, double t)
+double find_optimum(double_vector *b, double t)
 {
-    double_vector *function_solution = matrix_vector_mult(A, x);
-    
     double minimum = 0;
-    double maximum = vector_min(function_solution);
+    double maximum = vector_min(b);
     
     double medium = 0.5 * (minimum + maximum);
-    double optimum_condition = calculate_optimum_condition(function_solution, medium, t);
+    double optimum_condition = calculate_optimum_condition(b, medium, t);
     while(fabs(optimum_condition - 1) > t && minimum < maximum) {
         if(optimum_condition < 1) {
             minimum = medium;
@@ -40,7 +38,7 @@ double find_optimum(double_matrix *A, double_vector *x, double t)
         }
         
         double medium = 0.5 * (minimum + maximum);
-        double optimum_condition = calculate_optimum_condition(function_solution, medium, t);
+        double optimum_condition = calculate_optimum_condition(b, medium, t);
     }
     
     return medium;
@@ -71,10 +69,44 @@ double_vector *approximate_max_min_resource_sharing(double_matrix *A,
     
     double approximate_block_solver_precision = precision / 6;
     while(1) {
-        double theta = find_optimum(A, x, approximate_block_solver_precision);
+        double_vector *function_solution = matrix_vector_mult(A, x);
+        double theta = find_optimum(function_solution, approximate_block_solver_precision);
         
-        // TODO: Add the improving part.
+        // Calculation p
+        p = alloc_double_vector(function_solution->size);
+        int i;
+        for(i = 0; i < function_solution->size; ++i) {
+            p->values[i] =
+                approximate_block_solver_precision / ((double) function_solution->size)
+                * theta / (function_solution->values[i] - theta);
+        }
         
+        // Calculating the hat x
+        double_vector *hat_x = approximate_block_solver(A, p, limit,
+                                                         approximate_block_solver_precision);
+        double_vector *hat_function_solution = matrix_vector_mult(A, hat_x);
+        
+        // Checking what we want to do next
+        double hat_prod = vector_scalar_mult(p, hat_function_solution);
+        double prod = vector_scalar_mult(p, function_solution);
+        double residuum = (hat_prod - prod) / (hat_prod + prod);
+        
+        if(residuum < approximate_block_solver_precision) {
+            break;
+        }
+        
+        // Calculate step size
+        double step_size = (approximate_block_solver_precision * theta * residuum)
+                           / (2 * function_solution->size * (hat_prod + prod));
+        
+        free_double_vector(p); p = NULL;
+        free_double_vector(function_solution);
+        
+        number_vector_mult_assignment(1 - step_size, x);
+        number_vector_mult_assignment(step_size, hat_x);
+        vector_vector_add_assignment(x, hat_x);
+        
+        free_double_vector(hat_x);
         
         break;
     }
