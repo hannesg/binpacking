@@ -84,7 +84,7 @@ double_vector *matrix_vector_mult(double_matrix *A, double_vector *x)
 {
     assert(x->size == A->width);
     
-    double_vector *result = alloc_double_vector(A->width);
+    double_vector *result = alloc_double_vector(A->height);
     
     int row;
     for(row = 0; row < A->height; ++row) {
