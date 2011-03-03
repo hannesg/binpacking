@@ -62,9 +62,11 @@ double_vector *approximate_max_min_resource_sharing(double_matrix *A,
         p->values[m] = 1.0;
         double_vector *block_solution = approximate_block_solver(A, p, limit, 0.5);
         vector_vector_add_assignment(x, block_solution);
+        free_double_vector(block_solution);
         p->values[m] = 0.0;
     }
-    free_double_vector(p); p = NULL;
+    // Vector p will stay in memory, it is needed in the while-loop.
+    
     number_vector_mult_assignment(1.0/((double) A->height), x);
     
     double approximate_block_solver_precision = precision / 6;
@@ -73,9 +75,9 @@ double_vector *approximate_max_min_resource_sharing(double_matrix *A,
         double theta = find_optimum(function_solution, approximate_block_solver_precision);
         
         // Calculation p
-        p = alloc_double_vector(function_solution->size);
         int i;
         for(i = 0; i < function_solution->size; ++i) {
+            // the vector p is already in memory with the right size
             p->values[i] =
                 approximate_block_solver_precision / ((double) function_solution->size)
                 * theta / (function_solution->values[i] - theta);
@@ -91,24 +93,22 @@ double_vector *approximate_max_min_resource_sharing(double_matrix *A,
         double prod = vector_scalar_mult(p, function_solution);
         double residuum = (hat_prod - prod) / (hat_prod + prod);
         
+        free_double_vector(function_solution);
+        free_double_vector(hat_function_solution);
+        
         if(residuum < approximate_block_solver_precision) {
             break;
         }
         
         // Calculate step size
         double step_size = (approximate_block_solver_precision * theta * residuum)
-                           / (2 * function_solution->size * (hat_prod + prod));
-        
-        free_double_vector(p); p = NULL;
-        free_double_vector(function_solution);
+                           / (2 * A->height * (hat_prod + prod));
         
         number_vector_mult_assignment(1 - step_size, x);
         number_vector_mult_assignment(step_size, hat_x);
         vector_vector_add_assignment(x, hat_x);
         
         free_double_vector(hat_x);
-        
-        break;
     }
     
     free_double_vector(p);
