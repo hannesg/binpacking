@@ -48,6 +48,8 @@ void Test_vector_matrix_mult(CuTest *tc)
     double_vector *result = vector_matrix_mult(vector, matrix);
     
     // Test
+    CuAssertIntEquals(tc, 2, result->size);
+    
     CuAssertDblEquals(tc, 1.0, result->values[0], 0.001);
     CuAssertDblEquals(tc, 0.0, result->values[1], 0.001);
     
@@ -79,6 +81,8 @@ void Test_matrix_vector_mult(CuTest *tc)
     double_vector *result = matrix_vector_mult(matrix, vector);
     
     // Test
+    CuAssertIntEquals(tc, 2, result->size);
+    
     CuAssertDblEquals(tc, 2.0 * 1.0 + 0.0 * 2.0 + 1.0 * 3.0, result->values[0], DBL_EPSILON);
     CuAssertDblEquals(tc, 3.0 * 1.0 - 1.0 * 2.0 - 2.0 * 3.0, result->values[1], DBL_EPSILON);
     
@@ -141,6 +145,8 @@ void Test_fill_double_vector(CuTest *tc)
     fill_double_vector(vector, 10.0);
     
     // Test
+    CuAssertIntEquals(tc, 10, vector->size);
+
     int i;
     for(i = 0; i < 10; ++i) {
         CuAssertDblEquals(tc, 10.0, vector->values[i], DBL_EPSILON);
@@ -168,6 +174,8 @@ void Test_vector_vector_add_assignment(CuTest *tc)
     vector_vector_add_assignment(a, b);
     
     // Test
+    CuAssertIntEquals(tc, 3, a->size);
+
     CuAssertDblEquals(tc, 1.0 + 0.4, a->values[0], DBL_EPSILON);
     CuAssertDblEquals(tc, 0.5 + 2.1, a->values[1], DBL_EPSILON);
     CuAssertDblEquals(tc, 0.3 + 1.5, a->values[2], DBL_EPSILON);
@@ -190,6 +198,8 @@ void Test_number_vector_mult_assignment(CuTest *tc)
     number_vector_mult_assignment(2.0, a);
     
     // Test 
+    CuAssertIntEquals(tc, 3, a->size);
+
     CuAssertDblEquals(tc, 1.0 * 2.0, a->values[0], DBL_EPSILON);
     CuAssertDblEquals(tc, 0.5 * 2.0, a->values[1], DBL_EPSILON);
     CuAssertDblEquals(tc, 0.3 * 2.0, a->values[2], DBL_EPSILON);
