@@ -44,11 +44,61 @@ typedef struct {
     double * values;
 } double_matrix;
 
+// Alloc
+/**
+ * Allocate a vector of @p size doubles.
+ */
 double_vector *alloc_double_vector(unsigned int size);
+
+/**
+ * Allocate a @p height X @p width matrix of double values.
+ */
+double_matrix *alloc_double_matrix(unsigned int height, unsigned int width);
+
+/**
+ * Allocate an unsigned integer vector with the size @p size.
+ */
+uint_vector *alloc_uint_vector(unsigned int size);
+
+/**
+ * Allocate a @p height X @p width matrix of unsigned int values.
+ */
+uint_matrix *alloc_uint_matrix(unsigned int height, unsigned int width);
+
+// Free
+/**
+ * Free the double vector @p vector.
+ */
 void free_double_vector(double_vector *vector);
 
+/**
+ * Free the double matrix @p matrix.
+ */
+void free_double_matrix(double_matrix *matrix);
+
+/**
+ * Free the unsigned int vector @p vector.
+ */
+void free_uint_vector(uint_vector *vector);
+
+/**
+ * Free the unsigned int matrix @p matrix.
+ */
+void free_uint_matrix(uint_matrix *matrix);
+
+// Initialization
+/** 
+ * Fill the double vector @p vector with the value @p value.
+ */
 void fill_double_vector(double_vector *vector, double value);
 
+/**
+ * Fill the unsigned integer vector @p vector with the value @p value.
+ */
+void fill_uint_vector(uint_vector *vector, unsigned int value);
+
+// Assignment calculations (calculations that save the result in one of the 
+// input variables.
 /**
  * Calculates a + b and saves the result in a.
  */
@@ -59,20 +109,19 @@ void vector_vector_add_assignment(double_vector *a, double_vector *b);
  */
 void number_vector_mult_assignment(double x, double_vector *a);
 
+// Output
+/**
+ * Print a formatted output of the vector values.
+ */
 void print_double_vector(double_vector *vector);
 
-double_matrix *alloc_double_matrix(unsigned int height, unsigned int width);
-void free_double_matrix(double_matrix *matrix);
-
-uint_matrix *alloc_uint_matrix(unsigned int height, unsigned int width);
-void free_uint_matrix(uint_matrix *matrix);
-
+// Others
+/**
+ * Returns the element in row @p row and column @p col of the matrix @p matrix.
+ */
 inline unsigned int uint_matrix_elem(uint_matrix *matrix, unsigned int row, unsigned int col);
 
-uint_vector *alloc_uint_vector(unsigned int size);
-void free_uint_vector(uint_vector *vector);
-void fill_uint_vector(uint_vector *vector, unsigned int value);
-
+// Normal calculations.
 /**
  * Calculates x^T * A
  */
