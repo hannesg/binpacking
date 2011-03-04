@@ -115,6 +115,11 @@ void number_vector_mult_assignment(double x, double_vector *a);
  */
 void print_double_vector(double_vector *vector);
 
+/**
+ * Print a formatted output of the matrix values.
+ */
+void print_double_matrix(double_matrix *matrix);
+
 // Others
 /**
  * Returns the element in row @p row and column @p col of the matrix @p matrix.

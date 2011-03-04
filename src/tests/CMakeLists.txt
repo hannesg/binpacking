@@ -2,6 +2,7 @@ set(TEST_SRCS packing_list.c
               linear_algebra.c
               first_fit.c
               approximate_block_solver.c
+              approximate_max_min_resource_sharing.c
               binpacking.c
               )
 

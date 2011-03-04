@@ -37,8 +37,8 @@ double find_optimum(double_vector *b, double t)
             maximum = medium;
         }
         
-        double medium = 0.5 * (minimum + maximum);
-        double optimum_condition = calculate_optimum_condition(b, medium, t);
+        medium = 0.5 * (minimum + maximum);
+        optimum_condition = calculate_optimum_condition(b, medium, t);
     }
     
     return medium;
@@ -66,12 +66,12 @@ double_vector *approximate_max_min_resource_sharing(double_matrix *A,
         p->values[m] = 0.0;
     }
     // Vector p will stay in memory, it is needed in the while-loop.
-    
     number_vector_mult_assignment(1.0/((double) A->height), x);
     
     double approximate_block_solver_precision = precision / 6;
     while(1) {
         double_vector *function_solution = matrix_vector_mult(A, x);
+        printf("Vector min is %lf.\n", vector_min(function_solution));
         double theta = find_optimum(function_solution, approximate_block_solver_precision);
         
         // Calculation p
@@ -96,7 +96,7 @@ double_vector *approximate_max_min_resource_sharing(double_matrix *A,
         free_double_vector(function_solution);
         free_double_vector(hat_function_solution);
         
-        if(residuum < approximate_block_solver_precision) {
+        if(fabs(residuum) < approximate_block_solver_precision) {
             break;
         }
         
