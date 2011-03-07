@@ -5,6 +5,7 @@
 
 #include "CuTest.h"
 #include "binpacking.h"
+#include <time.h>
 
 void Test_track_sort_should_work(CuTest *tc)
 {
@@ -96,6 +97,9 @@ int check_bin_packing_matrix(uint_matrix *A, double items[], unsigned int limit)
             min = items[i];
         }
     }
+    // the algorithm rather packs a bit-too-small packings
+    // this is due to double precision loss
+    min += 0.0000000000000001;
 
     max_value = floor(PACKING_SIZE / min);
     if( max_value > limit ){
@@ -124,16 +128,13 @@ int check_bin_packing_matrix(uint_matrix *A, double items[], unsigned int limit)
         }
     }
 
-    // check if every packing is present
-    /*
-    while( 1 ){
+    // check if at least some packings are present
+    i = 1;
+    while( i < max_value ){
         x = 0;
         while( x < A->width ){
-            row[x]++;
-            if( row[x] > max_value ){
-                row[x] = 0;
-                x++;
-            }else{
+            if( row[x] == 0 ){
+                row[x] = i;
                 // check if this row is possible
                 room = PACKING_SIZE;
                 for( j = 0; j < A->width ; j++ ){
@@ -149,13 +150,15 @@ int check_bin_packing_matrix(uint_matrix *A, double items[], unsigned int limit)
                     }
                 }
                 break;
+            }else{
+                row[x] = 0;
             }
+            x++;
         }
         if( x == A->width ){
-            break;
+            i++;
         }
     }
-*/
     return errors;
 }
 

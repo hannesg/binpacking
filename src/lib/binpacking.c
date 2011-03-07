@@ -178,6 +178,7 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
     i = min_small_n;
     while( i < n ){
         first_fit_step(items_in, n, positions[i], result);
+        i++;
     }
 
     // rewrite the positions in the solution
@@ -254,29 +255,6 @@ unsigned int *alloc_positions(unsigned int n)
     return result;
 }
 
-void renumber_packing_list(packing_list * list, item_number * positions){
-    packing_container * cont = list->list, * next = NULL;
-    unsigned int size;
-    packing * pack;
-    item_number * items;
-    unsigned int i;
-    list->list = NULL;
-    list->size = 0;
-    while( cont ){
-        next = cont->next;
-        pack = alloc_packing();
-        i = 0;
-        size = cont->value->size;
-        items = cont->value->items;
-        while( i < size ){
-            insert_item(pack, positions[items[i]]);
-        }
-        insert_packing(list, pack, cont->quantity );
-        free_packing_container(cont);
-        cont = next;
-    }
-}
-
 uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limit){
     unsigned int *store;
     unsigned int m = 0;
@@ -336,13 +314,7 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
         if( i == n ){
             break ;
         }
-        fill = 0;
-        col[min_pos]++;
-        for( j = 0 ; j < n ; j++ ){
-            fill += items[j] * col[j];
-        }
-        col[min_pos]--;
-        if( fill > PACKING_SIZE ){
+        if( fill > min_fill ){
             // this configuration is valid
             if( (m + 1)*n >= size ){
                 size *= 2;
