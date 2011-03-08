@@ -262,3 +262,48 @@ void Test_matrix_from_items_example1(CuTest *tc) {
     free_uint_matrix(A);
 }
 
+void Test_matrix_from_items_example2(CuTest *tc) {
+    // This example contains only items from which less than the limit fit into a bin.
+    double items[] = {
+        0.5,
+        0.375,
+        0.428
+    };
+    
+    uint_matrix *A = matrix_from_items(items, 3, 3);
+    
+    CuAssertIntEquals(tc, 6, A->height);
+    
+    {
+        unsigned int combination[] = {0, 0, 2};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    {
+        unsigned int combination[] = {0, 1, 1};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    {
+        unsigned int combination[] = {0, 2, 0};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    {
+        unsigned int combination[] = {1, 0, 1};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    {
+        unsigned int combination[] = {1, 1, 0};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    {
+        unsigned int combination[] = {2, 0, 0};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+        
+    free_uint_matrix(A);
+}
+
