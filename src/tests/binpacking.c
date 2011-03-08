@@ -307,3 +307,62 @@ void Test_matrix_from_items_example2(CuTest *tc) {
     free_uint_matrix(A);
 }
 
+void Test_matrix_from_items_example3(CuTest *tc) {
+    // This examle contains only items from which more than the limit fit into a bin.
+    double items[] = {
+        0.33,
+        0.25,
+        0.2
+    };
+    
+    uint_matrix *A = matrix_from_items(items, 3, 3);
+    
+    CuAssertIntEquals(tc, 9, A->height);
+    
+    {
+        unsigned int combination[] = {0, 1, 3};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    {
+        unsigned int combination[] = {0, 2, 2};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    {
+        unsigned int combination[] = {0, 3, 1};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    {
+        unsigned int combination[] = {1, 0, 3};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    {
+        unsigned int combination[] = {1, 1, 2};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    {
+        unsigned int combination[] = {1, 2, 0};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    {
+        unsigned int combination[] = {2, 0, 1};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    {
+        unsigned int combination[] = {2, 1, 0};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    {
+        unsigned int combination[] = {3, 0, 0};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    free_uint_matrix(A);
+}
