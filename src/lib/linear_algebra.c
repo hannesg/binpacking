@@ -119,7 +119,7 @@ double vector_scalar_mult(double_vector *a, double_vector *b)
 {
     assert(a->size == b->size);
     
-    double result;
+    double result = 0.0;
     int i;
     for(i = 0; i < a->size; ++i) {
         result += a->values[i] * b->values[i];

@@ -21,7 +21,10 @@ double calculate_optimum_condition(double_vector *b, double theta, double t)
     for(i = 0; i < b->size; ++i) {
         result += theta / (b->values[i] - theta);
     }
-    result *= t/((double) b->size);
+    
+    result = result * t/((double) b->size);
+    
+    return result;
 }
 
 double find_optimum(double_vector *b, double t)
@@ -85,7 +88,7 @@ double_vector *approximate_max_min_resource_sharing(double_matrix *A,
         
         // Calculating the hat x
         double_vector *hat_x = approximate_block_solver(A, p, limit,
-                                                         approximate_block_solver_precision);
+                                                        approximate_block_solver_precision);
         double_vector *hat_function_solution = matrix_vector_mult(A, hat_x);
         
         // Checking what we want to do next
