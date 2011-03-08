@@ -30,7 +30,7 @@ double find_optimum(double_vector *b, double t)
     
     double medium = 0.5 * (minimum + maximum);
     double optimum_condition = calculate_optimum_condition(b, medium, t);
-    while(fabs(optimum_condition - 1) > t && minimum < maximum) {
+    while(fabs(optimum_condition - 1) > 1e-10 && minimum < maximum) {
         if(optimum_condition < 1) {
             minimum = medium;
         } else {
@@ -71,7 +71,6 @@ double_vector *approximate_max_min_resource_sharing(double_matrix *A,
     double approximate_block_solver_precision = precision / 6;
     while(1) {
         double_vector *function_solution = matrix_vector_mult(A, x);
-        printf("Vector min is %lf.\n", vector_min(function_solution));
         double theta = find_optimum(function_solution, approximate_block_solver_precision);
         
         // Calculation p
@@ -103,6 +102,9 @@ double_vector *approximate_max_min_resource_sharing(double_matrix *A,
         // Calculate step size
         double step_size = (approximate_block_solver_precision * theta * residuum)
                            / (2 * A->height * (hat_prod + prod));
+        
+        free_double_vector(hat_prod);
+        free_douleb_vector(prod);
         
         number_vector_mult_assignment(1 - step_size, x);
         number_vector_mult_assignment(step_size, hat_x);
