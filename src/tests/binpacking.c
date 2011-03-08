@@ -366,3 +366,23 @@ void Test_matrix_from_items_example3(CuTest *tc) {
     
     free_uint_matrix(A);
 }
+
+void Test_matrix_from_items_example4(CuTest *tc) {
+    // All fit
+    double items[] = {
+        0.111,
+        0.100,
+        0.05
+    };
+    
+    uint_matrix *A = matrix_from_items(items, 3, 3);
+    
+    CuAssertIntEquals(tc, 1, A->height);
+    
+    {
+        unsigned int combination[] = {3, 3, 3};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    free_uint_matrix(A);
+}
