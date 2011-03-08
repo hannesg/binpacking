@@ -11,6 +11,7 @@
 
 // Self
 #include "approximate_max_min_resource_sharing.h"
+#include "approximate_max_min_resource_sharing_p.h"
 
 double calculate_optimum_condition(double_vector *b, double theta, double t)
 {
@@ -102,9 +103,6 @@ double_vector *approximate_max_min_resource_sharing(double_matrix *A,
         // Calculate step size
         double step_size = (approximate_block_solver_precision * theta * residuum)
                            / (2 * A->height * (hat_prod + prod));
-        
-        free_double_vector(hat_prod);
-        free_douleb_vector(prod);
         
         number_vector_mult_assignment(1 - step_size, x);
         number_vector_mult_assignment(step_size, hat_x);

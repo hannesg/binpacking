@@ -28,3 +28,18 @@ void Test_approximate_max_min_resource_sharing(CuTest *tc)
     free_double_matrix(A);
     free_double_vector(optimum);
 }
+
+void Test_calculate_optimum_condition(CuTest *tc)
+{
+    double_vector *b = alloc_double_vector(3);
+    
+    b->values[0] = 1.0;
+    b->values[1] = 2.0;
+    b->values[2] = 3.0;
+    
+    double optimum_condition = calculate_optimum_condition(b, 0.5, 5.0);
+    
+    CuAssertDblEquals(tc, 15.0, optimum_condition, 0.01);
+    
+    free_double_vector(b);
+}
