@@ -83,7 +83,7 @@ int matrix_contains_higher_row(uint_matrix *A, unsigned int *row){
 
 // this method is not required to be fast, just correct
 int check_bin_packing_matrix(uint_matrix *A, double items[], unsigned int limit){
-    unsigned int i,j, x,y;
+    unsigned int i,j, x;
     double room;
     double fill;
     double min;
@@ -187,7 +187,6 @@ void Test_matrix_from_items_should_work(CuTest *tc)
             0.15
     };
     uint_matrix *A = matrix_from_items(items,  20, 10);
-    unsigned int i = 0, j = 0;
 
     printf("A in %2i x %2i \n",A->width, A->height);
     CuAssertIntEquals(tc, 0, check_bin_packing_matrix(A,items, 10));
