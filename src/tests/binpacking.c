@@ -81,6 +81,22 @@ int matrix_contains_higher_row(uint_matrix *A, unsigned int *row){
     return 0;
 }
 
+int matrix_contains_exact_row(uint_matrix *A, unsigned int *row) {
+    unsigned int i;
+    for(i = 0; i < A->height; ++i) {
+        unsigned int j;
+        for(j = 0; j < A->width; j++) {
+            if(A->values[A->width*i + j] != row[j]) {
+                break;
+            }
+        }
+        if(j == A->width) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 // this method is not required to be fast, just correct
 int check_bin_packing_matrix(uint_matrix *A, double items[], unsigned int limit){
     unsigned int i,j, x,y;
@@ -191,5 +207,59 @@ void Test_matrix_from_items_should_work(CuTest *tc)
 
     printf("A in %2i x %2i \n",A->width, A->height);
     CuAssertIntEquals(tc, 0, check_bin_packing_matrix(A,items, 10));
+}
+
+void Test_matrix_from_items_example1(CuTest *tc) {
+    // This example contains both items from which more than limit fit into a bin
+    // and items from which only less than limit fit into a bin.
+    
+    double items[] = {
+        0.5,
+        0.33,
+        0.25
+    };
+    
+    uint_matrix *A = matrix_from_items(items, 3, 3);
+    
+    // TODO: Remove this once it returns the right result.
+    print_uint_matrix(A);
+    CuAssertIntEquals(tc, 7, A->height);
+    
+    {
+        unsigned int combination[] = {0, 0, 3};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    {
+        unsigned int combination[] = {0, 1, 2};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    {
+        unsigned int combination[] = {0, 2, 1};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    {
+        unsigned int combination[] = {0, 3, 0};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    {
+        unsigned int combination[] = {1, 0, 2};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    {
+        unsigned int combination[] = {1, 1, 0};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    {
+        unsigned int combination[] = {2, 0, 0};
+        CuAssertTrue(tc, matrix_contains_exact_row(A, combination));
+    }
+    
+    free_uint_matrix(A);
 }
 

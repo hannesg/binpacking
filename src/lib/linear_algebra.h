@@ -120,6 +120,11 @@ void print_double_vector(double_vector *vector);
  */
 void print_double_matrix(double_matrix *matrix);
 
+/**
+ * Print a formatted output of the matrix values.
+ */
+void print_uint_matrix(uint_matrix *matrix);
+
 // Others
 /**
  * Returns the element in row @p row and column @p col of the matrix @p matrix.

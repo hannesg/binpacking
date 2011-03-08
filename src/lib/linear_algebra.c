@@ -148,6 +148,18 @@ void print_double_matrix(double_matrix *matrix)
     }
 }
 
+void print_uint_matrix(uint_matrix *matrix)
+{
+    int row;
+    for(row = 0; row < matrix->height; ++row) {
+        int column;
+        for(column = 0; column < matrix->width; ++column) {
+            printf("%4i ", matrix->values[row * matrix->width + column]);
+        }
+        printf("\n");
+    }
+}
+
 uint_matrix *alloc_uint_matrix(unsigned int height, unsigned int width)
 {
     uint_matrix *result = (uint_matrix *) malloc(sizeof(uint_matrix));
