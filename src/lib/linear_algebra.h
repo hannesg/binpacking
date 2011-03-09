@@ -109,6 +109,14 @@ void vector_vector_add_assignment(double_vector *a, double_vector *b);
  */
 void number_vector_mult_assignment(double x, double_vector *a);
 
+// Comparison
+/**
+ * Test if @p a and @p b are equal.
+ * @return 0 if a and b are equal, -1 if the sizes are different and the number of the first item that 
+ *         is not equal + 1 in any other case.
+ */
+int double_vector_cmp(double_vector *a, double_vector *b);
+
 // Output
 /**
  * Print a formatted output of the vector values.

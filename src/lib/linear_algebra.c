@@ -128,6 +128,22 @@ double vector_scalar_mult(double_vector *a, double_vector *b)
     return result;
 }
 
+int double_vector_cmp(double_vector *a, double_vector *b)
+{
+    if(a->size != b->size) {
+        return -1;
+    }
+    
+    int i;
+    for(i = 0; i < a->size; i++) {
+        if(a->values[i] != b->values[i]) {
+            return i+1;
+        }
+    }
+    
+    return 0;
+}
+
 void print_double_vector(double_vector *vector)
 {
     int i;

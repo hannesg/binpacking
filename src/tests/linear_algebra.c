@@ -207,3 +207,53 @@ void Test_number_vector_mult_assignment(CuTest *tc)
     // Cleaning up
     free_double_vector(a);
 }
+
+void Test_double_vector_cmp_different_size(CuTest *tc)
+{
+    double_vector *a = alloc_double_vector(5);
+    double_vector *b = alloc_double_vector(6);
+    
+    int equal = double_vector_cmp(a, b);
+    
+    CuAssertIntEquals(tc, -1, equal);
+    
+    free_double_vector(a);
+    free_double_vector(b);
+}
+
+void Test_double_vector_cmp_not_equal(CuTest *tc)
+{
+    double_vector *a = alloc_double_vector(3);
+    double_vector *b = alloc_double_vector(3);
+    
+    fill_double_vector(a, 0.1);
+    fill_double_vector(b, 0.1);
+    
+    a->values[1] = 0.2;
+    
+    int equal = double_vector_cmp(a, b);
+    
+    CuAssertIntEquals(tc, 2, equal);
+    
+    free_double_vector(a);
+    free_double_vector(b);
+}
+
+void Test_double_vector_cmp_equal(CuTest *tc)
+{
+    double_vector *a = alloc_double_vector(3);
+    double_vector *b = alloc_double_vector(3);
+    
+    fill_double_vector(a, 0.1);
+    fill_double_vector(b, 0.1);
+    
+    a->values[1] = 0.2;
+    b->values[1] = 0.2;
+    
+    int equal = double_vector_cmp(a, b);
+    
+    CuAssertIntEquals(tc, 0, equal);
+    
+    free_double_vector(a);
+    free_double_vector(b);
+}
