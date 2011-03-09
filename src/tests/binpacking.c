@@ -202,6 +202,13 @@ void Test_matrix_from_items_should_work(CuTest *tc)
             0.15,
             0.15
     };
+
+    double old_items[20];
+    memcpy(old_items,items, sizeof(double)*20);
+    unsigned int *positions = alloc_positions(20);
+
+    track_sort_items(items,20, positions);
+
     uint_matrix *A = matrix_from_items(items,  20, 10);
 
     printf("A in %2i x %2i \n",A->width, A->height);
@@ -377,6 +384,8 @@ void Test_matrix_from_items_example4(CuTest *tc) {
     
     uint_matrix *A = matrix_from_items(items, 3, 3);
     
+    print_uint_matrix(A);
+
     CuAssertIntEquals(tc, 1, A->height);
     
     {

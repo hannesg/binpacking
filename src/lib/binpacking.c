@@ -314,7 +314,20 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
         if( i == n ){
             break ;
         }
-        if( fill > min_fill ){
+        char valid = 1;
+        for( j=n; j > 0 ; j-- ){
+            if( (fill + items[j-1]) <= PACKING_SIZE ){
+                if( col[j-1] < max[j-1] ){
+                    // this item could have been put into the bin
+                    valid = 0;
+                    break;
+                }
+            }else{
+                // too big
+                break;
+            }
+        }
+        if( valid ){
             // this configuration is valid
             if( (m + 1)*n >= size ){
                 size *= 2;
