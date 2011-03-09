@@ -4,6 +4,8 @@
  * 2011 Bastian Holst <bastianholst@gmx.de>
  *****************************************************************************/
 
+#include <assert.h>
+
 #include "binpacking.h"
 
 packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
@@ -128,8 +130,12 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
 
     // solve the LP approximately
     //x = approximate_lp_solver(A, b , delta);
+    // dummy:
+    x = alloc_double_vector(A->width);
 
     // pack the solutions
+    result = alloc_packing_list();
+
     i = 0;
     while( i < x->size ){
         g = ceil(x->values[i]);
@@ -256,6 +262,9 @@ unsigned int *alloc_positions(unsigned int n)
 }
 
 uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limit){
+    if( n == 0 ){
+        return alloc_uint_matrix(n,0);
+    }
     unsigned int *store;
     unsigned int m = 0;
     unsigned int size = n * n;// we will at least have n rows and n columns
@@ -266,11 +275,16 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
     unsigned int max_items;
     unsigned int cur_items = 0;
     double fill = 0;
-    double room;
     double min;
     unsigned int min_pos =0;
     double min_fill;
     uint_matrix *matrix;
+
+    // items must be sorted
+    for( i=1; i<n; i++ ){
+        assert(items[i-1] >= items[i]);
+    }
+    i = 0;
 
     min = items[0];
     while( i < n ){
@@ -314,7 +328,20 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
         if( i == n ){
             break ;
         }
-        if( fill > min_fill ){
+        char valid = 1;
+        for( j=n; j > 0 ; j-- ){
+            if( (fill + items[j-1]) <= PACKING_SIZE ){
+                if( col[j-1] < max[j-1] ){
+                    // this item could have been put into the bin
+                    valid = 0;
+                    break;
+                }
+            }else{
+                // too big
+                break;
+            }
+        }
+        if( valid ){
             // this configuration is valid
             if( (m + 1)*n >= size ){
                 size *= 2;
