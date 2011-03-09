@@ -104,7 +104,6 @@ max_min_resource_sharing_solution *approximate_max_min_resource_sharing(double_m
         double prod = vector_scalar_mult(p, function_solution);
         double residuum = (hat_prod - prod) / (hat_prod + prod);
         
-        free_double_vector(function_solution);
         free_double_vector(hat_function_solution);
         
         if(fabs(residuum) < approximate_block_solver_precision) {
@@ -121,7 +120,7 @@ max_min_resource_sharing_solution *approximate_max_min_resource_sharing(double_m
         
         free_double_vector(hat_x);
         
-        free(function_solution);
+        free_double_vector(function_solution);
         function_solution = matrix_vector_mult(A, x);
     }
     
