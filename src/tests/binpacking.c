@@ -273,8 +273,8 @@ void Test_matrix_from_items_example2(CuTest *tc) {
     // This example contains only items from which less than the limit fit into a bin.
     double items[] = {
         0.5,
-        0.375,
-        0.428
+        0.428,
+        0.375
     };
     
     uint_matrix *A = matrix_from_items(items, 3, 3);
