@@ -1,5 +1,6 @@
 // Standard library
 #include <assert.h>
+#include <math.h>
 
 // Self
 #include "linear_algebra.h"
@@ -128,6 +129,22 @@ double vector_scalar_mult(double_vector *a, double_vector *b)
     return result;
 }
 
+void vector_scale_assignment(double_vector *a, double d){
+    unsigned int i;
+    for(i = 0; i < a->size; ++i) {
+        a->values[i] *= d;
+    }
+}
+
+void vector_convex_assignment(double_vector *a, double_vector *b, double lambda ){
+    double one_minus_lambda = 1 - lambda;
+    unsigned int i;
+    for(i = 0; i < a->size; ++i) {
+        a->values[i] = (one_minus_lambda * a->values[i]) + (lambda * b->values[i]);
+    }
+}
+
+
 int double_vector_cmp(double_vector *a, double_vector *b)
 {
     if(a->size != b->size) {
@@ -141,6 +158,22 @@ int double_vector_cmp(double_vector *a, double_vector *b)
         }
     }
     
+    return 0;
+}
+
+int double_vector_cmp_delta(double_vector *a, double_vector *b, double delta )
+{
+    if(a->size != b->size) {
+        return -1;
+    }
+
+    int i;
+    for(i = 0; i < a->size; i++) {
+        if( fabs(a->values[i] - b->values[i]) > delta ) {
+            return i+1;
+        }
+    }
+
     return 0;
 }
 

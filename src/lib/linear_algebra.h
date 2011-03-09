@@ -165,5 +165,20 @@ double vector_scalar_mult(double_vector *a, double_vector *b);
  */
 double_matrix *uint_matrix_vector_division(uint_matrix *A, uint_vector *b);
 
+/**
+ * Sets @p a to (1- @p lambda)* @p a + @p lambda* @p b
+ */
+void vector_convex_assignment(double_vector *a, double_vector *b, double lambda );
+
+/**
+ * Scales @p a by @d
+ */
+void vector_scale_assignment(double_vector *a, double d);
+
+/**
+ * Compares @p a and @p b and allows a maximum deviation of @p delta
+ */
+int double_vector_cmp_delta(double_vector *a, double_vector *b, double delta );
+
 #endif
 
