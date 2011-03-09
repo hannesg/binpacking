@@ -13,6 +13,13 @@
 #include "approximate_max_min_resource_sharing.h"
 #include "approximate_max_min_resource_sharing_p.h"
 
+void free_max_min_resource_sharing_solution(max_min_resource_sharing_solution *solution)
+{
+    free_double_vector(solution->vector);
+    free_double_vector(solution->function_solution);
+    free(solution);
+}
+
 double calculate_optimum_condition(double_vector *b, double theta, double t)
 {
     double result = 0;
@@ -48,9 +55,9 @@ double find_optimum(double_vector *b, double t)
     return medium;
 }
 
-double_vector *approximate_max_min_resource_sharing(double_matrix *A,
-                                                    unsigned int limit,
-                                                    double precision)
+max_min_resource_sharing_solution *approximate_max_min_resource_sharing(double_matrix *A,
+                                                                        unsigned int limit,
+                                                                        double precision)
 {
     // The vector to contain the solution.
     double_vector *x = alloc_double_vector(A->width);
@@ -73,8 +80,9 @@ double_vector *approximate_max_min_resource_sharing(double_matrix *A,
     number_vector_mult_assignment(1.0/((double) A->height), x);
     
     double approximate_block_solver_precision = precision / 6;
+    
+    double_vector *function_solution = matrix_vector_mult(A, x);
     while(1) {
-        double_vector *function_solution = matrix_vector_mult(A, x);
         double theta = find_optimum(function_solution, approximate_block_solver_precision);
         
         // Calculation p
@@ -112,8 +120,18 @@ double_vector *approximate_max_min_resource_sharing(double_matrix *A,
         vector_vector_add_assignment(x, hat_x);
         
         free_double_vector(hat_x);
+        
+        free(function_solution);
+        function_solution = matrix_vector_mult(A, x);
     }
     
     free_double_vector(p);
-    return x;
+    
+    max_min_resource_sharing_solution *result
+        = (max_min_resource_sharing_solution *) malloc(sizeof(max_min_resource_sharing_solution));
+    result->vector = x;
+    result->function_solution = function_solution;
+    result->function_solution_min = vector_min(function_solution);
+    
+    return result;
 }

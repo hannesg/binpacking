@@ -13,4 +13,5 @@
  */
 double_vector *approximate_lp_solver(uint_matrix *A,
                                      uint_vector *b,
-                                     double precision);
+                                     double precision,
+                                     unsigned int limit);

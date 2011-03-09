@@ -21,10 +21,11 @@ void Test_approximate_max_min_resource_sharing(CuTest *tc)
     A->values[1 * 2 + 0] = 3;
     A->values[1 * 2 + 1] = 0;
     
-    double_vector *optimum = approximate_max_min_resource_sharing(A,
-                                                                  3,                                         
-                                                                  epsilon);
-    double_vector *function_solution = matrix_vector_mult(A, optimum);
+    max_min_resource_sharing_solution *solution
+        = approximate_max_min_resource_sharing(A, 3, epsilon);
+    double_vector *function_solution = matrix_vector_mult(A, solution->vector);
+    CuAssertTrue(tc, !double_vector_cmp(solution->function_solution, function_solution));
+    CuAssertIntEquals(tc, vector_min(function_solution), solution->function_solution_min);
     
     double_vector *real_optimum = alloc_double_vector(2);
     real_optimum->values[0] = 1.5;
@@ -32,10 +33,10 @@ void Test_approximate_max_min_resource_sharing(CuTest *tc)
     double_vector *optimum_function_solution = matrix_vector_mult(A, real_optimum);
     double optimum_min = vector_min(optimum_function_solution);
     
-    CuAssertDblEquals(tc, optimum_min, vector_min(function_solution), optimum_min * epsilon); 
+    CuAssertDblEquals(tc, optimum_min, solution->function_solution_min, optimum_min * epsilon); 
     
     free_double_matrix(A);
-    free_double_vector(optimum);
+    free_max_min_resource_sharing_solution(solution);
     free_double_vector(real_optimum);
     free_double_vector(optimum_function_solution);
 }
