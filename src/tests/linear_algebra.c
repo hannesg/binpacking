@@ -257,3 +257,37 @@ void Test_double_vector_cmp_equal(CuTest *tc)
     free_double_vector(a);
     free_double_vector(b);
 }
+
+void Test_uint_matrix_vector_division(CuTest *tc)
+{
+    uint_matrix *A = alloc_uint_matrix(3, 2);
+    
+    A->values[0 * 2 + 0] = 1;
+    A->values[0 * 2 + 1] = 2;
+    
+    A->values[1 * 2 + 0] = 3;
+    A->values[1 * 2 + 1] = 4;
+    
+    A->values[2 * 2 + 0] = 5;
+    A->values[2 * 2 + 1] = 6;
+    
+    uint_vector *b = alloc_uint_vector(3);
+    b->values[0] = 1;
+    b->values[1] = 2;
+    b->values[2] = 3;
+    
+    double_matrix *result = uint_matrix_vector_division(A, b);
+    
+    CuAssertDblEquals(tc, 1.0 / 1.0, result->values[0 * 2 + 0], DBL_EPSILON);
+    CuAssertDblEquals(tc, 2.0 / 1.0, result->values[0 * 2 + 1], DBL_EPSILON);
+    
+    CuAssertDblEquals(tc, 3.0 / 2.0, result->values[1 * 2 + 0], DBL_EPSILON);
+    CuAssertDblEquals(tc, 4.0 / 2.0, result->values[1 * 2 + 1], DBL_EPSILON);
+    
+    CuAssertDblEquals(tc, 5.0 / 3.0, result->values[2 * 2 + 0], DBL_EPSILON);
+    CuAssertDblEquals(tc, 6.0 / 3.0, result->values[2 * 2 + 1], DBL_EPSILON);
+    
+    free_uint_matrix(A);
+    free_uint_vector(b);
+    free_double_matrix(result);
+}

@@ -216,3 +216,22 @@ void fill_uint_vector(uint_vector *vector, unsigned int value){
         vector->values[i] = value;
     }
 }
+
+double_matrix *uint_matrix_vector_division(uint_matrix *A, uint_vector *b)
+{
+    assert(A->height == b->size);
+
+    double_matrix *result = alloc_double_matrix(A->height, A->width);
+    
+    int row;
+    for(row = 0; row < A->height; ++row) {
+        int column;
+        
+        for(column = 0; column < A->width; ++column) {
+            result->values[row * A->width + column] = ((double) A->values[row * A->width + column]) / 
+                                                      ((double) b->values[row]);
+        }
+    }
+    
+    return result;
+}

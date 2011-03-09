@@ -160,5 +160,10 @@ double vector_min(double_vector *x);
  */
 double vector_scalar_mult(double_vector *a, double_vector *b);
 
+/**
+ * Divides every row of the matrix @p A by the corresponding row in the vector @p b.
+ */
+double_matrix *uint_matrix_vector_division(uint_matrix *A, uint_vector *b);
+
 #endif
 
