@@ -11,6 +11,6 @@
  * 
  * @return The approximated solution.
  */
-double_vector *approximate_lp_solver(uint_matrix * A,
-                                     uint_vector * b,
+double_vector *approximate_lp_solver(uint_matrix *A,
+                                     uint_vector *b,
                                      double precision);
