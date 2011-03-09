@@ -227,8 +227,6 @@ void Test_matrix_from_items_example1(CuTest *tc) {
     
     uint_matrix *A = matrix_from_items(items, 3, 3);
     
-    // TODO: Remove this once it returns the right result.
-    print_uint_matrix(A);
     CuAssertIntEquals(tc, 7, A->height);
     
     {
@@ -383,8 +381,6 @@ void Test_matrix_from_items_example4(CuTest *tc) {
     };
     
     uint_matrix *A = matrix_from_items(items, 3, 3);
-    
-    print_uint_matrix(A);
 
     CuAssertIntEquals(tc, 1, A->height);
     
