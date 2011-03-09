@@ -66,7 +66,7 @@ max_min_resource_sharing_solution *approximate_max_min_resource_sharing(double_m
     // A vector needed to compute the starting solution.
     double_vector *p = alloc_double_vector(A->height);
     fill_double_vector(p, 0.0);
-    
+
     // Compute the starting solution.
     int m;
     for(m = 0; m < A->height; m++) {
@@ -104,8 +104,6 @@ max_min_resource_sharing_solution *approximate_max_min_resource_sharing(double_m
         double prod = vector_scalar_mult(p, function_solution);
         double residuum = (hat_prod - prod) / (hat_prod + prod);
         
-        free_double_vector(hat_function_solution);
-        
         if(fabs(residuum) < approximate_block_solver_precision) {
             break;
         }
@@ -120,8 +118,9 @@ max_min_resource_sharing_solution *approximate_max_min_resource_sharing(double_m
         
         free_double_vector(hat_x);
         
-        free_double_vector(function_solution);
-        function_solution = matrix_vector_mult(A, x);
+        vector_convex_assignment(function_solution, hat_function_solution, step_size );
+
+        free_double_vector(hat_function_solution);
     }
     
     free_double_vector(p);

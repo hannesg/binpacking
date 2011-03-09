@@ -24,7 +24,7 @@ void Test_approximate_max_min_resource_sharing(CuTest *tc)
     max_min_resource_sharing_solution *solution
         = approximate_max_min_resource_sharing(A, 3, epsilon);
     double_vector *function_solution = matrix_vector_mult(A, solution->vector);
-    CuAssertTrue(tc, !double_vector_cmp(solution->function_solution, function_solution));
+    CuAssertTrue(tc, !double_vector_cmp_delta(solution->function_solution, function_solution, epsilon));
     CuAssertIntEquals(tc, vector_min(function_solution), solution->function_solution_min);
     
     double_vector *real_optimum = alloc_double_vector(2);
