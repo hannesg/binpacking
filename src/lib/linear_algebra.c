@@ -225,6 +225,14 @@ void print_double_vector(double_vector *vector)
     }
 }
 
+void print_double_array(double* array, int size)
+{
+    int i;
+    for(i = 0; i < size; ++i) {
+        printf("%lf\n", array[i]);
+    }
+}
+
 void print_double_matrix(double_matrix *matrix)
 {
     int row;
