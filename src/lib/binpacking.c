@@ -77,19 +77,19 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
     /*
      * auxiliary variables
      */
-    unsigned int g=0, h=0, i=0, j=0, aij;
-    packing * pack;
+    unsigned int g = 0, h = 0, i = 0, j = 0, aij;
+    packing *pack;
 
     // copy and sort the given items
     memcpy(items, items_in, sizeof(double) * n);
-    track_sort_items(items,n,positions);
+    track_sort_items(items, n, positions);
 
     // determine the border between normal and small items
-    while( min_small_n < n && items[min_small_n] >= delta ){
+    while(min_small_n < n && items[min_small_n] >= delta){
         min_small_n++;
     }
 
-    if( min_small_n <= 1 ){
+    if(min_small_n <= 1){
         // if max_normal_n == 0 then every item is small and we cannot partition the input.
         // if max_normal_n == 1 then k will be 0, which will result in empty partitions.
         //      => simply first fit them!
@@ -99,22 +99,22 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
         return first_fit(items_in, n);
     }
 
-    k = ceil( (delta * delta * (min_small_n - 1) )/2 );
+    k = ceil((delta * delta * (min_small_n - 1))/2);
     // k > 0 since min_small_n > 1
     // TODO: If k == 1 we will win nothing by partitioning the items. Fallback?
-    m = floor( (min_small_n - 1)/k );
+    m = floor((min_small_n - 1)/k);
 
     // create the partitions
     // TODO: Do we always need m partitions? Maybe we need only m-1.
-    partition_items = malloc( m * sizeof(double) );
-    partition_sizes = malloc( m * sizeof(unsigned int) );
+    partition_items = malloc(m * sizeof(double));
+    partition_sizes = malloc(m * sizeof(unsigned int));
 
     i = 0;
-    while( i < m ){
-        unsigned int partition_start = (i+1) * k;
+    while(i < m) {
+        unsigned int partition_start = (i + 1) * k;
         unsigned int partition_size = min_small_n - partition_start;
 
-        if( partition_size > k ){
+        if(partition_size > k) {
             partition_size = k;
         }
 
