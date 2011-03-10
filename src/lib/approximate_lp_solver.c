@@ -21,7 +21,7 @@ double_vector *approximate_lp_solver(uint_matrix *A,
     int minimum = 1;
     int maximum = limit;
     
-    double_matrix *matrix = uint_matrix_vector_division(A, b);
+    double_matrix *matrix = uint_transposed_matrix_vector_division(A, b);
     int medium;
     do {
         medium =  (minimum + maximum)/2; // This does not fail because limit is small.

@@ -146,9 +146,19 @@ inline unsigned int uint_matrix_elem(uint_matrix *matrix, unsigned int row, unsi
 double_vector * vector_matrix_mult(double_vector *x, double_matrix *A);
 
 /**
- * Calculates A * x^T
+ * Calculates x^T * A^T
+ */
+double_vector *vector_transposed_matrix_mult(double_vector *x, double_matrix *A);
+
+/**
+ * Calculates A * x
  */
 double_vector *matrix_vector_mult(double_matrix *A, double_vector *x);
+
+/**
+ * Calculates A^T * x
+ */
+double_vector *transposed_matrix_vector_mult(double_matrix *A, double_vector *x);
 
 /**
  * Calculates the minimum of all items in the vector @p x
@@ -164,6 +174,11 @@ double vector_scalar_mult(double_vector *a, double_vector *b);
  * Divides every row of the matrix @p A by the corresponding row in the vector @p b.
  */
 double_matrix *uint_matrix_vector_division(uint_matrix *A, uint_vector *b);
+
+/**
+ * Divides every column of the matrix @p A by the corresponding row in the vector @p b.
+ */
+double_matrix *uint_transposed_matrix_vector_division(uint_matrix *A, uint_vector *b);
 
 /**
  * Sets @p a to (1- @p lambda)* @p a + @p lambda* @p b

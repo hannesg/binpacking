@@ -11,7 +11,7 @@ double_vector *approximate_block_solver(double_matrix *A,
                                         unsigned int limit,
                                         double precision)
 {
-    double_vector *profits = vector_matrix_mult(p, A);
+    double_vector *profits = vector_transposed_matrix_mult(p, A);
     
     unsigned int i;
     double largest_value = profits->values[0];

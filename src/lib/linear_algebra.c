@@ -81,6 +81,27 @@ double_vector *vector_matrix_mult(double_vector *x, double_matrix *A)
     return result;
 }
 
+double_vector *vector_transposed_matrix_mult(double_vector *x, double_matrix *A)
+{
+    assert(x->size == A->width);
+    
+    double_vector *result = alloc_double_vector(A->height);
+    
+    int row;
+    for(row = 0; row < A->height; ++row) {
+        double row_sum = 0.0;
+        
+        int column;
+        for(column = 0; column < A->width; ++column) {
+            row_sum += x->values[column] * A->values[row * A->width + column];
+        }
+        
+        result->values[row] = row_sum;
+    }
+    
+    return result;
+}
+
 double_vector *matrix_vector_mult(double_matrix *A, double_vector *x)
 {
     assert(x->size == A->width);
@@ -96,6 +117,25 @@ double_vector *matrix_vector_mult(double_matrix *A, double_vector *x)
             row_sum += A->values[row * A->width + column] * x->values[column];
         }
         result->values[row] = row_sum;
+    }
+    
+    return result;
+}
+
+double_vector *transposed_matrix_vector_mult(double_matrix *A, double_vector *x)
+{
+    assert(x->size == A->height);
+    
+    double_vector *result = alloc_double_vector(A->width);
+    fill_double_vector(result, 0.0);
+    
+    int row;
+    for(row = 0; row < A->height; ++row) {
+        int column;
+        
+        for(column = 0; column < A->width; ++column) {
+            result->values[column] += A->values[row * A->width + column] * x->values[row];
+        }
     }
     
     return result;
@@ -263,6 +303,25 @@ double_matrix *uint_matrix_vector_division(uint_matrix *A, uint_vector *b)
         for(column = 0; column < A->width; ++column) {
             result->values[row * A->width + column] = ((double) A->values[row * A->width + column]) / 
                                                       ((double) b->values[row]);
+        }
+    }
+    
+    return result;
+}
+
+double_matrix *uint_transposed_matrix_vector_division(uint_matrix *A, uint_vector *b)
+{
+    assert(A->width == b->size);
+    
+    double_matrix *result = alloc_double_matrix(A->height, A->width);
+    
+    int column;
+    for(column = 0; column < A->width; ++column) {
+        int row;
+        
+        for(row = 0; row < A->height; ++row) {
+            result->values[row * A->width + column] = ((double) A->values[row * A->width + column]) / 
+                                                      ((double) b->values[column]);
         }
     }
     

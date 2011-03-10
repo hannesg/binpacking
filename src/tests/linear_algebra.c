@@ -59,6 +59,40 @@ void Test_vector_matrix_mult(CuTest *tc)
     free_double_vector(result);
 }
 
+void Test_vector_transposed_matrix_mult(CuTest *tc)
+{
+    // Alloc
+    double_vector *vector = (double_vector *) alloc_double_vector(3);
+    double_matrix *matrix = (double_matrix *) alloc_double_matrix(2, 3);
+    
+    // Initialize vector
+    vector->values[0] = 1.0;
+    vector->values[1] = 2.0;
+    vector->values[2] = 3.0;
+    
+    // Initialize matrix
+    matrix->values[0 * 3 + 0] = 2.0;
+    matrix->values[1 * 3 + 0] = 0.0;
+    matrix->values[0 * 3 + 1] = 1.0;
+    matrix->values[1 * 3 + 1] = 3.0;
+    matrix->values[0 * 3 + 2] = -1.0;
+    matrix->values[1 * 3 + 2] = -2.0;
+    
+    // Calculation
+    double_vector *result = vector_transposed_matrix_mult(vector, matrix);
+    
+    // Test
+    CuAssertIntEquals(tc, 2, result->size);
+    
+    CuAssertDblEquals(tc, 1.0, result->values[0], 0.001);
+    CuAssertDblEquals(tc, 0.0, result->values[1], 0.001);
+    
+    // Cleanup
+    free_double_vector(vector);
+    free_double_matrix(matrix);
+    free_double_vector(result);
+}
+
 void Test_matrix_vector_mult(CuTest *tc)
 {
     // Alloc
@@ -79,6 +113,40 @@ void Test_matrix_vector_mult(CuTest *tc)
     matrix->values[1 * 3 + 2] = -2.0;
     
     double_vector *result = matrix_vector_mult(matrix, vector);
+    
+    // Test
+    CuAssertIntEquals(tc, 2, result->size);
+    
+    CuAssertDblEquals(tc, 2.0 * 1.0 + 0.0 * 2.0 + 1.0 * 3.0, result->values[0], DBL_EPSILON);
+    CuAssertDblEquals(tc, 3.0 * 1.0 - 1.0 * 2.0 - 2.0 * 3.0, result->values[1], DBL_EPSILON);
+    
+    // Cleanup
+    free_double_vector(vector);
+    free_double_vector(result);
+    free_double_matrix(matrix);
+}
+
+void Test_transposed_matrix_vector_mult(CuTest *tc)
+{
+    // Alloc
+    double_vector *vector = (double_vector *) alloc_double_vector(3);
+    double_matrix *matrix = (double_matrix *) alloc_double_matrix(3, 2);
+    
+    // Initialize vector
+    vector->values[0] = 1.0;
+    vector->values[1] = 2.0;
+    vector->values[2] = 3.0;
+    
+    // Initialize matrix
+    matrix->values[0 * 2 + 0] = 2.0;
+    matrix->values[1 * 2 + 0] = 0.0;
+    matrix->values[2 * 2 + 0] = 1.0;
+    
+    matrix->values[0 * 2 + 1] = 3.0;
+    matrix->values[1 * 2 + 1] = -1.0;
+    matrix->values[2 * 2 + 1] = -2.0;
+    
+    double_vector *result = transposed_matrix_vector_mult(matrix, vector);
     
     // Test
     CuAssertIntEquals(tc, 2, result->size);
@@ -286,6 +354,38 @@ void Test_uint_matrix_vector_division(CuTest *tc)
     
     CuAssertDblEquals(tc, 5.0 / 3.0, result->values[2 * 2 + 0], DBL_EPSILON);
     CuAssertDblEquals(tc, 6.0 / 3.0, result->values[2 * 2 + 1], DBL_EPSILON);
+    
+    free_uint_matrix(A);
+    free_uint_vector(b);
+    free_double_matrix(result);
+}
+
+void Test_uint_transposed_matrix_vector_division(CuTest *tc)
+{
+    uint_matrix *A = alloc_uint_matrix(2, 3);
+    
+    A->values[0 * 3 + 0] = 1;
+    A->values[0 * 3 + 1] = 2;
+    A->values[0 * 3 + 2] = 3;
+    
+    A->values[1 * 3 + 0] = 4;
+    A->values[1 * 3 + 1] = 5;
+    A->values[1 * 3 + 2] = 6;
+    
+    uint_vector *b = alloc_uint_vector(3);
+    b->values[0] = 1;
+    b->values[1] = 2;
+    b->values[2] = 3;
+    
+    double_matrix *result = uint_transposed_matrix_vector_division(A, b);
+    
+    CuAssertDblEquals(tc, 1.0 / 1.0, result->values[0 * 3 + 0], DBL_EPSILON);
+    CuAssertDblEquals(tc, 2.0 / 2.0, result->values[0 * 3 + 1], DBL_EPSILON);
+    CuAssertDblEquals(tc, 3.0 / 3.0, result->values[0 * 3 + 2], DBL_EPSILON);
+    
+    CuAssertDblEquals(tc, 4.0 / 1.0, result->values[1 * 3 + 0], DBL_EPSILON);
+    CuAssertDblEquals(tc, 5.0 / 2.0, result->values[1 * 3 + 1], DBL_EPSILON);
+    CuAssertDblEquals(tc, 6.0 / 3.0, result->values[1 * 3 + 2], DBL_EPSILON);
     
     free_uint_matrix(A);
     free_uint_vector(b);

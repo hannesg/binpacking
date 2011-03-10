@@ -60,16 +60,16 @@ max_min_resource_sharing_solution *approximate_max_min_resource_sharing(double_m
                                                                         double precision)
 {
     // The vector to contain the solution.
-    double_vector *x = alloc_double_vector(A->width);
+    double_vector *x = alloc_double_vector(A->height);
     fill_double_vector(x, 0.0);
     
     // A vector needed to compute the starting solution.
-    double_vector *p = alloc_double_vector(A->height);
+    double_vector *p = alloc_double_vector(A->width);
     fill_double_vector(p, 0.0);
 
     // Compute the starting solution.
     int m;
-    for(m = 0; m < A->height; m++) {
+    for(m = 0; m < A->width; m++) {
         p->values[m] = 1.0;
         double_vector *block_solution = approximate_block_solver(A, p, limit, 0.5);
         vector_vector_add_assignment(x, block_solution);
@@ -77,11 +77,11 @@ max_min_resource_sharing_solution *approximate_max_min_resource_sharing(double_m
         p->values[m] = 0.0;
     }
     // Vector p will stay in memory, it is needed in the while-loop.
-    number_vector_mult_assignment(1.0/((double) A->height), x);
+    number_vector_mult_assignment(1.0/((double) A->width), x);
     
     double approximate_block_solver_precision = precision / 6;
     
-    double_vector *function_solution = matrix_vector_mult(A, x);
+    double_vector *function_solution = transposed_matrix_vector_mult(A, x);
     while(1) {
         double theta = find_optimum(function_solution, approximate_block_solver_precision);
         
@@ -97,7 +97,7 @@ max_min_resource_sharing_solution *approximate_max_min_resource_sharing(double_m
         // Calculating the hat x
         double_vector *hat_x = approximate_block_solver(A, p, limit,
                                                         approximate_block_solver_precision);
-        double_vector *hat_function_solution = matrix_vector_mult(A, hat_x);
+        double_vector *hat_function_solution = transposed_matrix_vector_mult(A, hat_x);
         
         // Checking what we want to do next
         double hat_prod = vector_scalar_mult(p, hat_function_solution);
@@ -110,7 +110,7 @@ max_min_resource_sharing_solution *approximate_max_min_resource_sharing(double_m
         
         // Calculate step size
         double step_size = (approximate_block_solver_precision * theta * residuum)
-                           / (2 * A->height * (hat_prod + prod));
+                           / (2 * A->width * (hat_prod + prod));
         
         number_vector_mult_assignment(1 - step_size, x);
         number_vector_mult_assignment(step_size, hat_x);

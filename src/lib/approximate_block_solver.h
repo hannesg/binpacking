@@ -10,8 +10,8 @@
  * 
  * Calculates an (1 - @p precisison) approximated solution for the problem
  * find x' in B with:
- * p^T * A * x' = max{p^T * A * x | x in B}
- * B = {x in R^(A.width) | sum(x_i) = @param limit, x_i >= 0}
+ * p^T * A^T * x' = max{p^T * A^T * x | x in B}
+ * B = {x in R^(A.height) | sum(x_i) = @param limit, x_i >= 0}
  * 
  * @return The approximated solution.
  */

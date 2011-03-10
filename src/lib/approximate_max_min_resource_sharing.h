@@ -15,6 +15,8 @@ void free_max_min_resource_sharing_solution(max_min_resource_sharing_solution *s
 
 /**
  * @brief An approximate solver for the max min resource sharing problem.
+ * Find the maximum lambda out of {lambda | it exists an x in B: for all i: (A^T * x)_i >= lambda}
+ * with B = {x | sum x_i = limit}.
  * 
  * @return The approximated solution.
  */

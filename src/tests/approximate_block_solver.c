@@ -14,14 +14,14 @@ void Test_approximate_block_solver(CuTest *tc)
     double_vector *p = alloc_double_vector(2);
     p->values[0] = 0.5;
     p->values[1] = 1.0;
-    double_matrix *A = alloc_double_matrix(2, 3);
-    A->values[0] = 1.0;
-    A->values[1] = 2.0;
-    A->values[2] = 3.0;
+    double_matrix *A = alloc_double_matrix(3, 2);
+    A->values[0 * 2 + 0] = 1.0;
+    A->values[1 * 2 + 0] = 2.0;
+    A->values[2 * 2 + 0] = 3.0;
     
-    A->values[3] = 2.0;
-    A->values[4] = 2.0;
-    A->values[5] = 3.0;
+    A->values[0 * 2 + 1] = 2.0;
+    A->values[1 * 2 + 1] = 2.0;
+    A->values[2 * 2 + 1] = 3.0;
     
     double_vector *opt = approximate_block_solver(A, p, 5, 0.001);
     

@@ -10,15 +10,15 @@
 
 void Test_approximate_lp_solver(CuTest *tc)
 {
-    uint_matrix *A = alloc_uint_matrix(2, 3);
+    uint_matrix *A = alloc_uint_matrix(3, 2);
     
-    A->values[0 * 3 + 0] = 4;
-    A->values[0 * 3 + 1] = 0;
-    A->values[0 * 3 + 2] = 1;
+    A->values[0 * 2 + 0] = 4;
+    A->values[1 * 2 + 0] = 0;
+    A->values[2 * 2 + 0] = 1;
     
-    A->values[1 * 3 + 0] = 4;
-    A->values[1 * 3 + 1] = 4;
-    A->values[1 * 3 + 2] = 0;
+    A->values[0 * 2 + 1] = 4;
+    A->values[1 * 2 + 1] = 4;
+    A->values[2 * 2 + 1] = 0;
     
     uint_vector *b = alloc_uint_vector(2);
     
