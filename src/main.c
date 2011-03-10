@@ -39,8 +39,10 @@ int main(int argc, char **argv) {
         }
         
         if(instance) {
-            print_double_vector(instance);
+            packing_list *result = binpacking(instance->values, precision, instance->size);
+            
             free_double_vector(instance);
+            free_packing_list(result);
         }
     }
     return 0;

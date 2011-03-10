@@ -8,6 +8,8 @@
 
 #include "binpacking.h"
 
+const int MAX_BIN_NUMBER = 100;
+
 packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
 
     /*
@@ -129,9 +131,9 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
     fill_uint_vector(b, k);
 
     // solve the LP approximately
-    //x = approximate_lp_solver(A, b , delta);
+    x = approximate_lp_solver(A, b, delta, MAX_BIN_NUMBER);
     // dummy:
-    x = alloc_double_vector(A->width);
+//     x = alloc_double_vector(A->width);
 
     // pack the solutions
     result = alloc_packing_list();
