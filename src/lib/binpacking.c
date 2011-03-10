@@ -69,7 +69,7 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
      */
     uint_vector *b;
 
-    /**
+    /*
      * The LP-Solution
      */
     double_vector *x;
