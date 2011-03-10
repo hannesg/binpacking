@@ -214,7 +214,7 @@ void track_sort_items(double items[], unsigned int n, unsigned int positions[])
         return;
     }
     
-    while(left < right && items[left] > items[0]) {
+    while(left < right && items[left] >= items[0]) {
         left++;
     }
     while(items[right] < items[0]) {
@@ -231,7 +231,7 @@ void track_sort_items(double items[], unsigned int n, unsigned int positions[])
         items[left] = items[right];
         items[right] = temp;
         
-        while(left < right && items[left] > items[0]) {
+        while(left < right && items[left] >= items[0]) {
             left++;
         }
         while(items[right] < items[0]) {

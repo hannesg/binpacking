@@ -13,6 +13,7 @@ void Test_track_sort_should_work(CuTest *tc)
     double last;
     double items[] = {
             0.32,
+            0.32,
             0.31,
             0.3,
             0.27,
