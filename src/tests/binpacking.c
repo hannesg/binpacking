@@ -391,3 +391,23 @@ void Test_matrix_from_items_example4(CuTest *tc) {
     
     free_uint_matrix(A);
 }
+
+void Test_binpacking(CuTest *tc)
+{
+    double items[] = {
+        0.25,
+        0.1,
+        0.2,
+        0.7,
+        0.25,
+        0.25,
+        0.25
+    };
+    
+    packing_list *result = binpacking(items, 0.25, 7);
+    
+    CuAssertIntEquals(tc, 2, result->size);
+    
+    print_packing_list(result);
+    free_packing_list(result);
+}

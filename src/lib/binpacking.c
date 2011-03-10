@@ -8,7 +8,7 @@
 
 #include "binpacking.h"
 
-const int MAX_BIN_NUMBER = 100;
+const int MAX_BIN_NUMBER = 10;
 
 packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
 
