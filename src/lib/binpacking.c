@@ -145,6 +145,7 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
 
     // pack the solutions
     result = alloc_packing_list();
+    uint_vector *order = double_vector_order(x);
 
     for(i = 0; i < x->size; i++) {
         for(g = ceil(x->values[i]); g > 0; g--) {

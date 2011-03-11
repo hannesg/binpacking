@@ -239,6 +239,11 @@ void print_double_array(double* array, int size)
     }
 }
 
+void print_uint_vector(uint_vector *vector)
+{
+    print_uint_array(vector->values, vector->size);
+}
+
 void print_uint_array(unsigned int* array, int size)
 {
     int i;
@@ -291,6 +296,57 @@ void free_uint_matrix(uint_matrix *matrix) {
 
 unsigned int uint_matrix_elem(uint_matrix *matrix, unsigned int row, unsigned int col){
     return matrix->values[ matrix->width*row + col ];
+}
+
+void sort_double_array_order(double *array, unsigned int *order, unsigned int size) {
+    unsigned int left = 1, right = size - 1, temp;
+    
+    if(size <= 1) {
+        return;
+    }
+    
+    while(left < right && array[order[left]] >= array[order[0]]) {
+        left++;
+    }
+    while(array[order[right]] < array[order[0]]) {
+        right--;
+    }
+    while(left < right) {
+        // exchange the order
+        temp = order[left];
+        order[left] = order[right];
+        order[right] = temp;
+        
+        while(left < right && array[order[left]] >= array[order[0]]) {
+            left++;
+        }
+        while(array[order[right]] < array[order[0]]) {
+            right--;
+        }
+    }
+    
+    // Putting the pivot element in the right position
+    temp = order[0];
+    order[0] = order[right];
+    order[right] = temp;
+    
+    sort_double_array_order(array, order, right);
+    sort_double_array_order(array, order + right + 1, size - right - 1);
+}
+
+uint_vector *double_vector_order(double_vector *vector) {
+    uint_vector *result = alloc_uint_vector(vector->size);
+    
+    // Initial fill
+    int i;
+    for(i = 0; i < vector->size; ++i) {
+        result->values[i] = i;
+    }
+    
+    // Sorting
+    sort_double_array_order(vector->values, result->values, vector->size);
+    
+    return result;
 }
 
 uint_vector * alloc_uint_vector(unsigned int size)

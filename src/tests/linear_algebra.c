@@ -391,3 +391,33 @@ void Test_uint_transposed_matrix_vector_division(CuTest *tc)
     free_uint_vector(b);
     free_double_matrix(result);
 }
+
+void Test_double_vector_order(CuTest *tc)
+{
+    double_vector *vector = alloc_double_vector(9);
+    
+    vector->values[0] = 0.21;
+    vector->values[1] = 0.20;
+    vector->values[2] = 0.41;
+    vector->values[3] = 0.09;
+    vector->values[4] = 0.12;
+    vector->values[5] = 0.01;
+    vector->values[6] = 0.00;
+    vector->values[7] = 0.9;
+    vector->values[8] = 0.3;
+    
+    uint_vector *result = double_vector_order(vector);
+    
+    CuAssertIntEquals(tc, 7, result->values[0]);
+    CuAssertIntEquals(tc, 2, result->values[1]);
+    CuAssertIntEquals(tc, 8, result->values[2]);
+    CuAssertIntEquals(tc, 0, result->values[3]);
+    CuAssertIntEquals(tc, 1, result->values[4]);
+    CuAssertIntEquals(tc, 4, result->values[5]);
+    CuAssertIntEquals(tc, 3, result->values[6]);
+    CuAssertIntEquals(tc, 5, result->values[7]);
+    CuAssertIntEquals(tc, 6, result->values[8]);
+    
+    free_uint_vector(result);
+    free_double_vector(vector);
+}

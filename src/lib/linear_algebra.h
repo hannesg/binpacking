@@ -129,6 +129,11 @@ void print_double_vector(double_vector *vector);
 void print_double_array(double* array, int size);
 
 /**
+ * Print a formatted output of the vector values.
+ */
+void print_uint_vector(uint_vector *vector);
+
+/**
  * Print a formatted output of the first @p size values of @p array.
  */
 void print_uint_array(unsigned int* array, int size);
@@ -148,6 +153,8 @@ void print_uint_matrix(uint_matrix *matrix);
  * Returns the element in row @p row and column @p col of the matrix @p matrix.
  */
 inline unsigned int uint_matrix_elem(uint_matrix *matrix, unsigned int row, unsigned int col);
+
+uint_vector *double_vector_order(double_vector *vector);
 
 // Normal calculations.
 /**
