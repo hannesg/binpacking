@@ -40,6 +40,9 @@ int main(int argc, char **argv) {
         
         if(instance) {
             packing_list *result = binpacking(instance->values, precision, instance->size);
+            printf("%i bins will be needed.\n", result->size);
+            printf("The calculated packing for precision = %lf is:\n", precision);
+            print_packing_list(result);
             
             free_double_vector(instance);
             free_packing_list(result);
