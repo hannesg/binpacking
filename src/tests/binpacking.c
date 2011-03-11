@@ -413,5 +413,99 @@ void Test_binpacking(CuTest *tc)
     free_packing_list(result);
 }
 
-// TODO: Binpacking testcase, all items small.
-// TODO: Binpacking testcase k > 1.
+void Test_binpacking_all_small(CuTest *tc)
+{
+    double items[] = {
+        0.09,
+        0.10,
+        0.20,
+        0.05,
+        0.01,
+        0.21,
+        0.19,
+        0.12,
+        0.23,
+        0.09,
+        0.09,
+        0.20,
+        0.06,
+        0.06,
+        0.05,
+        0.02,
+        0.01,
+        0.05,
+        0.02,
+        0.12,
+        0.11,
+        0.13,
+        0.14,
+        0.14,
+        0.001
+    };
+    
+    packing_list *result = binpacking(items, 0.5, 25);
+    
+    CuAssertIntEquals(tc, 3, result->size);
+    
+    print_packing_list(result);
+    free_packing_list(result);
+}
+
+void Test_binpacking_k_larger_1(CuTest *tc)
+{
+    double items[] = {
+        0.95383,
+        0.91409,
+        0.82553,
+        0.81573,
+        0.80621,
+        
+        0.79471,
+        0.77701,
+        0.73309,
+        0.72229,
+        0.71332,
+        
+        0.68805,
+        0.63351,
+        0.63205,
+        0.59021,
+        0.54370,
+        
+        0.52509,
+        0.49393,
+        0.48782,
+        0.47655,
+        0.46857,
+        
+        0.46523,
+        0.46219,
+        0.46036,
+        0.45598,
+        0.44385,
+        
+        0.43423,
+        0.43112,
+        0.42865,
+        0.42197,
+        0.41972,
+        
+        0.41905,
+        0.41837,
+        0.41714,
+        0.41505,
+        0.40570,
+        
+        0.39944,
+        0.39261,
+        0.38895,
+        0.38666,
+        0.38536
+    };
+    
+    packing_list *result = binpacking(items, 0.5, 40);
+    
+    printf("We need %i bins.\n", result->size);
+    print_packing_list(result);
+    free_packing_list(result);
+}
