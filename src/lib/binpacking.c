@@ -85,6 +85,7 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
     track_sort_items(items, n, positions);
 
     // determine the border between normal and small items
+    // TODO: Possible speed enhancement with binary search.
     while(min_small_n < n && items[min_small_n] >= delta){
         min_small_n++;
     }
@@ -139,32 +140,33 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
     result = alloc_packing_list();
 
     i = 0;
-    while( i < x->size ){
+    while(i < x->size) {
         g = ceil(x->values[i]);
-        while( g > 0 ){
+        while(g > 0){
             // generate packing
             pack = alloc_packing();
             j = 0;
-            while( j < m ){
-                aij = uint_matrix_elem(A,i,j);
-                if( aij > 0){
+            while(j < m) {
+                aij = uint_matrix_elem(A, i, j);
+                if(aij > 0) {
                     h = 0;
-                    while( h < aij ){
+                    while(h < aij) {
                         // we pack the original items directly or a smaller one
                         // depending on whether we have already packed a bigger one
-                        if( partition_sizes[j] > 0 ){
+                        if(partition_sizes[j] > 0) {
                             // we haven't packed all items in this partition
                             partition_sizes[j]--;
-                            insert_item(pack, positions[ (j+1)*k + partition_sizes[j] ] );
+                            insert_item(pack, positions[(j+1)*k + partition_sizes[j]]);
                         }
                         h++;
                     }
                 }
                 j++;
             }
-            if( pack->size == 0 ){
+            if(pack->size == 0) {
                 free_packing(pack);
-            }else{
+            }
+            else {
                 insert_packing(result, pack, 1);
             }
             g--;
@@ -175,7 +177,7 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
 
     // pack the big items
     i = 0;
-    while( i < k ){
+    while(i < k) {
         pack = alloc_packing();
         insert_item(pack, positions[i]);
         insert_packing(result, pack, 1);
@@ -184,7 +186,7 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
 
     // pack the small items
     i = min_small_n;
-    while( i < n ){
+    while(i < n) {
         first_fit_step(items_in, n, positions[i], result);
         i++;
     }
@@ -210,7 +212,7 @@ void track_sort_items(double items[], unsigned int n, unsigned int positions[])
 {
     double temp;
     unsigned int left = 1, right = n - 1, temp_pos;
-    if (n <= 1) {
+    if(n <= 1) {
         return;
     }
     
@@ -220,7 +222,7 @@ void track_sort_items(double items[], unsigned int n, unsigned int positions[])
     while(items[right] < items[0]) {
         right--;
     }
-    while (left < right) {
+    while(left < right) {
         // exchange the positions
         temp_pos = positions[left];
         positions[left] = positions[right];
@@ -256,7 +258,7 @@ unsigned int *alloc_positions(unsigned int n)
 {
     unsigned int *result = malloc(sizeof(unsigned int) * n);
     unsigned int i = 0;
-    while (i < n) {
+    while(i < n) {
         result[i] = i;
         i++;
     }
@@ -264,7 +266,7 @@ unsigned int *alloc_positions(unsigned int n)
 }
 
 uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limit){
-    if( n == 0 ){
+    if(n == 0){
         return alloc_uint_matrix(n,0);
     }
     unsigned int *store;
@@ -283,18 +285,18 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
     uint_matrix *matrix;
 
     // items must be sorted
-    for( i=1; i<n; i++ ){
+    for(i=1; i<n; i++) {
         assert(items[i-1] >= items[i]);
     }
     i = 0;
 
     min = items[0];
-    while( i < n ){
+    while(i < n) {
         max[i] = floor(PACKING_SIZE / items[i]);
-        if( max[i] > limit ){
+        if(max[i] > limit) {
             max[i] = limit;
         }
-        if( min > items[i] ){
+        if(min > items[i]) {
             min = items[i];
             min_pos = i;
         }
@@ -307,49 +309,49 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
 
     min_fill = PACKING_SIZE - min;
 
-    store = malloc(size * sizeof(unsigned int) );
+    store = malloc(size * sizeof(unsigned int));
 
     // TODO: this is fucking close to brute force!
-    while( 1 ){
+    while(1) {
         i = 0;
-        while( i < n ){
+        while(i < n) {
             col[i]++;
             cur_items++;
             fill = 0;
-            for( j = 0 ; j < n ; j++ ){
+            for(j = 0 ; j < n ; j++) {
                 fill += items[j] * col[j];
             }
-            if( fill > PACKING_SIZE || col[i] > max[i] || cur_items > max_items ){
+            if(fill > PACKING_SIZE || col[i] > max[i] || cur_items > max_items) {
                 cur_items -= col[i];
                 col[i] = 0;
-            }else{
+            } else {
                 break;
             }
             i++;
         }
-        if( i == n ){
-            break ;
+        if(i == n) {
+            break;
         }
         char valid = 1;
-        for( j=n; j > 0 ; j-- ){
-            if( (fill + items[j-1]) <= PACKING_SIZE ){
-                if( col[j-1] < max[j-1] ){
+        for(j=n; j > 0; j--) {
+            if((fill + items[j-1]) <= PACKING_SIZE) {
+                if(col[j-1] < max[j-1]) {
                     // this item could have been put into the bin
                     valid = 0;
                     break;
                 }
-            }else{
+            } else {
                 // too big
                 break;
             }
         }
-        if( valid ){
+        if(valid) {
             // this configuration is valid
-            if( (m + 1)*n >= size ){
+            if((m + 1)*n >= size) {
                 size *= 2;
                 store = realloc(store, size * sizeof(unsigned int));
             }
-            memcpy( store + ( m * n ), col, colsize );
+            memcpy(store + (m * n), col, colsize);
             m++;
         }
     }
