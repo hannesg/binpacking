@@ -147,12 +147,13 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
     result = alloc_packing_list();
     uint_vector *order = double_vector_order(x);
 
-    for(i = 0; i < x->size; i++) {
-        for(g = ceil(x->values[i]); g > 0; g--) {
+    for(i = 0; i < order->size; i++) {
+        int current_packing = order->values[i];
+        for(g = ceil(x->values[current_packing]); g > 0; g--) {
             // generate packing
             pack = alloc_packing();
             for(j = 0; j < m - 1; j++) {
-                aij = uint_matrix_elem(A, i, j);
+                aij = uint_matrix_elem(A, current_packing, j);
 
                 for(h = 0; h < aij; h++) {
                     // we pack the original items directly or a smaller one
