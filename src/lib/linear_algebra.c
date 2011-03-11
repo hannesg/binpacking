@@ -273,7 +273,7 @@ void free_uint_matrix(uint_matrix *matrix){
 }
 
 unsigned int uint_matrix_elem(uint_matrix *matrix, unsigned int row, unsigned int col){
-    return matrix->values[ matrix->height*row + col ];
+    return matrix->values[ matrix->width*row + col ];
 }
 
 uint_vector * alloc_uint_vector(unsigned int size)
