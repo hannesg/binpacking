@@ -412,3 +412,6 @@ void Test_binpacking(CuTest *tc)
     print_packing_list(result);
     free_packing_list(result);
 }
+
+// TODO: Binpacking testcase, all items small.
+// TODO: Binpacking testcase k > 1.
