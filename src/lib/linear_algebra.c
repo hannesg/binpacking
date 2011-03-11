@@ -239,6 +239,14 @@ void print_double_array(double* array, int size)
     }
 }
 
+void print_uint_array(unsigned int* array, int size)
+{
+    int i;
+    for(i = 0; i < size; ++i) {
+        printf("%u\n", array[i]);
+    }
+}
+
 void print_double_matrix(double_matrix *matrix)
 {
     int row;

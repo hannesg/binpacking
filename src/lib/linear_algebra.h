@@ -129,6 +129,11 @@ void print_double_vector(double_vector *vector);
 void print_double_array(double* array, int size);
 
 /**
+ * Print a formatted output of the first @p size values of @p array.
+ */
+void print_uint_array(unsigned int* array, int size);
+
+/**
  * Print a formatted output of the matrix values.
  */
 void print_double_matrix(double_matrix *matrix);

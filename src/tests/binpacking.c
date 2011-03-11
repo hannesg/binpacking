@@ -500,10 +500,12 @@ void Test_binpacking_k_larger_1(CuTest *tc)
         0.39261,
         0.38895,
         0.38666,
-        0.38536
+        0.38536,
+        
+        0.38520
     };
     
-    packing_list *result = binpacking(items, 0.5, 40);
+    packing_list *result = binpacking(items, 0.5, 41);
     
     printf("We need %i bins.\n", result->size);
     print_packing_list(result);

@@ -48,4 +48,6 @@ void renumber_packing_list(packing_list * list, item_number * positions);
  */
 uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limit);
 
+void print_partition(double *partition_sizes, unsigned int *partition_count, int size);
+
 #endif
