@@ -22,6 +22,7 @@ double_vector *approximate_lp_solver(uint_matrix *A,
     int maximum = limit;
     
     double_matrix *matrix = uint_transposed_matrix_vector_division(A, b);
+    max_min_resource_sharing_solution *end_solution = NULL;
     int medium;
     do {
         medium =  (minimum + maximum)/2; // This does not fail because limit is small.
@@ -32,20 +33,23 @@ double_vector *approximate_lp_solver(uint_matrix *A,
             
         if(solution->function_solution_min >= 1.0) {
             maximum = medium;
+            free_max_min_resource_sharing_solution(end_solution);
+            end_solution = solution;
         } else {
             minimum = medium + 1;
+            free_max_min_resource_sharing_solution(solution);
         }
-        
-        free_max_min_resource_sharing_solution(solution);
     } while(minimum < maximum);
     
-    max_min_resource_sharing_solution *end_solution
-        = approximate_max_min_resource_sharing(matrix,
-                                               maximum,
-                                               precision);
-    free_double_vector(end_solution->function_solution);
-    
-    double_vector *solution_vector = end_solution->vector;
-    free(end_solution);
-    return solution_vector;
+    if(end_solution == NULL) {
+        // We did not find an solution.
+        return NULL;
+    }
+    else {
+        // We only need the solution_vector, the values are unneded for us.
+        free_double_vector(end_solution->function_solution);
+        double_vector *solution_vector = end_solution->vector;
+        free(end_solution);
+        return solution_vector;
+    }
 }
