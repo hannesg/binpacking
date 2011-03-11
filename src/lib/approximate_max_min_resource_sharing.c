@@ -15,6 +15,9 @@
 
 void free_max_min_resource_sharing_solution(max_min_resource_sharing_solution *solution)
 {
+    if(solution == NULL) {
+        return;
+    }
     free_double_vector(solution->vector);
     free_double_vector(solution->function_solution);
     free(solution);

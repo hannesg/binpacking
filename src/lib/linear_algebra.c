@@ -16,6 +16,9 @@ double_vector * alloc_double_vector(unsigned int size)
     
 void free_double_vector(double_vector * vector)
 {
+    if(vector == NULL) {
+        return;
+    }
     free(vector->values);
     free(vector);
 }
@@ -58,6 +61,9 @@ double_matrix *alloc_double_matrix(unsigned int height, unsigned int width)
 
 void free_double_matrix(double_matrix *matrix)
 {
+    if(matrix == NULL) {
+        return;
+    }
     free(matrix->values);
     free(matrix);
 }
@@ -267,7 +273,10 @@ uint_matrix *alloc_uint_matrix(unsigned int height, unsigned int width)
     return result;
 }
 
-void free_uint_matrix(uint_matrix *matrix){
+void free_uint_matrix(uint_matrix *matrix) {
+    if(matrix == NULL) {
+        return;
+    }
     free(matrix->values);
     free(matrix);
 }
@@ -287,6 +296,9 @@ uint_vector * alloc_uint_vector(unsigned int size)
 
 void free_uint_vector(uint_vector * vector)
 {
+    if(vector == NULL) {
+        return;
+    }
     free(vector->values);
     free(vector);
 }
