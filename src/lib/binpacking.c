@@ -158,10 +158,16 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
                 for(h = 0; h < aij; h++) {
                     // we pack the original items directly or a smaller one
                     // depending on whether we have already packed a bigger one
-                    if(partition_sizes[j + 1] > 0) {
+                    int substPartitionNr = j + 1;
+                    while(partition_sizes[substPartitionNr] <= 0
+                          && substPartitionNr < m)
+                    {
+                        substPartitionNr++;
+                    }
+                    if(substPartitionNr < m) {
                         // we haven't packed all items in this partition
-                        partition_sizes[j + 1]--;
-                        insert_item(pack, positions[partition_starts[j + 1] + partition_sizes[j + 1]]);
+                        partition_sizes[substPartitionNr]--;
+                        insert_item(pack, positions[partition_starts[substPartitionNr] + partition_sizes[substPartitionNr]]);
                     }
                 }
             }
