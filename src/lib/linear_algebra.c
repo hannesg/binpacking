@@ -298,6 +298,17 @@ unsigned int uint_matrix_elem(uint_matrix *matrix, unsigned int row, unsigned in
     return matrix->values[ matrix->width*row + col ];
 }
 
+uint_vector *uint_matrix_row(uint_matrix *matrix, unsigned int row)
+{
+    uint_vector *result = alloc_uint_vector(matrix->width);
+    int col;
+    for(col = 0; col < matrix->width; ++col) {
+        result->values[col] = matrix->values[matrix->width * row + col];
+    }
+    
+    return result;
+}
+
 void sort_double_array_order(double *array, unsigned int *order, unsigned int size) {
     unsigned int left = 1, right = size - 1, temp;
     

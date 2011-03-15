@@ -44,7 +44,8 @@ double find_optimum(double_vector *b, double t)
     
     double medium = 0.5 * (minimum + maximum);
     double optimum_condition = calculate_optimum_condition(b, medium, t);
-    while(fabs(optimum_condition - 1) > 1e-10 && minimum < maximum) {
+    while(fabs(optimum_condition - 1) > 1e-10 && minimum < maximum) { 
+        // Intervallgroeße 1/8 * (epsilon^2 / M)
         if(optimum_condition < 1) {
             minimum = medium;
         } else {

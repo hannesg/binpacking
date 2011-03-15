@@ -18,8 +18,8 @@ double_vector *approximate_lp_solver(uint_matrix *A,
                                      double precision,
                                      unsigned int limit)
 {
-    int minimum = 1;
-    int maximum = limit;
+    int minimum = 1;     // area
+    int maximum = limit; // 2 * area + 1
     
     double_matrix *matrix = uint_transposed_matrix_vector_division(A, b);
     max_min_resource_sharing_solution *end_solution = NULL;

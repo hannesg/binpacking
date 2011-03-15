@@ -154,6 +154,8 @@ void print_uint_matrix(uint_matrix *matrix);
  */
 inline unsigned int uint_matrix_elem(uint_matrix *matrix, unsigned int row, unsigned int col);
 
+inline uint_vector *uint_matrix_row(uint_matrix *matrix, unsigned int row);
+
 uint_vector *double_vector_order(double_vector *vector);
 
 // Normal calculations.

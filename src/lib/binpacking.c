@@ -152,6 +152,22 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
         for(g = ceil(x->values[current_packing]); g > 0; g--) {
             // generate packing
             pack = alloc_packing();
+            int itemExists = 0;
+            
+            // First see, if we still have at least one of the items
+            for(j = 0; j < m - 1; j++) {
+                if(uint_matrix_elem(A, current_packing, j) > 0
+                   && partition_sizes[j + 1] > 0)
+                {
+                    itemExists = 1;
+                    break;
+                }
+            }
+            
+            if(!itemExists) {
+                continue;
+            }
+            
             for(j = 0; j < m - 1; j++) {
                 aij = uint_matrix_elem(A, current_packing, j);
 
