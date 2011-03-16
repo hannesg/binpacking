@@ -18,7 +18,9 @@
 struct uint_matrix_s {
     unsigned int height;
     unsigned int width;
-    unsigned int * values;
+    unsigned int *values;
+    
+    unsigned int array_height;
 };
 
 
@@ -36,6 +38,16 @@ void free_uint_matrix(uint_matrix *matrix);
  * Print a formatted output of the matrix values.
  */
 void print_uint_matrix(uint_matrix *matrix);
+
+/**
+ * Change the height of the matrix to @p height.
+ */
+void uint_matrix_change_height(uint_matrix *matrix, unsigned int height);
+
+/**
+ * Append the given vector @p vector to the given matrix @p matrix.
+ */
+void uint_matrix_append_row(uint_matrix *matrix, uint_vector *vector);
 
 /**
  * Returns the element in row @p row and column @p col of the matrix @p matrix.

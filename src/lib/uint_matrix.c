@@ -22,6 +22,7 @@ uint_matrix *alloc_uint_matrix(unsigned int height, unsigned int width)
     result->height = height;
     result->width = width;
     result->values = (unsigned int *) malloc(sizeof(unsigned int) * height * width);
+    result->array_height = height;
 
     return result;
 }
@@ -43,6 +44,28 @@ void print_uint_matrix(uint_matrix *matrix)
             printf("%4i ", matrix->values[row * matrix->width + column]);
         }
         printf("\n");
+    }
+}
+
+void uint_matrix_change_height(uint_matrix *matrix, unsigned int height)
+{
+    if(height > matrix->array_height) {
+        while(height > matrix->array_height) {
+            matrix->array_height *= 2;
+        }
+        matrix->values = realloc(matrix->values, sizeof(unsigned int) * matrix->height * matrix->array_height);
+    }
+    matrix->height = height;
+}
+
+void uint_matrix_append_row(uint_matrix *matrix, uint_vector *vector)
+{
+    int row = matrix->height;
+    uint_matrix_change_height(matrix, matrix->height + 1);
+    
+    int column;
+    for(column = 0; column < matrix->width; ++column) {
+        matrix->values[row * matrix->width + column] = vector->values[column];
     }
 }
 
