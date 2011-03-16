@@ -51,6 +51,9 @@ void print_uint_matrix(uint_matrix *matrix)
 void uint_matrix_change_height(uint_matrix *matrix, unsigned int height)
 {
     if(height > matrix->array_height) {
+        if(height >= 1024) {
+            matrix->array_height = (height / 1024 + 1) * height;
+        }
         while(height > matrix->array_height) {
             matrix->array_height *= 2;
         }

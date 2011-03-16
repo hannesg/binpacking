@@ -426,6 +426,17 @@ void Test_double_vector_order(CuTest *tc)
     free_double_vector(vector);
 }
 
+void Test_uint_matrix_change_height(CuTest *tc)
+{
+    uint_matrix *A = alloc_uint_matrix(10, 8);
+    
+    uint_matrix_change_height(A, 23);
+    CuAssertIntEquals(tc, 40, A->array_height);
+    
+    uint_matrix_change_height(A, 1024);
+    CuAssertIntEquals(tc, 2048, A->array_height);
+}
+
 void Test_uint_matrix_append_row(CuTest *tc)
 {
     uint_vector *vector = alloc_uint_vector(3);
