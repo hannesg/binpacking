@@ -7,6 +7,7 @@
 // Standard
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <assert.h>
 
 // Project
@@ -60,13 +61,10 @@ void uint_matrix_change_height(uint_matrix *matrix, unsigned int height)
 
 void uint_matrix_append_row(uint_matrix *matrix, uint_vector *vector)
 {
+    assert(vector->size == matrix->width);
     int row = matrix->height;
     uint_matrix_change_height(matrix, matrix->height + 1);
-    
-    int column;
-    for(column = 0; column < matrix->width; ++column) {
-        matrix->values[row * matrix->width + column] = vector->values[column];
-    }
+    memcpy(matrix->values + row * matrix->width, vector->values, matrix->width * sizeof(unsigned int));
 }
 
 unsigned int uint_matrix_elem(uint_matrix *matrix, unsigned int row, unsigned int col){
