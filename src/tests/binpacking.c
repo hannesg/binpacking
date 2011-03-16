@@ -3,9 +3,11 @@
  * 2011 Hannes Georg <hannes.georg@googlemail.com>
  *****************************************************************************/
 
+#include <time.h>
+
 #include "CuTest.h"
 #include "binpacking.h"
-#include <time.h>
+#include "uint_matrix.h"
 
 void Test_track_sort_should_work(CuTest *tc)
 {

@@ -3,9 +3,13 @@
  * 2011 Bastian Holst <bastianholst@gmx.de>
  *****************************************************************************/
 
+// Standard
+#include <stdlib.h>
+
+// Library
+#include "double_vector.h"
 #include "parse_instance.h"
 #include "binpacking.h"
-#include <stdlib.h>
 
 int main(int argc, char **argv) {
     if(argc > 1) {

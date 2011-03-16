@@ -1,10 +1,18 @@
 /******************************************************************************
  * Authors:
  * 2011 Hannes Georg <hannes.georg@googlemail.com>
+ * 2011 Bastian Holst <bastianholst@gmx.de>
  *****************************************************************************/
 
-#include "packing_list.h"
+// Standard
 #include <stdio.h>
+
+// Project
+#include "uint_vector.h"
+#include "uint_matrix.h"
+
+// Self
+#include "packing_list.h"
 
 packing_container * new_packing_container(packing * pack, unsigned int quantity, packing_container * next ) {
     packing_container * result = malloc(sizeof(packing_container));

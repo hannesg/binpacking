@@ -3,6 +3,7 @@
  * 2011 Bastian Holst <bastianholst@gmx.de>
  *****************************************************************************/
 
-#include "linear_algebra.h"
+// Library
+#include "types.h"
 
 double_vector *parse_instance(char *file_name);

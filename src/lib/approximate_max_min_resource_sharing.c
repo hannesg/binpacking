@@ -4,10 +4,13 @@
  *****************************************************************************/
 
 // Standard library
+#include <stdlib.h>
 #include <math.h>
 
 // Library
 #include "approximate_block_solver.h"
+#include "double_vector.h"
+#include "double_matrix.h"
 
 // Self
 #include "approximate_max_min_resource_sharing.h"

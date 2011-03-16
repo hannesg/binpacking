@@ -3,7 +3,7 @@
  * 2011 Bastian Holst <bastianholst@gmx.de>
  *****************************************************************************/
 
-#include "linear_algebra.h"
+#include "types.h"
 
 double find_optimum(double_vector *b, double t);
 

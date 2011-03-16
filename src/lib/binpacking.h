@@ -13,7 +13,6 @@
 
 #include "packing_list.h"
 #include "first_fit.h"
-#include "linear_algebra.h"
 #include "approximate_lp_solver.h"
 #include <math.h>
 

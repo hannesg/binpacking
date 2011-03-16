@@ -4,8 +4,15 @@
  * 2011 Bastian Holst <bastianholst@gmx.de>
  *****************************************************************************/
 
+// Standard
 #include <assert.h>
 
+// Project
+#include "uint_vector.h"
+#include "double_vector.h"
+#include "uint_matrix.h"
+
+// Self
 #include "binpacking.h"
 
 const int MAX_BIN_NUMBER = 50;

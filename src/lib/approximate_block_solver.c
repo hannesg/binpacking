@@ -3,6 +3,10 @@
  * 2011 Bastian Holst <bastianholst@gmx.de>
  *****************************************************************************/
 
+// Project
+#include "double_matrix.h"
+#include "double_vector.h"
+
 // Self
 #include "approximate_block_solver.h"
 

@@ -3,13 +3,15 @@
  * 2011 Bastian Holst <bastianholst@gmx.de>
  *****************************************************************************/
 
+#include <float.h>
+#include <stdio.h>
+
 #include "CuTest.h"
-#include "linear_algebra.h"
 #include "approximate_max_min_resource_sharing_p.h"
 #include "approximate_max_min_resource_sharing.h"
-#include <float.h>
+#include "double_matrix.h"
+#include "double_vector.h"
 
-#include <stdio.h>
 
 void Test_approximate_max_min_resource_sharing(CuTest *tc)
 {

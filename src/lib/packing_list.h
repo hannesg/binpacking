@@ -9,9 +9,12 @@
 
 #define PACKING_SIZE 1
 
+// Standard
 #include <malloc.h>
 #include <string.h>
-#include "linear_algebra.h"
+
+// Project
+#include "types.h"
 
 /** @file packing_list.h
  *  @brief Packings and Packing Lists

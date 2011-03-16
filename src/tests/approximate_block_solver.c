@@ -4,8 +4,9 @@
  *****************************************************************************/
 
 #include "CuTest.h"
-#include "linear_algebra.h"
 #include "approximate_block_solver.h"
+#include "double_vector.h"
+#include "double_matrix.h"
 
 #include <stdio.h>
 

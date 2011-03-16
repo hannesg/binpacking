@@ -3,10 +3,14 @@
  * 2011 Bastian Holst <bastianholst@gmx.de>
  *****************************************************************************/
 
-#include "float.h"
+#include <float.h>
+#include <stdlib.h>
 
 #include "CuTest.h"
 #include "approximate_lp_solver.h"
+#include "uint_matrix.h"
+#include "uint_vector.h"
+#include "double_vector.h"
 
 void Test_approximate_lp_solver(CuTest *tc)
 {

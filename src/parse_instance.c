@@ -8,6 +8,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Project
+#include "double_vector.h"
+
 // Self
 #include "parse_instance.h"
 

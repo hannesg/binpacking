@@ -4,7 +4,11 @@
  *****************************************************************************/
 
 #include "CuTest.h"
-#include "linear_algebra.h"
+#include "types.h"
+#include "double_matrix.h"
+#include "double_vector.h"
+#include "uint_matrix.h"
+#include "uint_vector.h"
 
 #include <stdio.h>
 #include <float.h>

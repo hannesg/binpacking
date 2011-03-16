@@ -3,7 +3,7 @@
  * 2011 Bastian Holst <bastianholst@gmx.de>
  *****************************************************************************/
 
-#include "linear_algebra.h"
+#include "types.h"
 
 /**
  * Solves the LP @p A ^T * x = @p b with the target function sum(A_i).

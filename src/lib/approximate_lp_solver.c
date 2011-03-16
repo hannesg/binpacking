@@ -4,11 +4,15 @@
  *****************************************************************************/
 
 // Standard
+#include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
 
 // Project
 #include "approximate_max_min_resource_sharing.h"
+#include "double_vector.h"
+#include "double_matrix.h"
+#include "uint_matrix.h"
 
 // Self
 #include "approximate_lp_solver.h"

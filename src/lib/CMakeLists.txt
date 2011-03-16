@@ -1,5 +1,11 @@
-set(LIBRARY_SRCS packing_list.c
-                 linear_algebra.c
+set(LIBRARY_SRCS double_matrix.c
+                 double_vector.c
+                 uint_matrix.c
+                 uint_vector.c
+                 print_double_array.c
+                 print_uint_array.c
+
+                 packing_list.c
                  first_fit.c
                  approximate_block_solver.c
                  binpacking.c

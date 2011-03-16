@@ -3,7 +3,8 @@
  * 2011 Bastian Holst <bastianholst@gmx.de>
  *****************************************************************************/
 
-#include "linear_algebra.h"
+// Project
+#include "types.h"
 
 /**
  * @brief An approximated block solver for linear functions.
