@@ -67,6 +67,27 @@ void uint_matrix_append_row(uint_matrix *matrix, uint_vector *vector)
     memcpy(matrix->values + row * matrix->width, vector->values, matrix->width * sizeof(unsigned int));
 }
 
+unsigned int uint_matrix_ensure_row_existence(uint_matrix *matrix, uint_vector *row)
+{
+    assert(row->size == matrix->width);
+    
+    int rowNr;
+    for(rowNr = 0; rowNr < matrix->height; ++rowNr) {
+        int colNr;
+        for(colNr = 0; colNr < matrix->height; ++colNr) {
+            if(uint_matrix_elem(matrix, rowNr, colNr) != uint_vector_elem(row, colNr)) {
+                break;
+            }
+        }
+        if(colNr == matrix->height) {
+            return rowNr;
+        }
+    }
+    
+    uint_matrix_append_row(matrix, row);
+    return matrix->height - 1;
+}
+
 unsigned int uint_matrix_elem(uint_matrix *matrix, unsigned int row, unsigned int col){
     return matrix->values[ matrix->width*row + col ];
 }

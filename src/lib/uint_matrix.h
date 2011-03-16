@@ -50,6 +50,13 @@ void uint_matrix_change_height(uint_matrix *matrix, unsigned int height);
 void uint_matrix_append_row(uint_matrix *matrix, uint_vector *vector);
 
 /**
+ * Ensure the existence of the row @p row in the matrix @p matrix.
+ * If it is not existent the row will be appended to the matrix.
+ * @return The number of the row.
+ */
+unsigned int uint_matrix_ensure_row_existence(uint_matrix *matrix, uint_vector *row);
+
+/**
  * Returns the element in row @p row and column @p col of the matrix @p matrix.
  */
 inline unsigned int uint_matrix_elem(uint_matrix *matrix, unsigned int row, unsigned int col);

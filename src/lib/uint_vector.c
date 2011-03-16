@@ -43,3 +43,8 @@ void print_uint_vector(uint_vector *vector)
 {
     print_uint_array(vector->values, vector->size);
 }
+
+inline unsigned int uint_vector_elem(uint_vector *vector, unsigned int item)
+{
+    return vector->values[item];
+}

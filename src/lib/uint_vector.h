@@ -34,4 +34,6 @@ void fill_uint_vector(uint_vector *vector, unsigned int value);
  */
 void print_uint_vector(uint_vector *vector);
 
+inline unsigned int uint_vector_elem(uint_vector *vector, unsigned int item);
+
 #endif

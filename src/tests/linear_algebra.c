@@ -443,6 +443,7 @@ void Test_uint_matrix_append_row(CuTest *tc)
     A->values[1 * 3 + 1] = 5;
     A->values[1 * 3 + 2] = 6;
     
+    // First time
     uint_matrix_append_row(A, vector);
     
     // Sizes
@@ -450,6 +451,64 @@ void Test_uint_matrix_append_row(CuTest *tc)
     CuAssertIntEquals(tc, 4, A->array_height);
     
     // Values
+    CuAssertIntEquals(tc, 7, A->values[2 * 3 + 0]);
+    CuAssertIntEquals(tc, 8, A->values[2 * 3 + 1]);
+    CuAssertIntEquals(tc, 9, A->values[2 * 3 + 2]);
+    
+    // Second time
+    uint_matrix_append_row(A, vector);
+    
+    // Sizes
+    CuAssertIntEquals(tc, 4, A->height);
+    CuAssertIntEquals(tc, 4, A->array_height);
+    
+    // Values
+    CuAssertIntEquals(tc, 7, A->values[3 * 3 + 0]);
+    CuAssertIntEquals(tc, 8, A->values[3 * 3 + 1]);
+    CuAssertIntEquals(tc, 9, A->values[3 * 3 + 2]);
+}
+
+void Test_uint_matrix_ensure_row_existence(CuTest *tc)
+{
+    uint_vector *vector = alloc_uint_vector(3);
+    vector->values[0] = 7;
+    vector->values[1] = 8;
+    vector->values[2] = 9;
+    
+    uint_matrix *A = alloc_uint_matrix(2, 3);
+    
+    A->values[0 * 3 + 0] = 1;
+    A->values[0 * 3 + 1] = 2;
+    A->values[0 * 3 + 2] = 3;
+    
+    A->values[1 * 3 + 0] = 4;
+    A->values[1 * 3 + 1] = 5;
+    A->values[1 * 3 + 2] = 6;
+    
+    // Not in there:
+    CuAssertIntEquals(tc, 2, uint_matrix_ensure_row_existence(A, vector));
+    CuAssertIntEquals(tc, 3, A->height);
+    CuAssertIntEquals(tc, 7, A->values[2 * 3 + 0]);
+    CuAssertIntEquals(tc, 8, A->values[2 * 3 + 1]);
+    CuAssertIntEquals(tc, 9, A->values[2 * 3 + 2]);
+    
+    // In there:
+    vector->values[0] = 4;
+    vector->values[1] = 5;
+    vector->values[2] = 6;
+    CuAssertIntEquals(tc, 1, uint_matrix_ensure_row_existence(A, vector));
+    CuAssertIntEquals(tc, 3, A->height);
+    CuAssertIntEquals(tc, 4, A->values[1 * 3 + 0]);
+    CuAssertIntEquals(tc, 5, A->values[1 * 3 + 1]);
+    CuAssertIntEquals(tc, 6, A->values[1 * 3 + 2]);
+    
+    // Didn't we insert something a while ago?
+    vector->values[0] = 7;
+    vector->values[1] = 8;
+    vector->values[2] = 9;
+    
+    CuAssertIntEquals(tc, 2, uint_matrix_ensure_row_existence(A, vector));
+    CuAssertIntEquals(tc, 3, A->height);
     CuAssertIntEquals(tc, 7, A->values[2 * 3 + 0]);
     CuAssertIntEquals(tc, 8, A->values[2 * 3 + 1]);
     CuAssertIntEquals(tc, 9, A->values[2 * 3 + 2]);
