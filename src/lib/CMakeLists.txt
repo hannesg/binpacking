@@ -11,6 +11,8 @@ set(LIBRARY_SRCS double_matrix.c
                  binpacking.c
                  approximate_lp_solver.c
                  approximate_max_min_resource_sharing.c
+                 
+                 knapsack.c
                  )
 
 
