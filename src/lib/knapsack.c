@@ -6,12 +6,14 @@
  */
 
 #include "knapsack.h"
+#include <errno.h>
 
 uint_vector *bound_knapsack( uint_vector *sizes,
                              uint_vector *profits,
                              unsigned int B,
                              unsigned int limit){
     assert( sizes->size == profits->size );
+    assert( sizes->size > 0 );
     unsigned int n = sizes->size;
     unsigned int **minSizes;
     unsigned int ***minSizeConfigurations;
@@ -21,12 +23,31 @@ uint_vector *bound_knapsack( uint_vector *sizes,
     unsigned int i=0;
     unsigned int j, l, size;
 
+    unsigned int minSizeOverflow = 0;
+    unsigned int lastValidConfiguration;
+    unsigned int maxProfit;
+
+    unsigned int finalMinSize;
+    unsigned int *finalMinSizeConfiguration;
+    unsigned int finalMinSizeL;
+
+    unsigned int allocated = n;
+
+    unsigned int *emptyConfiguration = calloc(n, sizeof(unsigned int));
+
+    maxProfit = profits->values[0];
+    for( j = 1 ; j < n ; j++ ){
+        if( profits->values[j] > maxProfit ){
+            maxProfit = profits->values[j];
+        }
+    }
+
     /*
      * Initialize configuration with zero size.
      */
-    minSizes = malloc(sizeof(void *));
+    minSizes = malloc(sizeof(void *) * allocated);
     minSizes[0] = calloc(sizeof(unsigned int), n);
-    minSizeConfigurations = malloc(sizeof(void *));
+    minSizeConfigurations = malloc(sizeof(void *) * allocated);
     minSizeConfigurations[0] = calloc(sizeof(void *), n);
     for( j = 0; j < n ; j++ ){
         minSizeConfigurations[0][j] = calloc(sizeof(unsigned int), n);
@@ -36,82 +57,86 @@ uint_vector *bound_knapsack( uint_vector *sizes,
 
         i++;
 
-        // TODO: maybe we shouldn't realloc in *every* iteration
-        minSizes = realloc(minSizes, sizeof(void *)*(i+1));
+        if( allocated <= i ){
+            allocated *= 2;
+            minSizes = realloc(minSizes, sizeof(void *)*allocated);
+            minSizeConfigurations = realloc(minSizeConfigurations, sizeof(void *)*allocated);
+        }
         minSizes[i] = calloc( n , sizeof(unsigned int) );
-        minSizeConfigurations = realloc(minSizeConfigurations, sizeof(void *)*(i+1));
-        minSizeConfigurations[i] = calloc( n , sizeof(unsigned int) );
+        minSizeConfigurations[i] = calloc( n , sizeof(unsigned int *) );
 
         // j = 0 is special, since it can be easily calculated directly
-        l = ceil( i / profits->values[0] );
-        if( l > limit || l*sizes->values[0] > B ){
+        div_t d = div( i , profits->values[0] );
+        if( d.rem > 0 ){
+            d.quot++;
+        }
+        if( d.quot > limit || d.quot*sizes->values[0] > B ){
             minSizes[i][0] = B + 1;
-            printf("can't reach %i with one item\n", i);
         }else{
-            minSizes[i][0] = l * sizes->values[0];
-            printf("reach %i with %i times one item size %i\n", i, l, minSizes[i][0]);
+            minSizes[i][0] = d.quot * sizes->values[0];
             minSizeConfigurations[i][0] = calloc( n , sizeof(unsigned int) );
-            minSizeConfigurations[i][0][0] = l;
+            minSizeConfigurations[i][0][0] = d.quot;
         }
 
         // all other cases
         for( j = 1 ; j < n ; j++ ){
+            finalMinSize = B + 1;
+            finalMinSizeConfiguration = NULL;
+            finalMinSizeL = 0;
 
-            minSizes[i][j] = minSizes[i][j-1];
-            if( minSizeConfigurations[i][j-1] ){
-                minSizeConfigurations[i][j] = malloc(sizeof(unsigned int)*n);
-                memcpy(minSizeConfigurations[i][j], minSizeConfigurations[i][j-1], sizeof(unsigned int)*n );
-            }
-
-            for( l = 0 ; l < limit ; l++ ){
+            for( l = 0 ; l <= limit ; l++ ){
                 profit = i - l * profits->values[j];
-                if( profit <= 0 ){
-                    // for profit <= 0 the configuration is just empty
-                    size = l*sizes->values[j];
-                    if( size < minSizes[i][j] ){
-                        minSizes[i][j] = size;
-                        if( minSizeConfigurations[i][j] == NULL ){
-                            minSizeConfigurations[i][j] = calloc( n , sizeof(unsigned int) );
-                        }else{
-                            memset( minSizeConfigurations[i][j] , 0 , sizeof(unsigned int)*n);
-                        }
-                        minSizeConfigurations[i][j][j]=l;
+                if( profit > 0 ){
+                    size = ( minSizes[profit][j-1] + l*sizes->values[j] );
+                    if( size < finalMinSize &&
+                        minSizeConfigurations[profit][j-1] != NULL
+                        ){
+                        finalMinSizeConfiguration = minSizeConfigurations[profit][j-1];
+                        finalMinSizeL = l;
+                        finalMinSize = size;
                     }
+                }else if( profit == 0 ){
+                    size = l * sizes->values[j];
+                    if( size < finalMinSize ){
+                        finalMinSizeConfiguration = emptyConfiguration;
+                        finalMinSizeL = l;
+                        finalMinSize = size;
+                    }
+                    break ;
                 }else{
-                    size = l*sizes->values[j] + minSizes[profit][j-1];
-                    if( size < minSizes[i][j] ){
-                        minSizes[i][j] = size;
-                        if( minSizeConfigurations[i][j] == NULL ){
-                            minSizeConfigurations[i][j] = malloc(sizeof(unsigned int)*n);
-                        }
-                        if( minSizeConfigurations[profit][j] ){
-                            memcpy( minSizeConfigurations[i][j] , minSizeConfigurations[profit][j-1] , sizeof(unsigned int)*n);
-                            minSizeConfigurations[i][j][j]=l;
-                            printf("found {%i, %i, %i} with %i using %i items\n", minSizeConfigurations[i][j][0], minSizeConfigurations[i][j][1], minSizeConfigurations[i][j][2], i, j);
-                        }else{
-                            printf("msc[%i]? msc[%i][%i] == NULL \n", i, profit, j);
-                        }
-                    }
+                    break ;
                 }
             }
+            if( finalMinSizeConfiguration ){
+                minSizeConfigurations[i][j] = malloc( n * sizeof(unsigned int) );
+                memcpy( minSizeConfigurations[i][j] , finalMinSizeConfiguration, n * sizeof(unsigned int));
+                minSizeConfigurations[i][j][j] = finalMinSizeL;
+            }
+            minSizes[i][j] = finalMinSize;
         }
-    }while( minSizes[i][n-1] <= B );
+
+        if( minSizes[i][n-1] > B ){
+            minSizeOverflow++;
+        }else{
+            lastValidConfiguration = i;
+            minSizeOverflow = 0;
+        }
+
+    }while( minSizeOverflow <= maxProfit );
 
     // create result
     minSize = B + 1;
     unsigned int minSizePosition = n;
     for( j = 0 ; j < n ; j++ ){
-        printf("[%i] = %i\n", j , minSizes[i-1][j] );
-        if( minSize > minSizes[i-1][j] ){
+        if( minSize > minSizes[lastValidConfiguration][j] ){
             minSizePosition = j;
-            minSize = minSizes[i-1][j];
+            minSize = minSizes[lastValidConfiguration][j];
         }
     }
-    printf("i = %i\n",i);
     assert( minSizePosition < n );
 
     uint_vector *result = alloc_uint_vector(n);
-    memcpy( result->values , minSizeConfigurations[i-1][minSizePosition], sizeof(unsigned int)*n );
+    memcpy( result->values , minSizeConfigurations[lastValidConfiguration][minSizePosition], sizeof(unsigned int)*n );
 
     // clean memory
     for( l = 0 ; l < i ; l++ ){

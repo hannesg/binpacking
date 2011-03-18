@@ -48,3 +48,17 @@ inline unsigned int uint_vector_elem(uint_vector *vector, unsigned int item)
 {
     return vector->values[item];
 }
+
+unsigned int uint_vector_scalar_mult(uint_vector *a, uint_vector *b)
+{
+    assert(a->size == b->size);
+
+    unsigned int result = 0;
+    int i;
+    for(i = 0; i < a->size; ++i) {
+        result += a->values[i] * b->values[i];
+    }
+
+    return result;
+}
+

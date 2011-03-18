@@ -7,6 +7,8 @@
 #ifndef UINT_VECTOR_H
 #define UINT_VECTOR_H
 
+#include <assert.h>
+
 #include "types.h"
 
 struct uint_vector_s {
@@ -35,5 +37,10 @@ void fill_uint_vector(uint_vector *vector, unsigned int value);
 void print_uint_vector(uint_vector *vector);
 
 inline unsigned int uint_vector_elem(uint_vector *vector, unsigned int item);
+
+/**
+ * Scalar multiplication of @p a and @p b
+ */
+unsigned int uint_vector_scalar_mult(uint_vector *a, uint_vector *b);
 
 #endif

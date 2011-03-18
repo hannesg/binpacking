@@ -12,6 +12,7 @@
 #include <malloc.h>
 #include <math.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "uint_vector.h"
 
