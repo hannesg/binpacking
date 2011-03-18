@@ -57,7 +57,7 @@ void Test_knapsack_should_work_on_small_instances(CuTest *tc){
 
 void Test_knapsack_should_work_on_medium_instances(CuTest *tc){
 
-    uint_vector *sizes = alloc_uint_vector(10);
+    uint_vector *sizes = alloc_uint_vector(20);
     sizes->values[0] = 2;
     sizes->values[1] = 3;
     sizes->values[2] = 4;
@@ -68,18 +68,18 @@ void Test_knapsack_should_work_on_medium_instances(CuTest *tc){
     sizes->values[7] = 50;
     sizes->values[8] = 59;
     sizes->values[9] = 102;
-    /*    sizes->values[10] = 32;
-    sizes->values[11] = 12;
-    sizes->values[12] = 22;
-    sizes->values[13] = 3;
-    sizes->values[14] = 41;
-    sizes->values[15] = 22;
-    sizes->values[16] = 34;
-    sizes->values[17] = 42;
-    sizes->values[18] = 229;
-    sizes->values[19] = 31;*/
+    sizes->values[10] = 323;
+    sizes->values[11] = 123;
+    sizes->values[12] = 223;
+    sizes->values[13] = 33;
+    sizes->values[14] = 413;
+    sizes->values[15] = 223;
+    sizes->values[16] = 343;
+    sizes->values[17] = 423;
+    sizes->values[18] = 2293;
+    sizes->values[19] = 313;
 
-    uint_vector *profits = alloc_uint_vector(10);
+    uint_vector *profits = alloc_uint_vector(20);
     profits->values[0] = 1;
     profits->values[1] = 3;
     profits->values[2] = 4;
@@ -90,22 +90,26 @@ void Test_knapsack_should_work_on_medium_instances(CuTest *tc){
     profits->values[7] = 66;
     profits->values[8] = 61;
     profits->values[9] = 125;
-/*    profits->values[10] = 40;
-    profits->values[11] = 13;
-    profits->values[12] = 22;
-    profits->values[13] = 4;
-    profits->values[14] = 20;
-    profits->values[15] = 1;
-    profits->values[16] = 32;
-    profits->values[17] = 41;
-    profits->values[18] = 240;
-    profits->values[19] = 31;*/
+    profits->values[10] = 403;
+    profits->values[11] = 133;
+    profits->values[12] = 223;
+    profits->values[13] = 43;
+    profits->values[14] = 203;
+    profits->values[15] = 13;
+    profits->values[16] = 323;
+    profits->values[17] = 413;
+    profits->values[18] = 2403;
+    profits->values[19] = 313;
 
     uint_vector *result;
 
-    result = bound_knapsack(sizes, profits, 103, 2);
+    result = bound_knapsack(sizes, profits, 1000, 5);
 
-    CuAssertIntEquals(tc, 140, uint_vector_scalar_mult(result, profits));
+    CuAssertIntEquals(tc, 1306, uint_vector_scalar_mult(result, profits));
+
+    result = approximate_bound_knapsack(sizes, profits, 1000, 5, 0.1);
+
+    CuAssertTrue(tc, ( 1306 * 0.9 ) <= uint_vector_scalar_mult(result, profits) );
 
     free(result);
 

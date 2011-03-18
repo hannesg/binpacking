@@ -66,16 +66,21 @@ uint_vector *bound_knapsack( uint_vector *sizes,
         minSizeConfigurations[i] = calloc( n , sizeof(unsigned int *) );
 
         // j = 0 is special, since it can be easily calculated directly
-        div_t d = div( i , profits->values[0] );
-        if( d.rem > 0 ){
-            d.quot++;
-        }
-        if( d.quot > limit || d.quot*sizes->values[0] > B ){
+        if( profits->values[0] == 0 ){
+            // this is important, since scaling in the approximate version could produce profit-less items
             minSizes[i][0] = B + 1;
         }else{
-            minSizes[i][0] = d.quot * sizes->values[0];
-            minSizeConfigurations[i][0] = calloc( n , sizeof(unsigned int) );
-            minSizeConfigurations[i][0][0] = d.quot;
+            div_t d = div( i , profits->values[0] );
+            if( d.rem > 0 ){
+                d.quot++;
+            }
+            if( d.quot > limit || d.quot*sizes->values[0] > B ){
+                minSizes[i][0] = B + 1;
+            }else{
+                minSizes[i][0] = d.quot * sizes->values[0];
+                minSizeConfigurations[i][0] = calloc( n , sizeof(unsigned int) );
+                minSizeConfigurations[i][0][0] = d.quot;
+            }
         }
 
         // all other cases
@@ -83,28 +88,34 @@ uint_vector *bound_knapsack( uint_vector *sizes,
             finalMinSize = B + 1;
             finalMinSizeConfiguration = NULL;
             finalMinSizeL = 0;
-
-            for( l = 0 ; l <= limit ; l++ ){
-                profit = i - l * profits->values[j];
-                if( profit > 0 ){
-                    size = ( minSizes[profit][j-1] + l*sizes->values[j] );
-                    if( size < finalMinSize &&
-                        minSizeConfigurations[profit][j-1] != NULL
-                        ){
-                        finalMinSizeConfiguration = minSizeConfigurations[profit][j-1];
-                        finalMinSizeL = l;
-                        finalMinSize = size;
+            if( sizes->values[j]  == 0 ){
+                if( minSizeConfigurations[i][j-1] != NULL ){
+                    finalMinSizeConfiguration = minSizeConfigurations[i][j-1];
+                    finalMinSize = minSizes[i][j-1];
+                }
+            }else{
+                for( l = 0 ; l <= limit ; l++ ){
+                    profit = i - l * profits->values[j];
+                    if( profit > 0 ){
+                        size = ( minSizes[profit][j-1] + l*sizes->values[j] );
+                        if( size < finalMinSize &&
+                            minSizeConfigurations[profit][j-1] != NULL
+                            ){
+                            finalMinSizeConfiguration = minSizeConfigurations[profit][j-1];
+                            finalMinSizeL = l;
+                            finalMinSize = size;
+                        }
+                    }else if( profit == 0 ){
+                        size = l * sizes->values[j];
+                        if( size < finalMinSize ){
+                            finalMinSizeConfiguration = emptyConfiguration;
+                            finalMinSizeL = l;
+                            finalMinSize = size;
+                        }
+                        break ;
+                    }else{
+                        break ;
                     }
-                }else if( profit == 0 ){
-                    size = l * sizes->values[j];
-                    if( size < finalMinSize ){
-                        finalMinSizeConfiguration = emptyConfiguration;
-                        finalMinSizeL = l;
-                        finalMinSize = size;
-                    }
-                    break ;
-                }else{
-                    break ;
                 }
             }
             if( finalMinSizeConfiguration ){
@@ -154,8 +165,33 @@ uint_vector *bound_knapsack( uint_vector *sizes,
 
 uint_vector *approximate_bound_knapsack( uint_vector *sizes,
                                          uint_vector *profits,
-                                         unsigned int knapsack_size,
+                                         unsigned int B,
                                          unsigned int limit,
                                          double precision ){
+    assert( sizes->size == profits->size );
+    assert( sizes->size > 0 );
+    unsigned int n = sizes->size;
+    unsigned int j;
+    unsigned int maxProfit = profits->values[0];
+    for( j = 1 ; j < n ; j++ ){
+        if( profits->values[j] > maxProfit ){
+            maxProfit = profits->values[j];
+        }
+    }
+    unsigned int scale = floor(precision * (double)( maxProfit / n) );
+    if( scale <= 1 ){
+        return bound_knapsack(sizes, profits, B, limit);
+    }
 
+    uint_vector *scaled_profits = alloc_uint_vector(n);
+    for( j = 0 ; j < n ; j++ ){
+        div_t d = div( profits->values[j] , scale );
+        scaled_profits->values[j] = d.quot;
+    }
+
+    uint_vector *result = bound_knapsack(sizes, scaled_profits, B, limit);
+
+    free_uint_vector(scaled_profits);
+
+    return result;
 }

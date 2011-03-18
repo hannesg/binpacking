@@ -8,6 +8,11 @@
 #ifndef KNAPSACK_H_
 #define KNAPSACK_H_
 
+/** @file knapsack.h
+ *  @brief Exact and Approximative Knapsack algorithm
+ */
+
+
 #include <assert.h>
 #include <malloc.h>
 #include <math.h>
@@ -16,10 +21,47 @@
 
 #include "uint_vector.h"
 
+
+/**
+ * Calculates a knapsack configuration S such that
+ *
+ * @p sizes * S <= @p B
+ *
+ * @p profits * S = max( profits * U | @p sizes * S <= @p B )
+ *
+ * @param sizes the sizes of the items
+ * @param profits the profits of the items
+ * @param B the knapsack size
+ * @param limit a limit for frequency of each item
+ *
+ * @returns the optimal knapsack configuration S
+ */
 uint_vector *bound_knapsack( uint_vector *sizes,
                              uint_vector *profits,
                              unsigned int B,
                              unsigned int limit);
+
+
+/**
+ * Calculates a knapsack configuration S such that
+ *
+ * @p sizes * S <= @p B
+ *
+ * @p profits * S >= (1-precision) * max( profits * U | @p sizes * S <= @p B )
+ *
+ * @param sizes the sizes of the items
+ * @param profits the profits of the items
+ * @param B the knapsack size
+ * @param limit a limit for frequency of each item
+ * @param precision the desired precision
+ *
+ * @returns the nearly optimal knapsack configuration S
+ */
+uint_vector *approximate_bound_knapsack( uint_vector *sizes,
+                             uint_vector *profits,
+                             unsigned int B,
+                             unsigned int limit,
+                             double precision);
 
 
 #endif /* KNAPSACK_H_ */
