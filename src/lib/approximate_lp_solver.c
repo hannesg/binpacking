@@ -45,6 +45,8 @@ double_vector *approximate_lp_solver(uint_matrix *A,
         }
     } while(minimum < maximum);
     
+    free_double_matrix(matrix);
+
     if(end_solution == NULL) {
         // We did not find an solution.
         return NULL;

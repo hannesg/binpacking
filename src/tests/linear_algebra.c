@@ -435,6 +435,8 @@ void Test_uint_matrix_change_height(CuTest *tc)
     
     uint_matrix_change_height(A, 1024);
     CuAssertIntEquals(tc, 2048, A->array_height);
+
+    free_uint_matrix(A);
 }
 
 void Test_uint_matrix_append_row(CuTest *tc)
@@ -477,6 +479,9 @@ void Test_uint_matrix_append_row(CuTest *tc)
     CuAssertIntEquals(tc, 7, A->values[3 * 3 + 0]);
     CuAssertIntEquals(tc, 8, A->values[3 * 3 + 1]);
     CuAssertIntEquals(tc, 9, A->values[3 * 3 + 2]);
+
+    free_uint_vector(vector);
+    free_uint_matrix(A);
 }
 
 void Test_uint_matrix_ensure_row_existence(CuTest *tc)
@@ -523,4 +528,7 @@ void Test_uint_matrix_ensure_row_existence(CuTest *tc)
     CuAssertIntEquals(tc, 7, A->values[2 * 3 + 0]);
     CuAssertIntEquals(tc, 8, A->values[2 * 3 + 1]);
     CuAssertIntEquals(tc, 9, A->values[2 * 3 + 2]);
+
+    free_uint_vector(vector);
+    free_uint_matrix(A);
 }

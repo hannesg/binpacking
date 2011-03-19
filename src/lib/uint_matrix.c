@@ -57,7 +57,7 @@ void uint_matrix_change_height(uint_matrix *matrix, unsigned int height)
         while(height > matrix->array_height) {
             matrix->array_height *= 2;
         }
-        matrix->values = realloc(matrix->values, sizeof(unsigned int) * matrix->height * matrix->array_height);
+        matrix->values = realloc(matrix->values, sizeof(unsigned int) * matrix->width * matrix->array_height);
     }
     matrix->height = height;
 }

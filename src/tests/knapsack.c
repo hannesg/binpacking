@@ -28,31 +28,33 @@ void Test_knapsack_should_work_on_small_instances(CuTest *tc){
 
     CuAssertIntEquals(tc, 10, uint_vector_scalar_mult(result, profits));
 
-    free(result);
+    free_uint_vector(result);
 
     result = bound_knapsack(sizes, profits, 11, 2);
 
     CuAssertIntEquals(tc, 11, uint_vector_scalar_mult(result, profits));
 
-    free(result);
+    free_uint_vector(result);
 
     result = bound_knapsack(sizes, profits, 12, 2);
 
     CuAssertIntEquals(tc, 11, uint_vector_scalar_mult(result, profits));
 
-    free(result);
+    free_uint_vector(result);
 
     result = bound_knapsack(sizes, profits, 13, 2);
 
     CuAssertIntEquals(tc, 12, uint_vector_scalar_mult(result, profits));
 
-    free(result);
+    free_uint_vector(result);
 
     result = bound_knapsack(sizes, profits, 14, 2);
 
     CuAssertIntEquals(tc, 14, uint_vector_scalar_mult(result, profits));
 
-    free(result);
+    free_uint_vector(result);
+    free_uint_vector(profits);
+    free_uint_vector(sizes);
 }
 
 void Test_knapsack_should_work_on_medium_instances(CuTest *tc){
@@ -107,11 +109,15 @@ void Test_knapsack_should_work_on_medium_instances(CuTest *tc){
 
     CuAssertIntEquals(tc, 1306, uint_vector_scalar_mult(result, profits));
 
+    free_uint_vector(result);
+
     result = approximate_bound_knapsack(sizes, profits, 1000, 5, 0.1);
 
     CuAssertTrue(tc, ( 1306 * 0.9 ) <= uint_vector_scalar_mult(result, profits) );
 
-    free(result);
+    free_uint_vector(result);
 
+    free_uint_vector(profits);
+    free_uint_vector(sizes);
 }
 

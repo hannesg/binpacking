@@ -145,6 +145,16 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
     
     if(x == NULL) {
         // approximate_lp_solver did not find a solution
+
+        free(items);
+        free(partition_items);
+        free(partition_sizes);
+        free(partition_starts);
+        free(positions);
+
+        free_uint_vector(b);
+        free_uint_matrix(A);
+
         return NULL;
     }
     // dummy:
@@ -172,6 +182,7 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
             }
             
             if(!itemExists) {
+                free_packing(pack);
                 continue;
             }
             
@@ -182,8 +193,9 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
                     // we pack the original items directly or a smaller one
                     // depending on whether we have already packed a bigger one
                     int substPartitionNr = j + 1;
-                    while(partition_sizes[substPartitionNr] <= 0
-                          && substPartitionNr < m)
+                    while( substPartitionNr < m
+                           && partition_sizes[substPartitionNr] <= 0
+                           && substPartitionNr < m)
                     {
                         substPartitionNr++;
                     }
@@ -227,10 +239,12 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
     // free memory
     free_uint_matrix(A);
     free_uint_vector(b);
+    free_uint_vector(order);
     free_double_vector(x);
     free(items);
     free(partition_items);
     free(partition_sizes);
+    free(partition_starts);
     free(positions);
 
     // done!

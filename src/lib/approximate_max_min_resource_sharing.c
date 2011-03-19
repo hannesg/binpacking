@@ -112,6 +112,8 @@ max_min_resource_sharing_solution *approximate_max_min_resource_sharing(double_m
         double residuum = (hat_prod - prod) / (hat_prod + prod);
         
         if(fabs(residuum) < approximate_block_solver_precision) {
+            free_double_vector(hat_x);
+            free_double_vector(hat_function_solution);
             break;
         }
         

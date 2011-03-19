@@ -150,13 +150,14 @@ uint_vector *bound_knapsack( uint_vector *sizes,
     memcpy( result->values , minSizeConfigurations[lastValidConfiguration][minSizePosition], sizeof(unsigned int)*n );
 
     // clean memory
-    for( l = 0 ; l < i ; l++ ){
+    for( l = 0 ; l <= i ; l++ ){
         free(minSizes[l]);
         for( j = 0 ; j < n ; j++ ){
             free(minSizeConfigurations[l][j]);
         }
         free(minSizeConfigurations[l]);
     }
+    free(emptyConfiguration);
     free(minSizes);
     free(minSizeConfigurations);
 

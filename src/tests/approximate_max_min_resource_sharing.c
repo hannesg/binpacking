@@ -42,6 +42,7 @@ void Test_approximate_max_min_resource_sharing(CuTest *tc)
     free_max_min_resource_sharing_solution(solution);
     free_double_vector(real_optimum);
     free_double_vector(optimum_function_solution);
+    free_double_vector(function_solution);
 }
 
 void Test_calculate_optimum_condition(CuTest *tc)

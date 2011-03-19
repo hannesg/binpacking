@@ -4,6 +4,7 @@
  *****************************************************************************/
 
 #include <time.h>
+#include <assert.h>
 
 #include "CuTest.h"
 #include "binpacking.h"
@@ -49,6 +50,8 @@ void Test_track_sort_should_work(CuTest *tc)
         last = items[i];
         i++;
     }
+
+    free(positions);
 }
 
 void print_submatrix(uint_matrix *A, unsigned int start_i, unsigned int end_i, unsigned int start_j, unsigned int end_j){
@@ -102,13 +105,14 @@ int matrix_contains_exact_row(uint_matrix *A, unsigned int *row) {
 
 // this method is not required to be fast, just correct
 int check_bin_packing_matrix(uint_matrix *A, double items[], unsigned int limit){
-    unsigned int i,j, x;
+    assert( A != NULL );
+    unsigned int i,j, x=0;
     double room;
     double fill;
     double min;
     int errors = 0;
     unsigned int max_value;
-    unsigned int *row = malloc(sizeof(unsigned int) * A->width);
+    unsigned int *row = calloc(A->width, sizeof(unsigned int));
     // check if every present packing is valid
     min = items[0];
     for( i = 0; i < A->width ; i++ ){
@@ -178,6 +182,9 @@ int check_bin_packing_matrix(uint_matrix *A, double items[], unsigned int limit)
             i++;
         }
     }
+
+    free(row);
+
     return errors;
 }
 
@@ -216,6 +223,9 @@ void Test_matrix_from_items_should_work(CuTest *tc)
 
     printf("A in %2i x %2i \n",A->width, A->height);
     CuAssertIntEquals(tc, 0, check_bin_packing_matrix(A,items, 10));
+
+    free(positions);
+    free_uint_matrix(A);
 }
 
 void Test_matrix_from_items_example1(CuTest *tc) {

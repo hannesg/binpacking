@@ -5,6 +5,7 @@
 void Test_packing_is_initialized_correctly(CuTest *tc) {
     packing * pack = alloc_packing();
     CuAssertPtrNotNull(tc, pack);
+    free_packing(pack);
 }
 
 void Test_packing_contains_items(CuTest *tc) {
