@@ -20,7 +20,7 @@
 #include <stdlib.h>
 
 #include "uint_vector.h"
-
+#include "double_vector.h"
 
 /**
  * Calculates a knapsack configuration S such that
@@ -36,9 +36,9 @@
  *
  * @returns the optimal knapsack configuration S
  */
-uint_vector *bound_knapsack( uint_vector *sizes,
+uint_vector *bound_knapsack( double_vector *sizes,
                              uint_vector *profits,
-                             unsigned int B,
+                             double B,
                              unsigned int limit);
 
 
@@ -57,9 +57,9 @@ uint_vector *bound_knapsack( uint_vector *sizes,
  *
  * @returns the nearly optimal knapsack configuration S
  */
-uint_vector *approximate_bound_knapsack( uint_vector *sizes,
-                             uint_vector *profits,
-                             unsigned int B,
+uint_vector *approximate_bound_knapsack( double_vector *sizes,
+                             double_vector *profits,
+                             double B,
                              unsigned int limit,
                              double precision);
 

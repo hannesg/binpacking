@@ -2,6 +2,7 @@ set(LIBRARY_SRCS double_matrix.c
                  double_vector.c
                  uint_matrix.c
                  uint_vector.c
+                 mixed_vector.c
                  print_double_array.c
                  print_uint_array.c
 

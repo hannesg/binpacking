@@ -6,28 +6,31 @@
  */
 
 #include "knapsack.h"
-#include <errno.h>
 
-uint_vector *bound_knapsack( uint_vector *sizes,
+uint_vector *bound_knapsack( double_vector *sizes,
                              uint_vector *profits,
-                             unsigned int B,
+                             double B,
                              unsigned int limit){
     assert( sizes->size == profits->size );
     assert( sizes->size > 0 );
+    assert( B > 0 );
+    assert( B < INFINITY );
     unsigned int n = sizes->size;
-    unsigned int **minSizes;
+    double **minSizes;
     unsigned int ***minSizeConfigurations;
     int profit;
-    unsigned int minSize = 0;
+    double minSize = 0;
+    double tooBig = nextafter(B, INFINITY);
 
     unsigned int i=0;
-    unsigned int j, l, size;
+    unsigned int j, l;
+    double size;
 
     unsigned int minSizeOverflow = 0;
     unsigned int lastValidConfiguration;
     unsigned int maxProfit;
 
-    unsigned int finalMinSize;
+    double finalMinSize;
     unsigned int *finalMinSizeConfiguration;
     unsigned int finalMinSizeL;
 
@@ -46,7 +49,7 @@ uint_vector *bound_knapsack( uint_vector *sizes,
      * Initialize configuration with zero size.
      */
     minSizes = malloc(sizeof(void *) * allocated);
-    minSizes[0] = calloc(sizeof(unsigned int), n);
+    minSizes[0] = calloc(sizeof(double), n);
     minSizeConfigurations = malloc(sizeof(void *) * allocated);
     minSizeConfigurations[0] = calloc(sizeof(void *), n);
     for( j = 0; j < n ; j++ ){
@@ -62,20 +65,20 @@ uint_vector *bound_knapsack( uint_vector *sizes,
             minSizes = realloc(minSizes, sizeof(void *)*allocated);
             minSizeConfigurations = realloc(minSizeConfigurations, sizeof(void *)*allocated);
         }
-        minSizes[i] = calloc( n , sizeof(unsigned int) );
+        minSizes[i] = calloc( n , sizeof(double) );
         minSizeConfigurations[i] = calloc( n , sizeof(unsigned int *) );
 
         // j = 0 is special, since it can be easily calculated directly
         if( profits->values[0] == 0 ){
             // this is important, since scaling in the approximate version could produce profit-less items
-            minSizes[i][0] = B + 1;
+            minSizes[i][0] = tooBig;
         }else{
             div_t d = div( i , profits->values[0] );
             if( d.rem > 0 ){
                 d.quot++;
             }
             if( d.quot > limit || d.quot*sizes->values[0] > B ){
-                minSizes[i][0] = B + 1;
+                minSizes[i][0] = tooBig;
             }else{
                 minSizes[i][0] = d.quot * sizes->values[0];
                 minSizeConfigurations[i][0] = calloc( n , sizeof(unsigned int) );
@@ -85,7 +88,7 @@ uint_vector *bound_knapsack( uint_vector *sizes,
 
         // all other cases
         for( j = 1 ; j < n ; j++ ){
-            finalMinSize = B + 1;
+            finalMinSize = tooBig;
             finalMinSizeConfiguration = NULL;
             finalMinSizeL = 0;
             if( sizes->values[j]  == 0 ){
@@ -136,7 +139,7 @@ uint_vector *bound_knapsack( uint_vector *sizes,
     }while( minSizeOverflow <= maxProfit );
 
     // create result
-    minSize = B + 1;
+    minSize = tooBig;
     unsigned int minSizePosition = n;
     for( j = 0 ; j < n ; j++ ){
         if( minSize > minSizes[lastValidConfiguration][j] ){
@@ -164,9 +167,9 @@ uint_vector *bound_knapsack( uint_vector *sizes,
     return result;
 }
 
-uint_vector *approximate_bound_knapsack( uint_vector *sizes,
-                                         uint_vector *profits,
-                                         unsigned int B,
+uint_vector *approximate_bound_knapsack( double_vector *sizes,
+                                         double_vector *profits,
+                                         double B,
                                          unsigned int limit,
                                          double precision ){
     assert( sizes->size == profits->size );
@@ -180,14 +183,15 @@ uint_vector *approximate_bound_knapsack( uint_vector *sizes,
         }
     }
     unsigned int scale = floor(precision * (double)( maxProfit / n) );
-    if( scale <= 1 ){
-        return bound_knapsack(sizes, profits, B, limit);
-    }
-
     uint_vector *scaled_profits = alloc_uint_vector(n);
-    for( j = 0 ; j < n ; j++ ){
-        div_t d = div( profits->values[j] , scale );
-        scaled_profits->values[j] = d.quot;
+    if( scale <= 1 ){
+        for( j = 0 ; j < n ; j++ ){
+            scaled_profits->values[j] = floor(profits->values[j]);
+        }
+    }else{
+        for( j = 0 ; j < n ; j++ ){
+            scaled_profits->values[j] = floor(profits->values[j] / scale);
+        }
     }
 
     uint_vector *result = bound_knapsack(sizes, scaled_profits, B, limit);
