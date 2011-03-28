@@ -115,8 +115,10 @@ double_vector *transposed_matrix_vector_mult(double_matrix *A, double_vector *x)
     
     int row;
     for(row = 0; row < A->height; ++row) {
+        if( x->values[row] == 0.0 ){
+            continue ;
+        }
         int column;
-        
         for(column = 0; column < A->width; ++column) {
             result->values[column] += A->values[row * A->width + column] * x->values[row];
         }

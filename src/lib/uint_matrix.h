@@ -8,6 +8,7 @@
 #define UINT_MATRIX_H
 
 #include "types.h"
+#include "double_vector.h"
 
 /**
  * A matrix of unsigned int values with height and width with
@@ -72,5 +73,8 @@ double_matrix *uint_matrix_vector_division(uint_matrix *A, uint_vector *b);
  * Divides every column of the matrix @p A by the corresponding row in the vector @p b.
  */
 double_matrix *uint_transposed_matrix_vector_division(uint_matrix *A, uint_vector *b);
+
+
+double_vector *uint_transposed_matrix_vector_mult(uint_matrix *A, double_vector *x);
 
 #endif

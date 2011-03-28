@@ -47,7 +47,7 @@ double vector_min(double_vector *x);
 double vector_scalar_mult(double_vector *a, double_vector *b);
 
 /**
- * Calculates a + b and saves the result in a.
+ * Calculates a + b and saves the result in a. Increases the size of a when needed.
  */
 void vector_vector_add_assignment(double_vector *a, double_vector *b);
 

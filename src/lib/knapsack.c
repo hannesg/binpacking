@@ -174,29 +174,62 @@ uint_vector *approximate_bound_knapsack( double_vector *sizes,
                                          double precision ){
     assert( sizes->size == profits->size );
     assert( sizes->size > 0 );
+
     unsigned int n = sizes->size;
     unsigned int j;
-    unsigned int maxProfit = profits->values[0];
+    double maxProfit = profits->values[0];
+    unsigned int maxProfitPosition = 0;
     for( j = 1 ; j < n ; j++ ){
         if( profits->values[j] > maxProfit ){
             maxProfit = profits->values[j];
+            maxProfitPosition = j;
         }
     }
-    unsigned int scale = floor(precision * (double)( maxProfit / n) );
+    double scale = precision * (double)( maxProfit / n);
     uint_vector *scaled_profits = alloc_uint_vector(n);
-    if( scale <= 1 ){
+
+    unsigned int positive_profit_found = 0;
+
+    /*if( scale <= 1 ){
         for( j = 0 ; j < n ; j++ ){
             scaled_profits->values[j] = floor(profits->values[j]);
+            if( scaled_profits->values[j] > 0 ){
+                positive_profit_found = 1;
+            }
         }
-    }else{
+    }else{*/
         for( j = 0 ; j < n ; j++ ){
             scaled_profits->values[j] = floor(profits->values[j] / scale);
+            if( scaled_profits->values[j] > 0 ){
+                positive_profit_found = 1;
+            }
         }
+    /*}*/
+    if( !positive_profit_found ){
+        // bad, bad ...
+        // with every profit == 0 we will never reach any profit at all
+        // we will fix this by giving the most valuable item a positive
+        // profit
+        scaled_profits->values[maxProfitPosition] = 1;
     }
-
     uint_vector *result = bound_knapsack(sizes, scaled_profits, B, limit);
 
     free_uint_vector(scaled_profits);
+    return result;
+}
 
+double_vector * approximate_bound_knapsack_block_solver(
+                             uint_matrix *A,
+                             double_vector *sizes,
+                             double_vector *profits,
+                             double B,
+                             unsigned int limit,
+                             double precision){
+    uint_vector *solution = approximate_bound_knapsack(sizes, profits, B, limit, precision);
+    unsigned int index = uint_matrix_ensure_row_existence(A, solution);
+    double_vector *result = alloc_double_vector(A->height);
+    fill_double_vector(result,0.0);
+    result->values[index] = 1;
+    free_uint_vector(solution);
     return result;
 }

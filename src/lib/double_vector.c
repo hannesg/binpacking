@@ -131,10 +131,16 @@ double vector_scalar_mult(double_vector *a, double_vector *b)
 
 void vector_vector_add_assignment(double_vector *a, double_vector *b)
 {
-    assert(a->size == b->size);
-
-    int i;
-    for(i = 0; i < a->size; ++i) {
+    unsigned int i;
+    if(a->size < b->size){
+        // rescale a
+        a->values = realloc(a->values, b->size * sizeof(double));
+        for( i = a->size; i < b->size; i++ ){
+            a->values[i] = 0.0;
+        }
+        a->size = b->size;
+    }
+    for(i = 0; i < b->size; ++i) {
         a->values[i] = a->values[i] + b->values[i];
     }
 }

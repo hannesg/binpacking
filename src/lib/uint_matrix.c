@@ -50,9 +50,18 @@ void print_uint_matrix(uint_matrix *matrix)
 
 void uint_matrix_change_height(uint_matrix *matrix, unsigned int height)
 {
+    if( height == 0 ){
+        free(matrix->values);
+        matrix->array_height =0;
+        matrix->height = 0;
+        matrix->values = NULL;
+        return;
+    }
     if(height > matrix->array_height) {
         if(height >= 1024) {
             matrix->array_height = (height / 1024 + 1) * height;
+        }else if( matrix->array_height == 0 ){
+            matrix->array_height = 1;
         }
         while(height > matrix->array_height) {
             matrix->array_height *= 2;
@@ -65,7 +74,7 @@ void uint_matrix_change_height(uint_matrix *matrix, unsigned int height)
 void uint_matrix_append_row(uint_matrix *matrix, uint_vector *vector)
 {
     assert(vector->size == matrix->width);
-    int row = matrix->height;
+    unsigned int row = matrix->height;
     uint_matrix_change_height(matrix, matrix->height + 1);
     memcpy(matrix->values + row * matrix->width, vector->values, matrix->width * sizeof(unsigned int));
 }
@@ -74,19 +83,19 @@ unsigned int uint_matrix_ensure_row_existence(uint_matrix *matrix, uint_vector *
 {
     assert(row->size == matrix->width);
     
-    int rowNr;
+    unsigned int rowNr;
     for(rowNr = 0; rowNr < matrix->height; ++rowNr) {
-        int colNr;
-        for(colNr = 0; colNr < matrix->height; ++colNr) {
-            if(uint_matrix_elem(matrix, rowNr, colNr) != uint_vector_elem(row, colNr)) {
+        printf("checking row %i of %i\n", rowNr, matrix->height);
+        unsigned int colNr;
+        for(colNr = 0; colNr < matrix->width; ++colNr) {
+            if( uint_matrix_elem(matrix, rowNr, colNr) != uint_vector_elem(row, colNr)) {
                 break;
             }
         }
-        if(colNr == matrix->height) {
+        if(colNr == matrix->width) {
             return rowNr;
         }
     }
-    
     uint_matrix_append_row(matrix, row);
     return matrix->height - 1;
 }
@@ -141,6 +150,27 @@ double_matrix *uint_transposed_matrix_vector_division(uint_matrix *A, uint_vecto
         }
     }
     
+    return result;
+}
+
+double_vector *uint_transposed_matrix_vector_mult(uint_matrix *A, double_vector *x)
+{
+    assert(x->size == A->height);
+
+    double_vector *result = alloc_double_vector(A->width);
+    fill_double_vector(result, 0.0);
+
+    int row;
+    for(row = 0; row < A->height; ++row) {
+        if( x->values[row] == 0.0 ){
+            continue ;
+        }
+        int column;
+        for(column = 0; column < A->width; ++column) {
+            result->values[column] += A->values[row * A->width + column] * x->values[row];
+        }
+    }
+
     return result;
 }
 

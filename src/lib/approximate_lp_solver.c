@@ -59,3 +59,53 @@ double_vector *approximate_lp_solver(uint_matrix *A,
         return solution_vector;
     }
 }
+
+double_vector *approximate_rbp_lp_solver(double_vector *items,
+                                     uint_matrix *A,
+                                     double precision,
+                                     unsigned int limit)
+{
+    int minimum = 1;     // area
+    int maximum = limit; // 2 * area + 1
+
+    uint_matrix *matrix = NULL;
+    max_min_resource_sharing_solution *end_solution = NULL;
+    int medium;
+    do {
+        medium =  (minimum + maximum)/2; // This does not fail because limit is small.
+        matrix = alloc_uint_matrix(0, items->size);
+        max_min_resource_sharing_solution *solution
+            = approximate_rbp_lp_max_min_resource_sharing(
+                                                   items,
+                                                   matrix,
+                                                   medium,
+                                                   precision);
+
+        if(solution->function_solution_min >= 1.0) {
+            maximum = medium;
+            free_max_min_resource_sharing_solution(end_solution);
+            end_solution = solution;
+        } else {
+            minimum = medium + 1;
+            free_max_min_resource_sharing_solution(solution);
+            free_uint_matrix(matrix);
+        }
+    } while(minimum < maximum);
+
+    if(end_solution == NULL) {
+        // We did not find an solution.
+        return NULL;
+    }
+    else {
+        // We only need the solution_vector, the values are unneded for us.
+        free_double_vector(end_solution->function_solution);
+        double_vector *solution_vector = end_solution->vector;
+        free(end_solution);
+        A->values = matrix->values;
+        A->width = matrix->width;
+        A->height = matrix->height;
+        A->array_height = matrix->array_height;
+        free(matrix);
+        return solution_vector;
+    }
+}

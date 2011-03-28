@@ -20,6 +20,7 @@
 #include <stdlib.h>
 
 #include "uint_vector.h"
+#include "uint_matrix.h"
 #include "double_vector.h"
 
 /**
@@ -58,6 +59,17 @@ uint_vector *bound_knapsack( double_vector *sizes,
  * @returns the nearly optimal knapsack configuration S
  */
 uint_vector *approximate_bound_knapsack( double_vector *sizes,
+                             double_vector *profits,
+                             double B,
+                             unsigned int limit,
+                             double precision);
+
+/**
+ *
+ */
+double_vector * approximate_bound_knapsack_block_solver(
+                             uint_matrix *A,
+                             double_vector *sizes,
                              double_vector *profits,
                              double B,
                              unsigned int limit,

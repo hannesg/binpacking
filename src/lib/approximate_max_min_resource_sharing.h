@@ -5,6 +5,7 @@
 
 // Project
 #include "types.h"
+#include "uint_matrix.h"
 
 typedef struct {
     double_vector *vector;
@@ -24,3 +25,10 @@ void free_max_min_resource_sharing_solution(max_min_resource_sharing_solution *s
 max_min_resource_sharing_solution *approximate_max_min_resource_sharing(double_matrix *A,
                                                                         unsigned int limit,
                                                                         double precision);
+
+
+max_min_resource_sharing_solution *approximate_rbp_lp_max_min_resource_sharing(double_vector *items,
+                                                                        uint_matrix *A,
+                                                                        unsigned int limit,
+                                                                        double precision
+                                                                        );
