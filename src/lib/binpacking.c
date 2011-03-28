@@ -77,7 +77,7 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
     /*
      * The LP-Target
      */
-    uint_vector *b;
+    //uint_vector *b;
 
     /*
      * The LP-Solution
@@ -89,6 +89,7 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
      */
     unsigned int g = 0, h = 0, i = 0, j = 0, aij;
     packing *pack;
+    double_vector sizes;
 
     // copy and sort the given items
     memcpy(items, items_in, sizeof(double) * n);
@@ -135,6 +136,7 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
     }
 
     // this matrix contains all possible packings
+    /*
     A = matrix_from_items(partition_items + 1, m - 1, k);
 
     b = alloc_uint_vector(m - 1);
@@ -142,7 +144,14 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
 
     // solve the LP approximately
     x = approximate_lp_solver(A, b, delta, (min_small_n < MAX_BIN_NUMBER) ? min_small_n : MAX_BIN_NUMBER);
-    
+    */
+    A = malloc(sizeof(uint_matrix));
+
+    sizes.values = partition_items;
+    sizes.size = m;
+
+    x = approximate_rbp_lp_solver(&sizes, A, delta, (min_small_n < MAX_BIN_NUMBER) ? min_small_n : MAX_BIN_NUMBER );
+
     if(x == NULL) {
         // approximate_lp_solver did not find a solution
 
@@ -152,13 +161,11 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
         free(partition_starts);
         free(positions);
 
-        free_uint_vector(b);
-        free_uint_matrix(A);
+        //free_uint_vector(b);
+        free(A);
 
         return NULL;
     }
-    // dummy:
-//     x = alloc_double_vector(A->width);
 
     // pack the solutions
     result = alloc_packing_list();
@@ -238,7 +245,7 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
 
     // free memory
     free_uint_matrix(A);
-    free_uint_vector(b);
+    //free_uint_vector(b);
     free_uint_vector(order);
     free_double_vector(x);
     free(items);
