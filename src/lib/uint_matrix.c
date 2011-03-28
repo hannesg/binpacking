@@ -85,7 +85,6 @@ unsigned int uint_matrix_ensure_row_existence(uint_matrix *matrix, uint_vector *
     
     unsigned int rowNr;
     for(rowNr = 0; rowNr < matrix->height; ++rowNr) {
-        printf("checking row %i of %i\n", rowNr, matrix->height);
         unsigned int colNr;
         for(colNr = 0; colNr < matrix->width; ++colNr) {
             if( uint_matrix_elem(matrix, rowNr, colNr) != uint_vector_elem(row, colNr)) {
