@@ -70,7 +70,6 @@ double_vector *approximate_rbp_lp_solver(double_vector *items,
 {
     int minimum = min;
     int maximum = max + 1;
-
     uint_matrix *matrix = NULL;
     max_min_resource_sharing_solution *end_solution = NULL;
     int medium;

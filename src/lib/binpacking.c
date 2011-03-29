@@ -145,8 +145,8 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
     */
     A = malloc(sizeof(uint_matrix));
 
-    sizes.values = partition_items;
-    sizes.size = m;
+    sizes.values = partition_items + 1;
+    sizes.size = m - 1;
 
     double area = 0.0;
     for(i = 1; i < m - 1; ++i) {
