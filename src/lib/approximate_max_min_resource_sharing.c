@@ -209,8 +209,6 @@ max_min_resource_sharing_solution *approximate_rbp_lp_max_min_resource_sharing(d
         double prod = vector_scalar_mult(p, function_solution);
         double residuum = (hat_prod - prod) / (hat_prod + prod);
 
-        printf("residuum: %.10f < %.10f\n", residuum, approximate_block_solver_precision);
-
         if(fabs(residuum) < approximate_block_solver_precision) {
             free_double_vector(hat_x);
             free_double_vector(hat_function_solution);
