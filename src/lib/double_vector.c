@@ -116,6 +116,17 @@ double vector_min(double_vector *x)
     return result;
 }
 
+double vector_sum(double_vector *x)
+{
+    double sum = 0.0;
+    int i;
+    for(i = 0; i < x->size; ++i) {
+        sum += x->values[i];
+    }
+    
+    return sum;
+}
+
 double vector_scalar_mult(double_vector *a, double_vector *b)
 {
     assert(a->size == b->size);

@@ -185,6 +185,27 @@ void Test_vector_min(CuTest *tc)
     free_double_vector(x);
 }
 
+void Test_vector_sum(CuTest *tc)
+{
+    // Alloc
+    double_vector *x = alloc_double_vector(5);
+    
+    x->values[0] = -5.0;
+    x->values[1] = 0;
+    x->values[2] = 0.12;
+    x->values[3] = -12.2;
+    x->values[4] = -8;
+    
+    // Calculate
+    double sum = vector_sum(x);
+    
+    // Test
+    CuAssertDblEquals(tc, -5.0 + 0.0 + 0.12 - 12.2 - 8, sum, DBL_EPSILON);
+    
+    // Cleanup
+    free_double_vector(x);
+}
+
 void Test_vector_scalar_mult(CuTest *tc)
 {
     // Alloc
