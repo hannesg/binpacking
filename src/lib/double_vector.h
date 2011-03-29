@@ -42,6 +42,11 @@ uint_vector *double_vector_order(double_vector *vector);
 double vector_min(double_vector *x);
 
 /**
+ * Calculates the sum of all entries of vector @p x
+ */
+double vector_sum(double_vector *x);
+
+/**
  * Calculates the scalar product of @p a and @p b.
  */
 double vector_scalar_mult(double_vector *a, double_vector *b);

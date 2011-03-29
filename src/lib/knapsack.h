@@ -65,13 +65,15 @@ uint_vector *approximate_bound_knapsack( double_vector *sizes,
                              double precision);
 
 /**
- *
+ * @param k a limit for frequency of each item
+ * @param limit for all x in B = {x in R^(A.height) | sum(x_i) = @param limit, x_i >= 0}
  */
 double_vector * approximate_bound_knapsack_block_solver(
                              uint_matrix *A,
                              double_vector *sizes,
                              double_vector *profits,
                              double B,
+                             unsigned int k,
                              unsigned int limit,
                              double precision);
 

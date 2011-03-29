@@ -15,8 +15,6 @@
 // Self
 #include "binpacking.h"
 
-const int MAX_BIN_NUMBER = 50;
-
 packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
 
     /*
@@ -150,7 +148,13 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
     sizes.values = partition_items;
     sizes.size = m;
 
-    x = approximate_rbp_lp_solver(&sizes, A, delta, (min_small_n < MAX_BIN_NUMBER) ? min_small_n : MAX_BIN_NUMBER );
+    double area = 0.0;
+    for(i = 1; i < m - 1; ++i) {
+        area += partition_sizes[i];
+    }
+    area *= k;
+
+    x = approximate_rbp_lp_solver(&sizes, k, A, delta, ceil(area),  ceil(2 * area + 1));
 
     if(x == NULL) {
         // approximate_lp_solver did not find a solution

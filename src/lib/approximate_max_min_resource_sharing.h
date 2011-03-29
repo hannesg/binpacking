@@ -29,6 +29,7 @@ max_min_resource_sharing_solution *approximate_max_min_resource_sharing(double_m
 
 max_min_resource_sharing_solution *approximate_rbp_lp_max_min_resource_sharing(double_vector *items,
                                                                         uint_matrix *A,
+                                                                        unsigned int k,
                                                                         unsigned int limit,
                                                                         double precision
                                                                         );

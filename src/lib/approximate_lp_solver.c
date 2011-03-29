@@ -20,10 +20,11 @@
 double_vector *approximate_lp_solver(uint_matrix *A,
                                      uint_vector *b,
                                      double precision,
-                                     unsigned int limit)
+                                     unsigned int min,
+                                     unsigned int max)
 {
-    int minimum = 1;     // area
-    int maximum = limit; // 2 * area + 1
+    int minimum = min;
+    int maximum = max + 1;
     
     double_matrix *matrix = uint_transposed_matrix_vector_division(A, b);
     max_min_resource_sharing_solution *end_solution = NULL;
@@ -61,23 +62,27 @@ double_vector *approximate_lp_solver(uint_matrix *A,
 }
 
 double_vector *approximate_rbp_lp_solver(double_vector *items,
+                                         unsigned int k,
                                      uint_matrix *A,
                                      double precision,
-                                     unsigned int limit)
+                                     unsigned int min,
+                                     unsigned int max)
 {
-    int minimum = 1;     // area
-    int maximum = limit; // 2 * area + 1
+    int minimum = min;
+    int maximum = max + 1;
 
     uint_matrix *matrix = NULL;
     max_min_resource_sharing_solution *end_solution = NULL;
     int medium;
     do {
         medium =  (minimum + maximum)/2; // This does not fail because limit is small.
+        printf("Bin number: %i\n", medium);
         matrix = alloc_uint_matrix(0, items->size);
         max_min_resource_sharing_solution *solution
             = approximate_rbp_lp_max_min_resource_sharing(
                                                    items,
                                                    matrix,
+                                                   k,
                                                    medium,
                                                    precision);
 

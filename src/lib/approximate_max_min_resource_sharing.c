@@ -148,12 +148,11 @@ max_min_resource_sharing_solution *approximate_max_min_resource_sharing(double_m
 
 max_min_resource_sharing_solution *approximate_rbp_lp_max_min_resource_sharing(double_vector *items,
                                                                         uint_matrix *A,
+                                                                        unsigned int k,
                                                                         unsigned int limit,
                                                                         double precision
                                                                         )
 {
-    printf("arlmmrs limit=%i\n", limit);
-    print_double_vector(items);
     // M is the number of items, which is equal to the width of the matrix
     unsigned int M = items->size;
 
@@ -170,15 +169,11 @@ max_min_resource_sharing_solution *approximate_rbp_lp_max_min_resource_sharing(d
     int m;
     for(m = 0; m < M; m++) {
         p->values[m] = 1.0;
-        double_vector *block_solution = approximate_bound_knapsack_block_solver(A, items, p, PACKING_SIZE, limit, 0.5);
-        printf("block solution\n");
-        print_double_vector(block_solution);
+        double_vector *block_solution = approximate_bound_knapsack_block_solver(A, items, p, PACKING_SIZE, k, limit, 0.5);
         vector_vector_add_assignment(x, block_solution);
         free_double_vector(block_solution);
         p->values[m] = 0.0;
     }
-    printf("start solution\n");
-    print_double_vector(x);
 
     // Vector p will stay in memory, it is needed in the while-loop.
     number_vector_mult_assignment(1.0/((double) M), x);
@@ -186,6 +181,7 @@ max_min_resource_sharing_solution *approximate_rbp_lp_max_min_resource_sharing(d
     double approximate_block_solver_precision = (precision / 6);
 
     double_vector *function_solution = uint_transposed_matrix_vector_mult(A, x);
+    int iter_count = 1;
     while(1) {
         double theta = find_optimum(function_solution, approximate_block_solver_precision);
 
@@ -199,7 +195,7 @@ max_min_resource_sharing_solution *approximate_rbp_lp_max_min_resource_sharing(d
         }
 
         // Calculating the hat x
-        double_vector *hat_x = approximate_bound_knapsack_block_solver(A, items, p, PACKING_SIZE, limit,
+        double_vector *hat_x = approximate_bound_knapsack_block_solver(A, items, p, PACKING_SIZE, k, limit,
                                                         approximate_block_solver_precision);
         double_vector *hat_function_solution = uint_transposed_matrix_vector_mult(A, hat_x);
 
@@ -207,8 +203,6 @@ max_min_resource_sharing_solution *approximate_rbp_lp_max_min_resource_sharing(d
         double hat_prod = vector_scalar_mult(p, hat_function_solution);
         double prod = vector_scalar_mult(p, function_solution);
         double residuum = (hat_prod - prod) / (hat_prod + prod);
-
-        printf("residuum: %.10f < %.10f\n", residuum, approximate_block_solver_precision);
 
         if(fabs(residuum) < approximate_block_solver_precision) {
             free_double_vector(hat_x);
@@ -229,7 +223,9 @@ max_min_resource_sharing_solution *approximate_rbp_lp_max_min_resource_sharing(d
         vector_convex_assignment(function_solution, hat_function_solution, step_size );
 
         free_double_vector(hat_function_solution);
+        iter_count++;
     }
+    printf("Needed %i iterations.\n", iter_count);
 
     free_double_vector(p);
 

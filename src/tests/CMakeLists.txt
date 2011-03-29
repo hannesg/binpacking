@@ -1,11 +1,11 @@
-set(TEST_SRCS packing_list.c
-              linear_algebra.c
-              first_fit.c
-              approximate_block_solver.c
-              approximate_lp_solver.c
-              approximate_max_min_resource_sharing.c
-              binpacking.c
-              knapsack.c
+set(TEST_SRCS test_packing_list.c
+              test_linear_algebra.c
+              test_first_fit.c
+              test_approximate_block_solver.c
+              test_approximate_lp_solver.c
+              test_approximate_max_min_resource_sharing.c
+              test_binpacking.c
+              test_knapsack.c
               )
 
 add_custom_command(OUTPUT tests.c
