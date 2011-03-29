@@ -62,10 +62,11 @@ double_vector *approximate_lp_solver(uint_matrix *A,
 }
 
 double_vector *approximate_rbp_lp_solver(double_vector *items,
+                                         unsigned int k,
                                      uint_matrix *A,
                                      double precision)
 {
-    double area = vector_sum(items);
+    double area = vector_sum(items) * k;
     int minimum = ceil(area);
     int maximum = ceil(2 * area + 1);
 

@@ -148,7 +148,7 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
     sizes.values = partition_items;
     sizes.size = m;
 
-    x = approximate_rbp_lp_solver(&sizes, A, delta);
+    x = approximate_rbp_lp_solver(&sizes, k, A, delta);
 
     if(x == NULL) {
         // approximate_lp_solver did not find a solution
