@@ -15,8 +15,6 @@
 // Self
 #include "binpacking.h"
 
-const int MAX_BIN_NUMBER = 50;
-
 packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
 
     /*
@@ -141,7 +139,7 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
     fill_uint_vector(b, k);
 
     // solve the LP approximately
-    x = approximate_lp_solver(A, b, delta, (min_small_n < MAX_BIN_NUMBER) ? min_small_n : MAX_BIN_NUMBER);
+    x = approximate_lp_solver(A, b, delta, 1, 50);
     
     if(x == NULL) {
         // approximate_lp_solver did not find a solution

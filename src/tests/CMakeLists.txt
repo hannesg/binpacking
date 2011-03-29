@@ -4,7 +4,7 @@ set(TEST_SRCS packing_list.c
               approximate_block_solver.c
               approximate_lp_solver.c
               approximate_max_min_resource_sharing.c
-              binpacking.c
+              test_binpacking.c
               knapsack.c
               )
 

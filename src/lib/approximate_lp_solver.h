@@ -14,7 +14,8 @@
 double_vector *approximate_lp_solver(uint_matrix *A,
                                      uint_vector *b,
                                      double precision,
-                                     unsigned int limit);
+                                     unsigned int min,
+                                     unsigned int max);
 
 /**
  * Solves the LP(RBP) defined by the @p items and the @p limit.
@@ -25,5 +26,4 @@ double_vector *approximate_lp_solver(uint_matrix *A,
  */
 double_vector *approximate_rbp_lp_solver(double_vector *items,
                                      uint_matrix *A,
-                                     double precision,
-                                     unsigned int limit);
+                                     double precision);
