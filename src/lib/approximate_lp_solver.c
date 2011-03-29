@@ -20,10 +20,11 @@
 double_vector *approximate_lp_solver(uint_matrix *A,
                                      uint_vector *b,
                                      double precision,
-                                     unsigned int limit)
+                                     unsigned int min,
+                                     unsigned int max)
 {
-    int minimum = 1;     // area
-    int maximum = limit; // 2 * area + 1
+    int minimum = min;     // area
+    int maximum = max; // 2 * area + 1
     
     double_matrix *matrix = uint_transposed_matrix_vector_division(A, b);
     max_min_resource_sharing_solution *end_solution = NULL;
@@ -62,11 +63,11 @@ double_vector *approximate_lp_solver(uint_matrix *A,
 
 double_vector *approximate_rbp_lp_solver(double_vector *items,
                                      uint_matrix *A,
-                                     double precision,
-                                     unsigned int limit)
+                                     double precision)
 {
-    int minimum = 1;     // area
-    int maximum = limit; // 2 * area + 1
+    double area = vector_sum(items);
+    int minimum = ceil(area);
+    int maximum = ceil(2 * area + 1);
 
     uint_matrix *matrix = NULL;
     max_min_resource_sharing_solution *end_solution = NULL;
