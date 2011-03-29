@@ -62,6 +62,7 @@ double_vector *approximate_lp_solver(uint_matrix *A,
 }
 
 double_vector *approximate_rbp_lp_solver(double_vector *items,
+                                         unsigned int k,
                                      uint_matrix *A,
                                      double precision)
 {
