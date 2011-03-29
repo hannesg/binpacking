@@ -75,6 +75,7 @@ double_vector *approximate_rbp_lp_solver(double_vector *items,
     int medium;
     do {
         medium =  (minimum + maximum)/2; // This does not fail because limit is small.
+        printf("Bin number: %i\n", medium);
         matrix = alloc_uint_matrix(0, items->size);
         max_min_resource_sharing_solution *solution
             = approximate_rbp_lp_max_min_resource_sharing(
