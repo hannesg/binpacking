@@ -58,6 +58,18 @@ void Test_knapsack_should_work_on_small_instances(CuTest *tc){
     free_double_vector(sizes);
 }
 
+// void Test_approximate_bound_knapsack(CuTest *tc) {
+//     double_vector *sizes = alloc_double_vector(3);
+//     sizes->values[0] = 2;
+//     sizes->values[1] = 3;
+//     sizes->values[2] = 4;
+// 
+//     double_vector *profits = alloc_double_vector(3);
+//     profits->values[0] = 1;
+//     profits->values[1] = 3;
+//     profits->values[2] = 4;
+// }
+
 void Test_knapsack_should_work_on_medium_instances(CuTest *tc){
 
     double_vector *sizes = alloc_double_vector(20);
