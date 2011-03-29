@@ -139,7 +139,12 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
     fill_uint_vector(b, k);
 
     // solve the LP approximately
-    x = approximate_lp_solver(A, b, delta, 1, 50);
+    double area = 0.0;
+    for(i = 1; i < m - 1; ++i) {
+        area += partition_sizes[i];
+    }
+    area *= k;
+    x = approximate_lp_solver(A, b, delta, ceil(area), ceil(2 * area + 1));
     
     if(x == NULL) {
         // approximate_lp_solver did not find a solution
