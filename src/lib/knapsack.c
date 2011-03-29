@@ -223,13 +223,14 @@ double_vector * approximate_bound_knapsack_block_solver(
                              double_vector *sizes,
                              double_vector *profits,
                              double B,
+                             unsigned int k,
                              unsigned int limit,
                              double precision){
-    uint_vector *solution = approximate_bound_knapsack(sizes, profits, B, limit, precision);
+    uint_vector *solution = approximate_bound_knapsack(sizes, profits, B, k, precision);
     unsigned int index = uint_matrix_ensure_row_existence(A, solution);
     double_vector *result = alloc_double_vector(A->height);
     fill_double_vector(result,0.0);
-    result->values[index] = 1;
+    result->values[index] = limit;
     free_uint_vector(solution);
     return result;
 }

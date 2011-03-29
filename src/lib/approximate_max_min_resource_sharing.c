@@ -148,6 +148,7 @@ max_min_resource_sharing_solution *approximate_max_min_resource_sharing(double_m
 
 max_min_resource_sharing_solution *approximate_rbp_lp_max_min_resource_sharing(double_vector *items,
                                                                         uint_matrix *A,
+                                                                        unsigned int k,
                                                                         unsigned int limit,
                                                                         double precision
                                                                         )
@@ -170,7 +171,7 @@ max_min_resource_sharing_solution *approximate_rbp_lp_max_min_resource_sharing(d
     int m;
     for(m = 0; m < M; m++) {
         p->values[m] = 1.0;
-        double_vector *block_solution = approximate_bound_knapsack_block_solver(A, items, p, PACKING_SIZE, limit, 0.5);
+        double_vector *block_solution = approximate_bound_knapsack_block_solver(A, items, p, PACKING_SIZE, k, limit, 0.5);
         printf("block solution\n");
         print_double_vector(block_solution);
         vector_vector_add_assignment(x, block_solution);
@@ -199,7 +200,7 @@ max_min_resource_sharing_solution *approximate_rbp_lp_max_min_resource_sharing(d
         }
 
         // Calculating the hat x
-        double_vector *hat_x = approximate_bound_knapsack_block_solver(A, items, p, PACKING_SIZE, limit,
+        double_vector *hat_x = approximate_bound_knapsack_block_solver(A, items, p, PACKING_SIZE, k, limit,
                                                         approximate_block_solver_precision);
         double_vector *hat_function_solution = uint_transposed_matrix_vector_mult(A, hat_x);
 

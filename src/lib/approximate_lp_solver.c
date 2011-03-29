@@ -80,6 +80,7 @@ double_vector *approximate_rbp_lp_solver(double_vector *items,
             = approximate_rbp_lp_max_min_resource_sharing(
                                                    items,
                                                    matrix,
+                                                   k,
                                                    medium,
                                                    precision);
 
