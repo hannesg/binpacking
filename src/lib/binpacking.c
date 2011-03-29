@@ -145,8 +145,8 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
     */
     A = malloc(sizeof(uint_matrix));
 
-    sizes.values = partition_items;
-    sizes.size = m;
+    sizes.values = partition_items + 1;
+    sizes.size = m - 1;
 
     x = approximate_rbp_lp_solver(&sizes, k, A, delta);
 
