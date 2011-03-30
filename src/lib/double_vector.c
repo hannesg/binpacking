@@ -164,6 +164,17 @@ void number_vector_mult_assignment(double x, double_vector *a)
     }
 }
 
+void vector_number_div_assignment(double_vector *a, double x)
+{
+    if(x == 0) {
+        return;
+    }
+    int i;
+    for(i = 0; i < a->size; ++i) {
+        a->values[i] = a->values[i] / x;
+    }
+}
+
 void vector_convex_assignment(double_vector *a, double_vector *b, double lambda ){
     double one_minus_lambda = 1 - lambda;
     unsigned int i;

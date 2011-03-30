@@ -133,6 +133,7 @@ max_min_resource_sharing_solution *approximate_max_min_resource_sharing(double_m
         
         vector_convex_assignment(function_solution, hat_function_solution, step_size );
         if(vector_min(function_solution) >= 1.0) {
+            free_double_vector(hat_function_solution);
             break;
         }
 
@@ -187,6 +188,7 @@ max_min_resource_sharing_solution *approximate_rbp_lp_max_min_resource_sharing(d
     double approximate_block_solver_precision = (precision / 6);
 
     double_vector *function_solution = uint_transposed_matrix_vector_mult(A, x);
+//     vector_number_div_assignment(function_solution, k);
     int iter_count = 0;
     while(1) {
         double theta = find_optimum(function_solution, approximate_block_solver_precision);
@@ -204,6 +206,7 @@ max_min_resource_sharing_solution *approximate_rbp_lp_max_min_resource_sharing(d
         double_vector *hat_x = approximate_bound_knapsack_block_solver(A, items, p, PACKING_SIZE, k, limit,
                                                         approximate_block_solver_precision);
         double_vector *hat_function_solution = uint_transposed_matrix_vector_mult(A, hat_x);
+//         vector_number_div_assignment(function_solution, k);
 
         // Checking what we want to do next
         double hat_prod = vector_scalar_mult(p, hat_function_solution);
@@ -227,7 +230,8 @@ max_min_resource_sharing_solution *approximate_rbp_lp_max_min_resource_sharing(d
         free_double_vector(hat_x);
 
         vector_convex_assignment(function_solution, hat_function_solution, step_size );
-        if(vector_min(function_solution) >= 1.0) {
+        if(vector_min(function_solution) >= k) {
+            free_double_vector(hat_function_solution);
             break;
         }
 

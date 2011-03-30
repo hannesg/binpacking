@@ -151,10 +151,23 @@ packing_list * binpacking(double items_in[],
         area += partition_items[i];
     }
     area *= k;
+    
+    int foundSolution = 0;
 
     if(algorithm == Ugly) {
         // this matrix contains all possible packings
         uint_vector *b;
+        
+        packing_list *simple = first_fit(items, n);
+        if(simple->size <= ceil(area * (1.0 + epsilon))) {
+            free(positions);
+            free(items);
+            free(partition_items);
+            free(partition_sizes);
+            free(partition_starts);
+            return simple;
+        }
+        free_packing_list(simple);
         
         if(handle_large_items_seperately) {
             A = matrix_from_items(partition_items + 1, m - 1 , k);
@@ -165,12 +178,16 @@ packing_list * binpacking(double items_in[],
             b = alloc_uint_vector(m);
         }
         
-        fill_uint_vector(b, k);
+        if(A) {
+            fill_uint_vector(b, k);
 
-        // solve the LP approximately
-        x = approximate_lp_solver(A, b, delta, ceil(area), ceil(2 * area + 1));
+            // solve the LP approximately
+            x = approximate_lp_solver(A, b, delta, ceil(area), ceil(2 * area + 1));
+            foundSolution = 1;
+        }
     }
-    else {
+    
+    if(!foundSolution) {
         A = malloc(sizeof(uint_matrix));
 
         if(handle_large_items_seperately) {
@@ -432,6 +449,12 @@ uint_matrix *matrix_from_items(double items[], unsigned int n, unsigned int limi
             // this configuration is valid
             if((m + 1)*n >= size) {
                 size *= 2;
+                if(size > 10000000) {
+                    free(store);
+                    free(max);
+                    free(col);
+                    return NULL;
+                }
                 store = realloc(store, size * sizeof(unsigned int));
             }
             memcpy(store + (m * n), col, colsize);

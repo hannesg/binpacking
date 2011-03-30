@@ -87,7 +87,7 @@ double_vector *approximate_rbp_lp_solver(double_vector *items,
                                                    medium,
                                                    precision);
 
-        if(solution->function_solution_min >= 1.0) {
+        if(solution->function_solution_min >= k) {
             maximum = medium;
             free_max_min_resource_sharing_solution(end_solution);
             end_solution = solution;

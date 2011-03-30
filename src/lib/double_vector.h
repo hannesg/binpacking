@@ -62,6 +62,11 @@ void vector_vector_add_assignment(double_vector *a, double_vector *b);
 void number_vector_mult_assignment(double x, double_vector *a);
 
 /**
+ * Calculates @p a / @p x and stores the result in a.
+ */
+void vector_number_div_assignment(double_vector *a, double x);
+
+/**
  * Sets @p a to (1- @p lambda)* @p a + @p lambda* @p b
  */
 void vector_convex_assignment(double_vector *a, double_vector *b, double lambda );
