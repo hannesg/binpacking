@@ -238,9 +238,7 @@ packing_list * binpacking(double items_in[],
     // pack the big items
     i = 0;
     while(i < k) {
-        pack = alloc_packing();
-        insert_item(pack, positions[i]);
-        insert_packing(result, pack, 1);
+        first_fit_step(items_in, n, positions[i], result);
         i++;
     }
 
