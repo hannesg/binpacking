@@ -16,8 +16,13 @@
 #include "approximate_lp_solver.h"
 #include <math.h>
 
+typedef enum BinpackingAlgorithm {
+    Good,
+    Bad,
+    Ugly
+} BinpackingAlgorithm;
 
-packing_list * binpacking(double items[], double epsilon, unsigned int n);
+packing_list * binpacking(double items[], double epsilon, unsigned int n, BinpackingAlgorithm algorithm);
 
 /** @brief Sorts the given items and writes a list ( new_position => old_position ) into positions.
  *

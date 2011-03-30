@@ -417,10 +417,13 @@ void Test_binpacking(CuTest *tc)
         0.25
     };
     
-    packing_list *result = binpacking(items, 0.25, 7);
+    packing_list *result = binpacking(items, 0.25, 7, Good);
+    CuAssertIntEquals(tc, 3, result->size);
+    print_packing_list(result);
+    free_packing_list(result);
     
-    CuAssertIntEquals(tc, 2, result->size);
-    
+    result = binpacking(items, 0.25, 7, Ugly);
+    CuAssertIntEquals(tc, 3, result->size);
     print_packing_list(result);
     free_packing_list(result);
 }
@@ -455,10 +458,13 @@ void Test_binpacking_all_small(CuTest *tc)
         0.001
     };
     
-    packing_list *result = binpacking(items, 0.5, 25);
-    
+    packing_list *result = binpacking(items, 0.5, 25, Good);
     CuAssertIntEquals(tc, 3, result->size);
+    print_packing_list(result);
+    free_packing_list(result);
     
+    result = binpacking(items, 0.5, 25, Ugly);
+    CuAssertIntEquals(tc, 3, result->size);
     print_packing_list(result);
     free_packing_list(result);
 }
@@ -517,8 +523,12 @@ void Test_binpacking_k_larger_1(CuTest *tc)
         0.38520
     };
     
-    packing_list *result = binpacking(items, 0.5, 41);
+    packing_list *result = binpacking(items, 0.5, 41, Good);
+    printf("We need %i bins.\n", result->size);
+    print_packing_list(result);
+    free_packing_list(result);
     
+    result = binpacking(items, 0.5, 41, Ugly);
     printf("We need %i bins.\n", result->size);
     print_packing_list(result);
     free_packing_list(result);

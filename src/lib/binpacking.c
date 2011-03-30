@@ -15,8 +15,11 @@
 // Self
 #include "binpacking.h"
 
-packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
-
+packing_list * binpacking(double items_in[],
+                          double epsilon,
+                          unsigned int n,
+                          BinpackingAlgorithm algorithm)
+{
     /*
      * A list of positions which will be used in the last step to revert the sorting.
      */
@@ -80,7 +83,7 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
     /*
      * The LP-Solution
      */
-    double_vector *x;
+    double_vector *x = NULL;
 
     /*
      * auxiliary variables
@@ -99,7 +102,9 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
         min_small_n++;
     }
 
-    if(min_small_n <= 1){
+    if(algorithm == Bad
+       || min_small_n <= 1)
+    {
         // if max_normal_n == 0 then every item is small and we cannot partition the input.
         // if max_normal_n == 1 then k will be 0, which will result in empty partitions.
         //      => simply first fit them!
@@ -132,29 +137,32 @@ packing_list * binpacking(double items_in[], double epsilon, unsigned int n){
         partition_items[i] = items[ partition_start ];
         partition_sizes[i] = partition_size;
     }
-
-    // this matrix contains all possible packings
-    /*
-    A = matrix_from_items(partition_items + 1, m - 1, k);
-
-    b = alloc_uint_vector(m - 1);
-    fill_uint_vector(b, k);
-
-    // solve the LP approximately
-    x = approximate_lp_solver(A, b, delta, (min_small_n < MAX_BIN_NUMBER) ? min_small_n : MAX_BIN_NUMBER);
-    */
-    A = malloc(sizeof(uint_matrix));
-
-    sizes.values = partition_items + 1;
-    sizes.size = m - 1;
-
+    
     double area = 0.0;
     for(i = 1; i < m - 1; ++i) {
         area += partition_sizes[i];
     }
     area *= k;
 
-    x = approximate_rbp_lp_solver(&sizes, k, A, delta, ceil(area),  ceil(2 * area + 1));
+    if(algorithm == Ugly) {
+        // this matrix contains all possible packings
+    
+        A = matrix_from_items(partition_items + 1, m - 1, k);
+
+        uint_vector *b = alloc_uint_vector(m - 1);
+        fill_uint_vector(b, k);
+
+        // solve the LP approximately
+        x = approximate_lp_solver(A, b, delta, ceil(area), ceil(2 * area + 1));
+    }
+    else {
+        A = malloc(sizeof(uint_matrix));
+
+        sizes.values = partition_items + 1;
+        sizes.size = m - 1;
+
+        x = approximate_rbp_lp_solver(&sizes, k, A, delta, ceil(area),  ceil(2 * area + 1));
+    }
 
     if(x == NULL) {
         // approximate_lp_solver did not find a solution

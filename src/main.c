@@ -14,11 +14,21 @@
 int main(int argc, char **argv) {
     if(argc > 1) {
         double precision = 0.25;
+        BinpackingAlgorithm algorithm = Good;
         double_vector *instance;
         
         int i;
         for(i = 1; i < argc; ++i) {
-            if(strcmp(argv[i], "--precision") == 0) {
+            if(strcmp(argv[i], "--good") == 0) {
+                algorithm = Good;
+            }
+            else if(strcmp(argv[i], "--bad") == 0) {
+                algorithm = Bad;
+            }
+            else if(strcmp(argv[i], "--ugly") == 0) {
+                algorithm = Ugly;
+            }
+            else if(strcmp(argv[i], "--precision") == 0) {
                 if(i + 1 < argc) {
                     precision = atof(argv[i+1]);
                     printf("Value for precision is %s\n", argv[i+1]);
@@ -43,7 +53,7 @@ int main(int argc, char **argv) {
         }
         
         if(instance) {
-            packing_list *result = binpacking(instance->values, precision, instance->size);
+            packing_list *result = binpacking(instance->values, precision, instance->size, algorithm);
             if(result == NULL) {
                 printf("No solution found.");
             }
