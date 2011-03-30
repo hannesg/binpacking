@@ -140,7 +140,7 @@ packing_list * binpacking(double items_in[],
     
     double area = 0.0;
     for(i = 1; i < m - 1; ++i) {
-        area += partition_sizes[i];
+        area += partition_items[i];
     }
     area *= k;
 
