@@ -132,6 +132,9 @@ max_min_resource_sharing_solution *approximate_max_min_resource_sharing(double_m
         free_double_vector(hat_x);
         
         vector_convex_assignment(function_solution, hat_function_solution, step_size );
+        if(vector_min(function_solution) >= 1.0) {
+            break;
+        }
 
         free_double_vector(hat_function_solution);
         iter_count++;
@@ -224,6 +227,9 @@ max_min_resource_sharing_solution *approximate_rbp_lp_max_min_resource_sharing(d
         free_double_vector(hat_x);
 
         vector_convex_assignment(function_solution, hat_function_solution, step_size );
+        if(vector_min(function_solution) >= 1.0) {
+            break;
+        }
 
         free_double_vector(hat_function_solution);
         iter_count++;
