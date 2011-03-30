@@ -92,6 +92,7 @@ max_min_resource_sharing_solution *approximate_max_min_resource_sharing(double_m
     double approximate_block_solver_precision = precision / 6;
     
     double_vector *function_solution = transposed_matrix_vector_mult(A, x);
+    int iter_count = 0;
     while(1) {
         double theta = find_optimum(function_solution, approximate_block_solver_precision);
         
@@ -133,7 +134,9 @@ max_min_resource_sharing_solution *approximate_max_min_resource_sharing(double_m
         vector_convex_assignment(function_solution, hat_function_solution, step_size );
 
         free_double_vector(hat_function_solution);
+        iter_count++;
     }
+    printf("Needed %i iterations.\n", iter_count);
     
     free_double_vector(p);
     
@@ -181,7 +184,7 @@ max_min_resource_sharing_solution *approximate_rbp_lp_max_min_resource_sharing(d
     double approximate_block_solver_precision = (precision / 6);
 
     double_vector *function_solution = uint_transposed_matrix_vector_mult(A, x);
-    int iter_count = 1;
+    int iter_count = 0;
     while(1) {
         double theta = find_optimum(function_solution, approximate_block_solver_precision);
 

@@ -31,6 +31,7 @@ double_vector *approximate_lp_solver(uint_matrix *A,
     int medium;
     do {
         medium =  (minimum + maximum)/2; // This does not fail because limit is small.
+        printf("Bin number: %i\n", medium);
         max_min_resource_sharing_solution *solution
             = approximate_max_min_resource_sharing(matrix,
                                                    medium,
