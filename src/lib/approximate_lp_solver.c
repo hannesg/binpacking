@@ -72,6 +72,7 @@ double_vector *approximate_rbp_lp_solver(double_vector *items,
     int maximum = max + 1;
     uint_matrix *matrix = NULL;
     max_min_resource_sharing_solution *end_solution = NULL;
+    uint_matrix *end_matrix = NULL;
     int medium;
     do {
         medium =  (minimum + maximum)/2; // This does not fail because limit is small.
@@ -89,6 +90,8 @@ double_vector *approximate_rbp_lp_solver(double_vector *items,
             maximum = medium;
             free_max_min_resource_sharing_solution(end_solution);
             end_solution = solution;
+            free_uint_matrix(end_matrix);
+            end_matrix = matrix;
         } else {
             minimum = medium + 1;
             free_max_min_resource_sharing_solution(solution);
@@ -105,11 +108,13 @@ double_vector *approximate_rbp_lp_solver(double_vector *items,
         free_double_vector(end_solution->function_solution);
         double_vector *solution_vector = end_solution->vector;
         free(end_solution);
-        A->values = matrix->values;
-        A->width = matrix->width;
-        A->height = matrix->height;
-        A->array_height = matrix->array_height;
-        free(matrix);
+
+        A->values = end_matrix->values;
+        A->width = end_matrix->width;
+        A->height = end_matrix->height;
+        A->array_height = end_matrix->array_height;
+        free(end_matrix);
+
         return solution_vector;
     }
 }

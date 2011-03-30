@@ -221,7 +221,6 @@ void Test_matrix_from_items_should_work(CuTest *tc)
 
     uint_matrix *A = matrix_from_items(items,  20, 10);
 
-    printf("A in %2i x %2i \n",A->width, A->height);
     CuAssertIntEquals(tc, 0, check_bin_packing_matrix(A,items, 10));
 
     free(positions);
