@@ -22,7 +22,11 @@ typedef enum BinpackingAlgorithm {
     Ugly
 } BinpackingAlgorithm;
 
-packing_list * binpacking(double items[], double epsilon, unsigned int n, BinpackingAlgorithm algorithm);
+packing_list * binpacking(double items[],
+                          double epsilon,
+                          unsigned int n,
+                          BinpackingAlgorithm algorithm,
+                          int handle_large_items_seperately);
 
 /** @brief Sorts the given items and writes a list ( new_position => old_position ) into positions.
  *

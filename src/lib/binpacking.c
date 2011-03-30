@@ -18,7 +18,8 @@
 packing_list * binpacking(double items_in[],
                           double epsilon,
                           unsigned int n,
-                          BinpackingAlgorithm algorithm)
+                          BinpackingAlgorithm algorithm,
+                          int handle_large_items_seperately)
 {
     /*
      * A list of positions which will be used in the last step to revert the sorting.
@@ -115,6 +116,7 @@ packing_list * binpacking(double items_in[],
     }
 
     k = ceil((delta * delta * min_small_n)/2);
+    printf("k = %i\n", k);
     // k > 0 since min_small_n > 1
     // TODO: If k == 1 we will win nothing by partitioning the items. Fallback?
     m = ceil((double) min_small_n/(double) k);
@@ -139,17 +141,30 @@ packing_list * binpacking(double items_in[],
     }
     
     double area = 0.0;
-    for(i = 1; i < m - 1; ++i) {
+    if(handle_large_items_seperately) {
+        i = 1;
+    }
+    else {
+        i = 0;
+    }
+    for(; i < m - 1; ++i) {
         area += partition_items[i];
     }
     area *= k;
 
     if(algorithm == Ugly) {
         // this matrix contains all possible packings
-    
-        A = matrix_from_items(partition_items + 1, m - 1, k);
-
-        uint_vector *b = alloc_uint_vector(m - 1);
+        uint_vector *b;
+        
+        if(handle_large_items_seperately) {
+            A = matrix_from_items(partition_items + 1, m - 1 , k);
+            b = alloc_uint_vector(m - 1);
+        }
+        else {
+            A = matrix_from_items(partition_items, m , k);
+            b = alloc_uint_vector(m);
+        }
+        
         fill_uint_vector(b, k);
 
         // solve the LP approximately
@@ -158,8 +173,14 @@ packing_list * binpacking(double items_in[],
     else {
         A = malloc(sizeof(uint_matrix));
 
-        sizes.values = partition_items + 1;
-        sizes.size = m - 1;
+        if(handle_large_items_seperately) {
+            sizes.values = partition_items + 1;
+            sizes.size = m - 1;
+        }
+        else {
+            sizes.values = partition_items;
+            sizes.size = m;
+        }
 
         x = approximate_rbp_lp_solver(&sizes, k, A, delta, ceil(area),  ceil(2 * area + 1));
     }
@@ -236,10 +257,12 @@ packing_list * binpacking(double items_in[],
     // assert: every partition_sizes == 0
 
     // pack the big items
-    i = 0;
-    while(i < k) {
-        first_fit_step(items_in, n, positions[i], result);
-        i++;
+    if(handle_large_items_seperately) {
+        i = 0;
+        while(i < k) {
+            first_fit_step(items_in, n, positions[i], result);
+            i++;
+        }
     }
 
     // pack the small items

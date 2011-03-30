@@ -15,7 +15,8 @@ int main(int argc, char **argv) {
     if(argc > 1) {
         double precision = 0.25;
         BinpackingAlgorithm algorithm = Good;
-        double_vector *instance;
+        int handle_large_item_seperately = 1;
+        double_vector *instance = NULL;
         
         int i;
         for(i = 1; i < argc; ++i) {
@@ -27,6 +28,12 @@ int main(int argc, char **argv) {
             }
             else if(strcmp(argv[i], "--ugly") == 0) {
                 algorithm = Ugly;
+            }
+            else if(strcmp(argv[i], "--do-not-handle-large-items-seperately") == 0) {
+                handle_large_item_seperately = 0;
+            }
+            else if(strcmp(argv[i], "--handle-large-items-seperately") == 0) {
+                handle_large_item_seperately = 1;
             }
             else if(strcmp(argv[i], "--precision") == 0) {
                 if(i + 1 < argc) {
@@ -53,7 +60,11 @@ int main(int argc, char **argv) {
         }
         
         if(instance) {
-            packing_list *result = binpacking(instance->values, precision, instance->size, algorithm);
+            packing_list *result = binpacking(instance->values,
+                                              precision,
+                                              instance->size,
+                                              algorithm,
+                                              handle_large_item_seperately);
             if(result == NULL) {
                 printf("No solution found.");
             }
